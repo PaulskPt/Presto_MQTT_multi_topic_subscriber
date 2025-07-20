@@ -11,8 +11,14 @@ For a successful MQTT communication you need:
 
 How to install?
 
-Download the latest version of Pimoroni [Presto FW]https://github.com/pimoroni/presto/releases/tag/v0.1.0). Install that repo in your PC in a folder of your preference. Copy the files of this repo from the subfolders [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Subscriber) to a folder of your preference, for example: "C:\<Users>\<User>\Documents\Hardware\Pimoroni\Presto\Micropython\mqtt\"
-Copy the files of this repo from the subfolders [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Publisher) to a folder of your preference, for example: C:\<Users>\<User>\Documents\Arduino\Feather_ESP32_S3_TFT_MQTT_multi_topic\"
+Download the latest version of Pimoroni [Presto FW](https://github.com/pimoroni/presto/releases/tag/v0.1.0). Install that repo in your PC in a folder of your preference. Copy the files of this repo from the subfolders [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Subscriber) to a folder of your preference, for example: 
+```
+C:\<Users>\<User>\Documents\Hardware\Pimoroni\Presto\Micropython\mqtt\
+```
+Copy the files of this repo from the subfolders [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Publisher) to a folder of your preference, for example: 
+```
+C:\<Users>\<User>\Documents\Arduino\Feather_ESP32_S3_TFT_MQTT_multi_topic\
+```
 
 
 You need to have installed on your PC: 
@@ -29,19 +35,19 @@ This structure I copied from the firmware for a Unexpected Maker SQUiXL device.
 ```
 struct MQTT_Payload
 {
-		std::string owner = "";
-		std::string device_class = "";
-		std::string state_class = "";
-		std::string term = ""; // Like meterorological term: "Pressure"
-		std::string unit_of_measurement = "";
-		std::string sensor_value = "";
-		std::string value_type = "";
-		std::string min_value = "";
-		std::string max_value = "";
-		std::string description = "";
-		std::string timestampStr = ""; // human readable ISO format
-		std::string msgID = ""; // In fact thia member contains a Unix timestamp
-		int timestamp = 0;  // This member is not sent in the MQTT messages. It is used in the firmware 
+	std::string owner = "";
+	std::string device_class = "";
+	std::string state_class = "";
+	std::string term = ""; // Like meterorological term: "Pressure"
+	std::string unit_of_measurement = "";
+	std::string sensor_value = "";
+	std::string value_type = "";
+	std::string min_value = "";
+	std::string max_value = "";
+	std::string description = "";
+	std::string timestampStr = ""; // human readable ISO format
+	std::string msgID = ""; // In fact thia member contains a Unix timestamp
+	int timestamp = 0;  // This member is not sent in the MQTT messages. It is used in the firmware 
 }
   ```
 
@@ -61,61 +67,67 @@ device_class -> dc
 state_class  -> sc     and its class "measurement" -> "meas"
 value_type   -> vt     and the value_type "float"  -> "f"
 timestamp    -> ts
-
+```
 In case of a MQTT message with topic: "sensor/Feath/ambient"
 In the "reads" subsection:
 another four sub-sub-sections for each (term) of the BME280 sensor: "temperature", "pressure", "altitude" and "humidity":
+
 ```
-sub-sub-section (term) "temperature" -> "t"
-sub-sub-section (term) "pressure"    -> "p"
-sub-sub-section (term) "altitude"    -> "a"
-sub-sub-section (term) "humidity"    -> "h"
+	 sub-sub-section (term) "temperature" -> "t"
+	 sub-sub-section (term) "pressure"    -> "p"
+	 sub-sub-section (term) "altitude"    -> "a"
+	 sub-sub-section (term) "humidity"    -> "h"
 ```
 
 In case of a MQTT message with topic: "lights/Feath/toggle"
 the only subsection contains, for example: 
 ```
-  [...]"toggle":{"v":1,"u":"i","mn":1,"mx":0}}, where "v":1 stands for Toggle leds ON.
+  	[...]"toggle":{"v":1,"u":"i","mn":1,"mx":0}}, 
 ```
+where "v":1 stands for Toggle leds ON.
 
-In case of a MQTT messages with topics: "lights/Feath/color_inc" or "lights/Feath/color_dec"
+In case of a MQTT message with topic: "lights/Feath/color_inc",
 the only subsection contains, for example: 
 ```
-  [...]"colorInc":{"v":4,"u":"i","mn":0,"mx":9}}
+  	[...]"colorInc":{"v":4,"u":"i","mn":0,"mx":9}}
 ```
 where "v":4 stands for ColorIndex value 4 (minim 0 and maximum 9)
 
-the only subsection contains, for example: 
+In case of a MQTT message with topic: "lights/Feath/color_dec",
+the only subsection contains, for example:
 ```
-  [...]"colorDec":{"v":3,"u":"i","mn":0,"mx":9}}
-```
-same.
-
-each sub-sub-section with the same definitions:
-```
-"sensor_value"        -> "v"
-"unit_of_measurement" -> "u"
-"minimum_value"       -> "mn"
-"maximum_value"       -> "mx"
+  	[...]"colorDec":{"v":3,"u":"i","mn":0,"mx":9}}
 ```
 
-Here is an example of the contents of a MQTT message with topic "sensors/Feath/ambient" my MQTT Publisher device sends every minute:
+Each sub-sub-section has the same definitions:
+```
+	"sensor_value"        -> "v"
+	"unit_of_measurement" -> "u"
+	"minimum_value"       -> "mn"
+	"maximum_value"       -> "mx"
+```
+
+Here is an example of the contents of a MQTT message with topic "sensors/Feath/ambient"
+my MQTT Publisher device sends every minute:
 
 ```
-{"ow":"Feath","de":"PC-Lab","dc":"BME280","sc":"meas","vt":"f","ts":1752189817,"reads":{"t":{"v":29,"u":"C","mn":-10,"mx":50},"p":{"v":1005.6,"u":"mB","mn":800,"mx":1200},"a":{"v":63.9,"u":"m","mn":0,"mx":3000},"h":{"v":41.7,"u":"%","mn":0,"mx":100}}}
+	{"ow":"Feath","de":"PC-Lab","dc":"BME280","sc":"meas","vt":"f","ts":1752189817,
+ 	"reads":{"t":{"v":29,"u":"C","mn":-10,"mx":50},"p":{"v":1005.6,"u":"mB","mn":800,"mx":1200},
+  	"a":{"v":63.9,"u":"m","mn":0,"mx":3000},"h":{"v":41.7,"u":"%","mn":0,"mx":100}}}
 ```
 
 In case of a MQTT message with topic "lights/Feath/toggle":
+
 ```
-{"ow":"Feath","de":"PC-Lab","dc":"home","sc":"ligh","vt":"i","ts":1753052138,"toggle":{"v":1,"u":"i","mn":1,"mx":0}}
+	{"ow":"Feath","de":"PC-Lab","dc":"home","sc":"ligh","vt":"i","ts":1753052138,"toggle":{"v":1,"u":"i","mn":1,"mx":0}}
 ```
 In case of a MQTT message with topic "lights/Feath/color_inc":
 ```
-{"ow":"Feath","de":"PC-Lab","dc":"colr","sc":"inc","vt":"i","ts":1753052342,"colorInc":{"v":4,"u":"i","mn":0,"mx":9}}
+	{"ow":"Feath","de":"PC-Lab","dc":"colr","sc":"inc","vt":"i","ts":1753052342,"colorInc":{"v":4,"u":"i","mn":0,"mx":9}}
 ```
 In case of a MQTT message with topic "lights/Feath/color_dec":
 ```
-{"ow":"Feath","de":"PC-Lab","dc":"colr","sc":"dec","vt":"i","ts":1753052302,"colorDec":{"v":3,"u":"i","mn":0,"mx":9}}
+	{"ow":"Feath","de":"PC-Lab","dc":"colr","sc":"dec","vt":"i","ts":1753052302,"colorDec":{"v":3,"u":"i","mn":0,"mx":9}}
 ```
 
 # MQTT Publisher (other functionalities)
@@ -215,5 +227,5 @@ My advise for the Publisher device: the Adafruit Feather ESP32-S3 TFT (and proba
  Beside these three external I2C devices the Adafruit Feather ESP32-S3 TFT board has other internal devices on the I2C bus:
  The I2C bus scan reported devices found with the following addresses: 0x23, 0x36, 0x50, 0x51, 0x6A, 0x76.
  The three external devices are connected to the Stemma QT/Qwiic connector of the Adafruit Feather ESP32-S3 TFT board, via a M5Stack 3-port Grove Hub. 
- Initially I had the Adafruit Gamepad QT connected in series with the Pimoroni multi-sensor-stick, however this caused I2C bus problems. In fact the M5Unit-RTC was giving eratical datetime values after having been set with a correct NTP unixtime.  After disconnecting the Gamepad QT from the multi-sensor-stick and then connecting the Gamepad QT to the 3-port Grove Hub, the I2C bus problems were history. From then on the Arduino sketch running on the Adafruit Feather ESP32-S3 TFT received correct datetime data from the M5Unit-RTC.
+ Initially I had the Adafruit Gamepad QT connected in series with the Pimoroni multi-sensor-stick, however this caused I2C bus problems. In fact the M5Unit-RTC was giving unreliable datetime values after having been set with a correct NTP unixtime.  After disconnecting the Gamepad QT from the multi-sensor-stick and then connecting the Gamepad QT to the 3-port Grove Hub, the I2C bus problems were history. From then on the Arduino sketch running on the Adafruit Feather ESP32-S3 TFT received correct datetime data from the M5Unit-RTC.
 
