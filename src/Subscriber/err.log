@@ -1,0 +1,20 @@
+1609483421: Traceback (most recent call last):
+  File "mqtt_presto_v2.py", line 1057, in <module>
+  File "umqtt/simple.py", line 213, in check_msg
+  File "umqtt/simple.py", line 181, in wait_msg
+OSError: -1
+1609459209: Traceback (most recent call last):
+  File "mqtt_presto_v2.py", line 1057, in <module>
+  File "umqtt/simple.py", line 213, in check_msg
+  File "umqtt/simple.py", line 176, in wait_msg
+OSError: [Errno 104] ECONNRESET
+1609459209: Traceback (most recent call last):
+  File "mqtt_presto_v2.py", line 1057, in <module>
+  File "umqtt/simple.py", line 213, in check_msg
+  File "umqtt/simple.py", line 176, in wait_msg
+OSError: [Errno 104] ECONNRESET
+1609459209: Traceback (most recent call last):
+  File "mqtt_presto_v2.py", line 1057, in <module>
+  File "umqtt/simple.py", line 213, in check_msg
+  File "umqtt/simple.py", line 176, in wait_msg
+OSError: [Errno 104] ECONNRESET
