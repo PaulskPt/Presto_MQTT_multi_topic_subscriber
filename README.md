@@ -138,7 +138,7 @@ In case of a MQTT message with topic "lights/Feath/color_dec":
 
 # MQTT Publisher (other functionalities)
 
-To build and upload the Arduino sketch for the MQTT Publisher device I used the Arduino IDE v2.3.5. In the Arduino sketch for the MQTT Publisher (Adafruit ESP32-S3 TFT board) I added functionality to set the display to "sleep" at a time defined in the file ```secrets.h```. In this moment 23h. And a "wakeup" time. In this moment 8h. See in the file secrets.h: 
+To build and upload the Arduino sketch for the MQTT Publisher device I used the Arduino IDE v2.3.5. In the Arduino sketch for the MQTT Publisher (Adafruit Feather ESP32-S3 TFT board) I added functionality to set the display to "sleep" at a time defined in the file ```secrets.h```. In this moment 23h. And a "wakeup" time. In this moment 8h. See in the file secrets.h: 
 ```
 #define SECRET_DISPLAY_SLEEPTIME "23"  // Feather display going to sleep (black) time
 #define SECRET_DISPLAY_AWAKETIME "8"   // Feather display wakeup time
@@ -176,6 +176,84 @@ To have the Publisher device be able to connect to the internet, to get, at inte
 #define SECRET_DISPLAY_AWAKETIME "8"   // Feather display wakeup time
 ```
 
+# MQTT Subscriber 
+The Pimoroni Presto, in the role of MQTT Subscriber, runs on micropython. The firmware is a special version of micropython. See the link above. The micropython script for this Subscriber device "dims" the screen content during night hours by changing the colour from orange to navy blue (which is more dark). 
+The choice to use a "local MQTT broker" or an "external MQTT broker" is defined in this line of the micropython script (line 60):
+```
+	use_local_broker = True # Use the BROKER running on a local PC (in my case a Raspberry Pi Compute Module 5).
+```
+The "publisher_id" and "subscriber_id" are also defined in the file "secrets.json". They are read into the script as follows:
+```
+	139 CLIENT_ID = bytes(secrets['mqtt']['client_id'], 'utf-8')
+	140 PUBLISHER_ID = secrets['mqtt']['publisher_id']
+
+```
+If you put an SD-card into your Presto, this micropython script will start logging. Logfile names contain a date and time. When the logfile becomes of a certain file length, a new logfile will be created. Another file on SD-card, name: "mqtt_latest_log_fn.txt" will contain the filename of the current logfile. At the moment you force the running script to stop, by issuing the key-combo "<Ctrl+C>", this will provoke a KeyboardInterrupt. In this case the contents of the current logfile will be printed to the Thonny Shell window (serial output). The logfiles created on SD-card will not be deleted by the micropython script, leaving you the opportunity to copy them to another device or just read them once again. Beside these type of logfiles there exists also an "err.log" file in the root folder of the filesystem of the Presto.
+
+Example of the file: "mqtt_latest_log_fn.txt":
+```
+	mqtt_log_2025-07-20T172657.txt
+```
+
+Example of the log showed after a KeyboardInterrupt:
+```
+	loop(): KeyboardInterrupt: exiting...
+	
+	Size of log file: 8313. Max log file size can be: 51200 bytes.
+	Contents of log file: "/sd/mqtt_log_2025-07-20T172657.txt"
+	pr_log():  01) ---Log created on: 2025-07-20T17:26:57---
+	pr_log():  02) 
+	pr_log():  03) 2025-07-20T17:31:25 WiFi connected to: _____________
+	pr_log():  04) 2025-07-20T17:31:25 Connected to MQTT broker: 192.168._.___
+	pr_log():  05) 2025-07-20T17:31:26 Subscribed to topic: sensors/Feath/ambient
+	pr_log():  06) 2025-07-20T17:31:26 Subscribed to topic: lights/Feath/toggle
+	pr_log():  07) 2025-07-20T17:31:26 Subscribed to topic: lights/Feath/color_inc
+	pr_log():  08) 2025-07-20T17:31:26 Subscribed to topic: lights/Feath/color_dec
+	pr_log():  09) 2025-07-20T18:05:37 Session interrupted by user — logging and exiting.
+	[...]
+```
+
+# File secrets.json (for the MQTT Subscriber device)
+```
+{
+  "mqtt": {
+    "broker_local0" : "192.168._.__",
+    "broker_local1" : "192.168._.___",           <<<=== This one is used when you opt for a "local Broker". Fill-in the IP-address.
+    "broker_local2" : "curl mqtt://127.0.0.1",
+    "broker_local3" : "curl mqtt://localhost",
+    "local_server" : "192.168._.__",
+    "broker_external": "5.196.78.28",
+    "port": "1883",
+    "topic0": "sensors/Feath/ambient",
+    "topic1": "lights/Feath/toggle",
+    "topic2": "lights/Feath/color_inc",
+    "topic3": "lights/Feath/color_dec",
+    "client_id":  "PrestoMQTTClient",
+    "publisher_id": "Feath"
+  },
+  "wifi" : {
+      "ssid" : "<Your WiFi SSID here>",
+      "pass" : "<Your WiFi Password here>"
+  },
+  "timezone" : {
+      "utc_offset_in_hrs" : "1",
+      "utc_offset_in_secs" : "3600"
+  },
+  "mqtt_server" : {
+      "url" : "mqtt://localhost",
+      "url2" : "mqtt://127.0.0.1"
+  }
+}
+```
+# MQTT broker
+
+If you, like me, also use a Raspberry Pi model to host a Mosquitto broker application, see the files in ```/etc```
+- ```/etc/hosts.allow``` : insert in this file the ip-addres of your mosquitto broker. In my case: ```mosquitto: 127.0.0.1```
+- ```/etc/mosquitto/mosquitto.conf```. See the contents of the mosquitto.conf file that I use in the folder: ```/src/Broker/etc/mosquitto```.
+
+See also photos of sites where to download the mosquitto broker app for Raspberry Pi or for a MS Windows PC in the folder. ```/src/Broker```.
+
+
 # Adafruit Gamepad QT
 
 In the Arduino sketch for the MQTT Publisher device I have added functionality to read the state of the buttons and the joystick.
@@ -192,18 +270,6 @@ The joystick is not used yet. The buttons are defined as follows:
 |  START   | execute a software reset                      |
 +----------+-----------------------------------------------+
 ```
-
-# MQTT broker
-
-If you, like me, also use a Raspberry Pi model to host a Mosquitto broker application, see the files in ```/etc```
-- ```/etc/hosts.allow``` : insert in this file the ip-addres of your mosquitto broker. In my case: ```mosquitto: 127.0.0.1```
-- ```/etc/mosquitto/mosquitto.conf```. See the contents of the mosquitto.conf file that I use in the folder: ```/src/Broker/etc/mosquitto```.
-
-See also photos of sites where to download the mosquitto broker app for Raspberry Pi or for a MS Windows PC in the folder. ```/src/Broker```.
-
-# MQTT Subscriber 
-The Pimoroni Presto, in the role of MQTT Subscriber, runs on Micropython. The firmware is a special version of micropython. See the link above.
-
 
 # Hardware used:
 
