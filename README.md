@@ -188,7 +188,11 @@ The "publisher_id" and "subscriber_id" are also defined in the file "secrets.jso
 	140 PUBLISHER_ID = secrets['mqtt']['publisher_id']
 
 ```
-If you put an SD-card into your Presto, this micropython script will start logging. Logfile names contain a date and time. When the logfile becomes of a certain file length, a new logfile will be created. Another file on SD-card, name: "mqtt_latest_log_fn.txt" will contain the filename of the current logfile. At the moment you force the running script to stop, by issuing the key-combo "<Ctrl+C>", this will provoke a KeyboardInterrupt. In this case the contents of the current logfile will be printed to the Thonny Shell window (serial output). The logfiles created on SD-card will not be deleted by the micropython script, leaving you the opportunity to copy them to another device or just read them once again. Beside these type of logfiles there exists also an "err.log" file in the root folder of the filesystem of the Presto.
+If you put an SD-card into your Presto, this micropython script will start logging. Logfile names contain a date and time. When the logfile becomes of a certain file length, a new logfile will be created. Another file on SD-card, name: "mqtt_latest_log_fn.txt" will contain the filename of the current logfile. At the moment you force the running script to stop, by issuing the key-combo "<Ctrl+C>", this will provoke a KeyboardInterrupt. In this case the contents of the current logfile will be printed to the Thonny Shell window (serial output). In principle, the logfile(s) created on SD-card will not be deleted by the micropython script, leaving you the opportunity to copy them to another device or just read them once again. If you want old logfile(s) to be deleted automatically, set the following boolean flag to True: 
+```
+	59 delete_logs = False
+```
+Beside these type of logfiles there exists also an "err.log" file in the root folder of the filesystem of the Presto.
 
 Example of the file: "mqtt_latest_log_fn.txt":
 ```
@@ -211,6 +215,10 @@ Example of the log showed after a KeyboardInterrupt:
 	pr_log():  08) 2025-07-20T17:31:26 Subscribed to topic: lights/Feath/color_dec
 	pr_log():  09) 2025-07-20T18:05:37 Session interrupted by user — logging and exiting.
 	[...]
+```
+- Debug output: If you want more output to the serial output (Thonny Shell window), set the following boolean variable to True:
+```
+	58 my_debug = False
 ```
 
 # File secrets.json (for the MQTT Subscriber device)
