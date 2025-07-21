@@ -255,9 +255,9 @@ Example of the log showed after a KeyboardInterrupt:
 ```
 # MQTT broker
 
-If you, like me, also use a Raspberry Pi model to host a Mosquitto broker application, see the files in ```/etc```
+If you, like me, also use a Raspberry Pi model to host a Mosquitto broker application, see the files in the folder [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Broker/etc)
 - ```/etc/hosts.allow``` : insert in this file the ip-addres of your mosquitto broker. In my case: ```mosquitto: 127.0.0.1```
-- ```/etc/mosquitto/mosquitto.conf```. See the contents of the mosquitto.conf file that I use in the folder: ```/src/Broker/etc/mosquitto```.
+- ```/etc/mosquitto/mosquitto.conf```. See the contents of the mosquitto.conf file that I use in the folder [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Broker/etc/mosquitto).
 
 See also photos of sites where to download the mosquitto broker app for Raspberry Pi or for a MS Windows PC [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Broker).
 
