@@ -29,14 +29,11 @@ You need to have installed on your PC:
 
 # MQTT message content
 
-The structure for the MQTT message payload below, contains most of the members that are used in the MQTT messages that my MQTT Publisher device sends.
-This structure I copied from the firmware for a Unexpected Maker SQUiXL device.
+The structure for the MQTT message payload is shown below. Except for the members "timestampStr" and "timestamp" the structure members are used in the MQTT messages that my MQTT Publisher device sends. This structure I copied from the firmware for an Unexpected Maker SQUiXL device.
 
 ```
 struct MQTT_Payload
 {
-	#define SECRET_SSID "<Your_WiFi_SSID_here>"
-	#define SECRET_PASS "<Your_WiFi_Password_here>"
 	std::string owner = "";
 	std::string device_class = "";
 	std::string state_class = "";
@@ -53,7 +50,14 @@ struct MQTT_Payload
 }
   ```
 
-The mqtt messages are defined in a Json format.
+The mqtt messages are defined in a Json format. The messages that my Publisher device sends contain one main Json object "doc". Here is an example of the contents of this main Json object:
+```
+	{"ow":"Feath","de":"PC-Lab","dc":"BME280","sc":"meas","vt":"f","ts":1753098395,[...}
+```
+Then, depending on the topic, the MQTT messages my Publisher device sends, contain minimum one nested Json object and maximum four nested Json objects.
+The MQTT messages with topic "sensors/Feath/ambient" have four nested Json objects (see below). The other MQTT messages with topics:
+"lights/Feath/toggle", "lights/Feath/color_dec" or "lights/Feath/color_inc", contain one nested Json object (see below).
+
 To keep the length of the payload of the MQTT messages under 256 bytes, I have chosen to abbreviate the names of this struct.
 
 Why keep the payload length under 256 bytes? 
@@ -71,37 +75,37 @@ value_type   -> vt     and the value_type "float"  -> "f"
 timestamp    -> ts
 ```
 In case of a MQTT message with topic: "sensor/Feath/ambient"
-In the "reads" subsection:
-another four sub-sub-sections for each (term) of the BME280 sensor: "temperature", "pressure", "altitude" and "humidity":
+In the MQTT "payload" with name "reads" there are:
+four nested Json objects for each (term) of the BME280 sensor: "temperature", "pressure", "altitude" and "humidity":
 
 ```
-	 sub-sub-section (term) "temperature" -> "t"
-	 sub-sub-section (term) "pressure"    -> "p"
-	 sub-sub-section (term) "altitude"    -> "a"
-	 sub-sub-section (term) "humidity"    -> "h"
+	 nested Json object (term) "temperature" -> "t"
+	 nested Json object (term) "pressure"    -> "p"
+	 nested Json object (term) "altitude"    -> "a"
+	 nested Json object (term) "humidity"    -> "h"
 ```
 
 In case of a MQTT message with topic: "lights/Feath/toggle"
-the only subsection contains, for example: 
+the only nested Json object contains, for example: 
 ```
   	[...]"toggle":{"v":1,"u":"i","mn":1,"mx":0}}, 
 ```
 where "v":1 stands for Toggle leds ON.
 
 In case of a MQTT message with topic: "lights/Feath/color_inc",
-the only subsection contains, for example: 
+the only nested Json object contains, for example: 
 ```
   	[...]"colorInc":{"v":4,"u":"i","mn":0,"mx":9}}
 ```
 where "v":4 stands for ColorIndex value 4 (minim 0 and maximum 9)
 
 In case of a MQTT message with topic: "lights/Feath/color_dec",
-the only subsection contains, for example:
+the only nested Json object contains, for example:
 ```
   	[...]"colorDec":{"v":3,"u":"i","mn":0,"mx":9}}
 ```
 
-Each sub-sub-section has the same definitions:
+Each nested Json object has the same definition:
 ```
 	"sensor_value"        -> "v"
 	"unit_of_measurement" -> "u"
@@ -150,6 +154,8 @@ The source of the Arduino sketch for the MQTT Publisher device is [here](https:/
 To have the Publisher device be able to connect to the internet, to get, at intervals, a Unixtime datetime stamp from an NTP server, you have to fill-in the WiFi SSID and PASSWORD. Further you can change the following settings in the file secrets.h:
 
 ```
+#define SECRET_SSID "<Your_WiFi_SSID_here>"
+#define SECRET_PASS "<Your_WiFi_Password_here>"
 #define SECRET_TIMEZONE_OFFSET "1" // Europe/Lisbon (UTC offset in hours)
 // #define TIMEZONE_OFFSET "-4" // America/New_York
 #define SECRET_NTP_SERVER1 "1.pt.pool.ntp.org"
