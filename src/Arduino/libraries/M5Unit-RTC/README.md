@@ -2,6 +2,8 @@
 
 ## Overview
 
+Files /src/Unit_RTC.h and Unit_RTC.cpp are changed by Paulus Schulinck (Github handle: @PaulskPt)
+
 ### SKU:U126
 
 M5Stack-**UNIT RTC** related programs.compatible with BM8563 and HYM8563.
