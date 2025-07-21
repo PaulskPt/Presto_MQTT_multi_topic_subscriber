@@ -11,7 +11,7 @@ For a successful MQTT communication you need:
 
 How to install?
 
-Download the latest version of Pimoroni [Presto FW](https://github.com/pimoroni/presto/releases/tag/v0.1.0). Install that repo in your PC in a folder of your preference. Copy the files of this repo from the subfolders [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Subscriber) to a folder of your preference, for example: 
+Download the latest version of Pimoroni [Presto FW](https://github.com/pimoroni/presto/releases/tag/v0.1.0). Flash this firmware onto your Presto. This can be done from within the Thonny IDE. Copy the files of this repo from the subfolders [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Subscriber) to a folder of your preference, for example: 
 ```
 C:\<Users>\<User>\Documents\Hardware\Pimoroni\Presto\Micropython\mqtt\
 ```
