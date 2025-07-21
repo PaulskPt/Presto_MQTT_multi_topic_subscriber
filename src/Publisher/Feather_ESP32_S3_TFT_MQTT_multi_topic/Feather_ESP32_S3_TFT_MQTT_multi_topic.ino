@@ -1,7 +1,7 @@
 /*
   Sunday 2025-06-16 20h07 utc +1
   Adafruit Feather ESP32-S3 TFT MQTT test
-  This sketch is a port from a sketch for an Uno R4 WiFi to send BME280 sensor data to a MQTT broker
+  This sketch is a port from a sketch for an Adafruit Feather ESP32-S3 TFT board to send BME280 sensor data to a MQTT broker
   and to receive and display these MQTT messages onto the display of a Pimoroni Presto device.
   Update Saturday 2025-06-28 13h27 utc +1
   Successfully added neccesary components to comply with the UM SQUiXL system.
