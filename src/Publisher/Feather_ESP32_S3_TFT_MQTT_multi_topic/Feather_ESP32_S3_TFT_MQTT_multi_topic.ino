@@ -2,9 +2,7 @@
   Sunday 2025-06-16 20h07 utc +1
   Adafruit Feather ESP32-S3 TFT MQTT test
   This sketch is a port from a sketch for an Uno R4 WiFi to send BME280 sensor data to a MQTT broker
-  and to receive and display these MQTT messages onto the display of:
-  a) an Unexpected Maker SQUiXL device;
-  b) a Pimoroni Presto device.
+  and to receive and display these MQTT messages onto the display of a Pimoroni Presto device.
   Update Saturday 2025-06-28 13h27 utc +1
   Successfully added neccesary components to comply with the UM SQUiXL system.
   The MQTT messages are now displayed in the "MQTT Messages" screen of the UM SQUiXL.
@@ -40,6 +38,7 @@
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 #include <Adafruit_BME280.h>
+//#include <Wire.h>
 #include <iostream>
 #include <sstream>
 #include <iomanip>
@@ -204,7 +203,7 @@ MqttClient mqttClient(wifiClient);
 #define USE_BROKER_LOCAL   (1)
 
 #ifdef USE_BROKER_LOCAL
-const char broker[]  = SECRET_MQTT_BROKER_LOCAL2; // "192.168.1.114";
+const char broker[]  = SECRET_MQTT_BROKER_LOCAL2; // "192.168._.___";
 #else
 const char broker[]  = SECRET_MQTT_BROKER; // test.mosquitto.org";
 #endif
@@ -671,21 +670,21 @@ void disp_intro(bool disp_on_serial = false) {
 
 void disp_btn_info() {
   const char *msg[] = {"Gamepad Btns:",
-                       "A/B -/+ msg type",
-                       "X/Y -/+ color",
+                       "A/B +/- topic",
+                       "X/Y +/- color",
                        "Sel > show this",
                        "Sta > reset board"};
   
   disp_msg(msg, sizeof(msg) / sizeof(msg[0]), true);
 }
 
-void disp_msg_types() {
+void disp_topic_types() {
   // Display the message types on the TFT display
-  const char *msg[] = {"Message types:",
+  const char *msg[] = {"Topic types:",
                        "X: Sensor data",
                        "Y: Lights toggle",
-                       "A: Color decrease",
-                       "B: Color increase"};
+                       "A: Color increase",
+                       "B: Color decrease"};
   
   disp_msg(msg, sizeof(msg) / sizeof(msg[0]), true);
 }
@@ -1327,8 +1326,8 @@ int composePayload(char* outBuffer, size_t outSize,
       JsonObject toggle = doc.createNestedObject("toggle");
       toggle["v"] = (remote_led_is_on) ? 1 : 0; // v = value, true if LED is on, false if off
       toggle["u"] = "i"; // unit of measurement, an integer representing true or false value
-      toggle["mn"] = 1;  // minimum value
-      toggle["mx"] = 0;   // maximum value
+      toggle["mn"] = 0;  // minimum value
+      toggle["mx"] = 1;   // maximum value
       break;
     }
     case lights_color_increase:
@@ -1780,7 +1779,7 @@ void handleButtonPress(enum Button i)  //static_cast<Button>(i)) {
     buttonPressed[i] = false; // Reset the button state after handling
     lastButtonState[i] = currentButtonState[i]; // Update the last state
     currentButtonState[i] = false; // Reset the current state for the next loop
-    disp_msg_types();
+    disp_topic_types();
     delay(3000);
     disp_btn_info();
     delay(3000);
@@ -2125,7 +2124,7 @@ void setup()
   }
   composeMsgTopic(); // Prepare the MQTT default topic (global variable msg_topic)
   /*
-  disp_msg_types();
+  disp_topic_types();
   delay(5000);
   disp_btn_info();
   delay(5000);
