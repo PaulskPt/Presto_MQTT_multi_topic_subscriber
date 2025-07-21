@@ -35,7 +35,7 @@ This structure I copied from the firmware for a Unexpected Maker SQUiXL device.
 ```
 struct MQTT_Payload
 {
-	define SECRET_SSID "<Your_WiFi_SSID_here>"
+	#define SECRET_SSID "<Your_WiFi_SSID_here>"
 	#define SECRET_PASS "<Your_WiFi_Password_here>"
 	std::string owner = "";
 	std::string device_class = "";
