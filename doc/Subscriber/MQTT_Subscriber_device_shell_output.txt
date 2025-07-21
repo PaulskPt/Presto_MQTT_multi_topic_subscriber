@@ -19,13 +19,13 @@ setup(): Subscribed to topic: "lights/Feath/color_inc"
 setup(): Subscribed to topic: "lights/Feath/color_dec"
 draw(): hh = 0
 Decoded string length: 116
-raw msg: {"ow":"Feath","de":"PC-Lab","dc":"home","sc":"ligh","vt":"i","ts":1753013257,"toggle":{"v":0,"u":"i","mn":1,"mx":0}}
+raw msg: {"ow":"Feath","de":"PC-Lab","dc":"home","sc":"ligh","vt":"i","ts":1753013257,"toggle":{"v":0,"u":"i","mn":0,"mx":1}}
 mqtt_callback(): Received a mqtt message on topic: "lights/Feath/toggle", timestamp: 1753013257
 split_msg(): Topic rcvd: b'lights/Feath/toggle' found in TOPIC_LST: b'lights/Feath/toggle'
 toggle payload.items() = dict_items([('u', 'i'), ('mx', 0), ('mn', 1), ('v', 0)])
 key =  u, data =  i
-key = mx, data =  0
-key = mn, data =  1
+key = mx, data =  1
+key = mn, data =  0
 key =  v, data =  0                             <<<=== v = 0
 split_msg(): switching ambient LEDs off         <<<=== confirmation print to REPL.
 draw(): hh = 0
@@ -38,7 +38,7 @@ Note: however the bl leds keep on flashing! I have to "repair" this faulty behav
 Partial output after various changes into the micropython script:
 
 
-raw msg: {"ow":"Feath","de":"PC-Lab","dc":"home","sc":"ligh","vt":"i","ts":1753023697,"toggle":{"v":0,"u":"i","mn":1,"mx":0}}
+raw msg: {"ow":"Feath","de":"PC-Lab","dc":"home","sc":"ligh","vt":"i","ts":1753023697,"toggle":{"v":0,"u":"i","mn":0,"mx":1}}
 mqtt_callback(): Received a mqtt message on topic: "lights/Feath/toggle", timestamp: 1753023697
 
 split_msg(): Topic rcvd: b'lights/Feath/toggle' found in TOPIC_LST: b'lights/Feath/toggle'
@@ -81,14 +81,14 @@ setup(): Subscribed to topic: "lights/Feath/color_inc"
 setup(): Subscribed to topic: "lights/Feath/color_dec"
 draw(): hh = 0
 Decoded string length: 116
-raw msg: {"ow":"Feath","de":"PC-Lab","dc":"home","sc":"ligh","vt":"i","ts":1753024838,"toggle":{"v":0,"u":"i","mn":1,"mx":0}}
+raw msg: {"ow":"Feath","de":"PC-Lab","dc":"home","sc":"ligh","vt":"i","ts":1753024838,"toggle":{"v":0,"u":"i","mn":0,"mx":1}}
 mqtt_callback(): Received a mqtt message on topic: "lights/Feath/toggle", timestamp: 1753024838
 split_msg(): Topic rcvd: b'lights/Feath/toggle' found in TOPIC_LST: b'lights/Feath/toggle'
 split_msg(): toggle payload.keys() = dict_keys(['u', 'mx', 'mn', 'v'])
 split_msg(): toggle payload.items() = dict_items([('u', 'i'), ('mx', 0), ('mn', 1), ('v', 0)])
 split_msg():  key =  u, data =  i
-split_msg():  key = mx, data =  0
-split_msg():  key = mn, data =  1
+split_msg():  key = mx, data =  1
+split_msg():  key = mn, data =  0
 split_msg():  key =  v, data =  0
 draw(): hh = 0
 get_payload_member(): key tm found in entry {'tm': '15:20:38'}
@@ -122,11 +122,11 @@ setup(): Subscribed to topic: "lights/Feath/color_inc"
 setup(): Subscribed to topic: "lights/Feath/color_dec"
 draw(): hh = 0
 mqtt_callback(): Decoded raw_msg length: 116
-mqtt_callback(): raw_msg: {"ow":"Feath","de":"PC-Lab","dc":"home","sc":"ligh","vt":"i","ts":1753041781,"toggle":{"v":1,"u":"i","mn":1,"mx":0}}
+mqtt_callback(): raw_msg: {"ow":"Feath","de":"PC-Lab","dc":"home","sc":"ligh","vt":"i","ts":1753041781,"toggle":{"v":1,"u":"i","mn":0,"mx":1}}
 mqtt_callback(): Received a mqtt message on topic: "lights/Feath/toggle", timestamp: 1753041781
 split_msg():  key =  u, data =  i
-split_msg():  key = mx, data =  0
-split_msg():  key = mn, data =  1
+split_msg():  key = mx, data =  1
+split_msg():  key = mn, data =  0
 split_msg():  key =  v, data =  1
 split_msg(): Toggling backlight neopixel leds on             <<<=== Note @PaulskPt: I saw the 7 leds switch on 
 NP_color(): lightsColorIdx: 0 = color "BLUE"                        with default color (0) BLUE
@@ -138,11 +138,11 @@ draw(): toggle_draw2 = lights_ON_old = No
 draw(): topic_idx: 1 = topic: "lights/Feath/toggle"
 
 mqtt_callback(): Decoded raw_msg length: 116
-mqtt_callback(): raw_msg: {"ow":"Feath","de":"PC-Lab","dc":"home","sc":"ligh","vt":"i","ts":1753041901,"toggle":{"v":0,"u":"i","mn":1,"mx":0}}
+mqtt_callback(): raw_msg: {"ow":"Feath","de":"PC-Lab","dc":"home","sc":"ligh","vt":"i","ts":1753041901,"toggle":{"v":0,"u":"i","mn":0,"mx":1}}
 mqtt_callback(): Received a mqtt message on topic: "lights/Feath/toggle", timestamp: 1753041901
 split_msg():  key =  u, data =  i
-split_msg():  key = mx, data =  0
-split_msg():  key = mn, data =  1
+split_msg():  key = mx, data =  1
+split_msg():  key = mn, data =  0
 split_msg():  key =  v, data =  0
 split_msg(): Toggling backlight neopixel leds off             <<<=== Note @PaulskPt: I saw the 7 leds switch off
 NP_clear(): 🌈 ambient neopixels off
@@ -152,11 +152,11 @@ draw(): toggle_draw1 = lights_ON = No,
 draw(): toggle_draw2 = lights_ON_old = Yes
 draw(): topic_idx: 1 = topic: "lights/Feath/toggle"
 mqtt_callback(): Decoded raw_msg length: 116
-mqtt_callback(): raw_msg: {"ow":"Feath","de":"PC-Lab","dc":"home","sc":"ligh","vt":"i","ts":1753041961,"toggle":{"v":0,"u":"i","mn":1,"mx":0}}
+mqtt_callback(): raw_msg: {"ow":"Feath","de":"PC-Lab","dc":"home","sc":"ligh","vt":"i","ts":1753041961,"toggle":{"v":0,"u":"i","mn":0,"mx":1}}
 mqtt_callback(): Received a mqtt message on topic: "lights/Feath/toggle", timestamp: 1753041961
 split_msg():  key =  u, data =  i
-split_msg():  key = mx, data =  0
-split_msg():  key = mn, data =  1
+split_msg():  key = mx, data =  1
+split_msg():  key = mn, data =  0
 split_msg():  key =  v, data =  0
 split_msg(): Not toggling backlight neopixel leds. lights_ON = False, lights_ON_old = False
 draw(): hh = 0
@@ -165,7 +165,7 @@ draw(): toggle_draw1 = lights_ON = No,
 draw(): toggle_draw2 = lights_ON_old = No
 draw(): topic_idx: 1 = topic: "lights/Feath/toggle"
 mqtt_callback(): Decoded raw_msg length: 116
-mqtt_callback(): raw_msg: {"ow":"Feath","de":"PC-Lab","dc":"home","sc":"ligh","vt":"i","ts":1753042021,"toggle":{"v":0,"u":"i","mn":1,"mx":0}}
+mqtt_callback(): raw_msg: {"ow":"Feath","de":"PC-Lab","dc":"home","sc":"ligh","vt":"i","ts":1753042021,"toggle":{"v":0,"u":"i","mn":0,"mx":1}}
 
 [...]
 
