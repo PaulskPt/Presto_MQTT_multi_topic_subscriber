@@ -52,7 +52,7 @@ struct MQTT_Payload
 
 The mqtt messages are defined in a Json format. The messages that my Publisher device sends contain one main Json object "doc". Here is an example of the contents of this main Json object:
 ```
-	{"ow":"Feath","de":"PC-Lab","dc":"BME280","sc":"meas","vt":"f","ts":1753098395,[...}
+	{"ow":"Feath","de":"PC-Lab","dc":"BME280","sc":"meas","vt":"f","ts":1753098395,[...]}
 ```
 Then, depending on the topic, the MQTT messages my Publisher device sends, contain minimum one nested Json object and maximum four nested Json objects.
 The MQTT messages with topic "sensors/Feath/ambient" have four nested Json objects (see below). The other MQTT messages with topics:
