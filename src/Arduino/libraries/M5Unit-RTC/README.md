@@ -3,6 +3,8 @@
 ## Overview
 
 Files /src/Unit_RTC.h and Unit_RTC.cpp are changed by Paulus Schulinck (Github handle: @PaulskPt)
+The function "setUnixTime(unsigned long uxTime)" has been added, to set the RTC using a unix datetime stamp
+for example received from a NTP server.
 
 ### SKU:U126
 
