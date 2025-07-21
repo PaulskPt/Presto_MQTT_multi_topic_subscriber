@@ -1,0 +1,10 @@
+---Log created on: 2025-07-20T17:26:57---
+
+ 2025-07-20T17:31:25 WiFi connected to: _____________
+ 2025-07-20T17:31:25 Connected to MQTT broker: 192.168._.___
+ 2025-07-21T12:11:16 Subscribed to topic: sensors/Feath/ambient
+ 2025-07-21T12:11:16 Subscribed to topic: lights/Feath/toggle
+ 2025-07-21T12:11:17 Subscribed to topic: lights/Feath/color_inc
+ 2025-07-21T12:11:17 Subscribed to topic: lights/Feath/color_dec
+ 2025-07-21T12:11:52 Session interrupted by user — logging and exiting.
+ 
