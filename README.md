@@ -178,9 +178,9 @@ To have the Publisher device be able to connect to the internet, to get, at inte
 
 # MQTT Subscriber 
 The Pimoroni Presto, in the role of MQTT Subscriber, runs on micropython. The firmware is a special version of micropython. See the link above. The micropython script for this Subscriber device "dims" the screen content during night hours by changing the colour from orange to navy blue (which is more dark). 
-The choice to use a "local MQTT broker" or an "external MQTT broker" is defined in this line of the micropython script (line 60):
+The choice to use a "local MQTT broker" or an "external MQTT broker" is defined in this line of the micropython script:
 ```
-	use_local_broker = True # Use the BROKER running on a local PC (in my case a Raspberry Pi Compute Module 5).
+	60 use_local_broker = True # Use the BROKER running on a local PC (in my case a Raspberry Pi Compute Module 5).
 ```
 The "publisher_id" and "subscriber_id" are also defined in the file "secrets.json". They are read into the script as follows:
 ```
@@ -194,7 +194,7 @@ If you put an SD-card into your Presto, this micropython script will start loggi
 ```
 Beside these type of logfiles there exists also an "err.log" file in the root folder of the filesystem of the Presto.
 
-Example of the file: "mqtt_latest_log_fn.txt":
+Example of the contents of the file: "mqtt_latest_log_fn.txt":
 ```
 	mqtt_log_2025-07-20T172657.txt
 ```
