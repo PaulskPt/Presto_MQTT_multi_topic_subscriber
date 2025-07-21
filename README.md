@@ -29,7 +29,7 @@ You need to have installed on your PC:
 
 # MQTT message content
 
-The structure for the MQTT message payload is shown below. Except for the members "timestampStr" and "timestamp" the structure members are used in the MQTT messages that my MQTT Publisher device sends. This structure I copied from the firmware for an Unexpected Maker SQUiXL device.
+The structure for the MQTT message payload is shown below. Except for the members "timestampStr" and "timestamp" the structure members are used in the MQTT messages that my MQTT Publisher device sends. This structure I copied from the firmware for an Unexpected Maker SQUiXL device, however I added three members.
 
 ```
 struct MQTT_Payload
