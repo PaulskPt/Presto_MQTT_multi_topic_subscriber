@@ -11,11 +11,11 @@ For a successful MQTT communication you need:
 
 How to install?
 
-Download the latest version of Pimoroni [Presto FW](https://github.com/pimoroni/presto/releases/tag/v0.1.0). Flash this firmware onto your Presto. This can be done from within the Thonny IDE. Copy the files of this repo from the subfolders [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Subscriber) to a folder of your preference, for example: 
+Download the latest version of Pimoroni [Presto FW](https://github.com/pimoroni/presto/releases/tag/v0.1.0). Flash this firmware onto your Presto. This can be done from within the Thonny IDE. For this subscriber device, copy the files of this repo from these subfolders [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Subscriber) to a folder of your preference, for example: 
 ```
 C:\<Users>\<User>\Documents\Hardware\Pimoroni\Presto\Micropython\mqtt\
 ```
-Copy the files of this repo from the subfolders [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Publisher) to a folder of your preference, for example: 
+For the Publisher device, copy the files of this repo from these subfolders [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Publisher) to a folder of your preference, for example: 
 ```
 C:\<Users>\<User>\Documents\Arduino\Feather_ESP32_S3_TFT_MQTT_multi_topic\
 ```
@@ -35,6 +35,8 @@ This structure I copied from the firmware for a Unexpected Maker SQUiXL device.
 ```
 struct MQTT_Payload
 {
+	define SECRET_SSID "<Your_WiFi_SSID_here>"
+	#define SECRET_PASS "<Your_WiFi_Password_here>"
 	std::string owner = "";
 	std::string device_class = "";
 	std::string state_class = "";
