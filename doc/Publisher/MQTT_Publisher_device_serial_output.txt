@@ -1,7 +1,7 @@
 Sunday 2025-07-20 11h57 utc+1
 board: Adafruit Feather ESP32-S3 TFT
 IDE: Arduino v2.3.5
-Sketch: Feather_ESP32_S3_TFT_MQTT_multi_msg_type_without_debug.ino
+Sketch: Feather_ESP32_S3_TFT_MQTT_multi_topic.ino
 
 Notes: 1) moved global variable "remote_led_is_on" from function send_msg()  to function handleButtonPress()
        2) in function handleButtonPress added print statements to show the (altered) state of the global variable
