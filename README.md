@@ -176,7 +176,8 @@ To have the Publisher device be able to connect to the internet, to get, at inte
 #define SECRET_DISPLAY_AWAKETIME "8"   // Feather display wakeup time
 ```
 - Debug output
-  If you want debug serial output, change these lines:
+  
+  If you want debug serial output, change these lines and build the sketch again:
   ```
 	62 #ifdef MY_DEBUG         into:     62 #ifndef MY_DEBUG
 	63 #undef MY_DEBUG                   63 #define MY_DEBUG
