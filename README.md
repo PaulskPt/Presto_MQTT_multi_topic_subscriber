@@ -71,7 +71,7 @@ owner        -> ow
 description  -> de
 device_class -> dc
 state_class  -> sc     and its class "measurement" -> "meas"
-value_type   -> vt     and the value_type "float"  -> "f"
+value_type   -> vt     and the value_type "float"  -> "f", "integer" -> "i", "string" -> "s" and "boolean" -> "b"
 timestamp    -> ts
 ```
 In case of a MQTT message with topic: "sensor/Feath/ambient"
