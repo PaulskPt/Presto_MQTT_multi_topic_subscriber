@@ -47,7 +47,7 @@ You need to have installed on your PC:
 
 ### installing files onto your Presto Subscriber device
 
-Before going to copy files from this repo to your Presto I advise you to first edit the file "secrets.json". 
+Before going to copy files from this repo to your Presto I advise you to first edit the file "\src\Subscriber\secrets.json". 
 
 In the section with the key "wifi" fill-in your Wi-Fi SSID and your W-Fi Password.
 ```
