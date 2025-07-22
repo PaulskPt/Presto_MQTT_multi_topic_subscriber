@@ -89,7 +89,7 @@ four nested Json objects for each (term) of the BME280 sensor: "temperature", "p
 In case of a MQTT message with topic: "lights/Feath/toggle"
 the only nested Json object contains, for example: 
 ```
-  	[...]"toggle":{"v":1,"u":"i","mn":1,"mx":0}}, 
+  	[...]"toggle":{"v":1,"u":"i","mn":0,"mx":1}}, 
 ```
 where "v":1 stands for Toggle leds ON.
 
