@@ -16,7 +16,7 @@ For a successful MQTT communication you need:
 - a MQTT Broker device. This can be an online broker or a Broker device in your Local Area Network (LAN). I prefered the latter. In my case: a Raspberry Pi Compute Module 5.
 - one or more MQTT Subscriber device(s). This repo is intended to use a Pimoroni Presto as MQTT Subscriber device.
 
-How to install?
+## How to install?
 
 Download the latest version of Pimoroni [Presto FW](https://github.com/pimoroni/presto/releases/tag/v0.1.0). Flash this firmware onto your Presto. This can be done from within the Thonny IDE. For this subscriber device, copy the files of this repo from these subfolders [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Subscriber) to a folder of your preference, for example: 
 ```
@@ -157,7 +157,7 @@ In case the Arduino sketch of the Publisher device encounters that it cannot rea
 
 The source of the Arduino sketch for the MQTT Publisher device is [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Publisher)
 
-# File secrets.h (for the MQTT Publisher device)
+## File secrets.h (for the MQTT Publisher device)
 
 To have the Publisher device be able to connect to the internet, to: a) get, at intervals, a Unixtime datetime stamp from an NTP server; b) send MQTT messages to the MQTT Broker, you have to fill-in the WiFi SSID and PASSWORD. Further you can change the following settings in the file secrets.h:
 
@@ -237,7 +237,7 @@ Example of the contents of the current log showed after a KeyboardInterrupt:
 	58 my_debug = False
 ```
 
-# File secrets.json (for the MQTT Subscriber device)
+## File secrets.json (for the MQTT Subscriber device)
 ```
 {
   "mqtt": {
@@ -297,9 +297,9 @@ The joystick is not used yet. The buttons are defined as follows:
 +----------+-----------------------------------------------+
 ```
 
-# Hardware used:
+# Hardware used
 
-For the MQTT Publisher device: Adafruit Feather ESP32-S3 TFT [info](https://www.adafruit.com/product/5483);
+### For the MQTT Publisher device: Adafruit Feather ESP32-S3 TFT [info](https://www.adafruit.com/product/5483);
 
 Accessories for the MQTT Publisher device:
 Equipment connected to the Publisher device:
@@ -307,24 +307,26 @@ Equipment connected to the Publisher device:
 - M5Stack Unit-RTC [info](https://docs.m5stack.com/en/unit/UNIT%20RTC);
 - M5Stack Grove Hub [info](https://shop.m5stack.com/products/mini-hub-module)
 
-For the MQTT Broker device:
+### For the MQTT Broker device:
 - a Raspberry Pi Compute Module 5 [info](https://www.raspberrypi.com/products/compute-module-5/?variant=cm5-104032);
 - a Raspberry Pi Compute Module IO Board [info](https://thepihut.com/products/raspberry-pi-compute-module-5-io-board)
 - a case for the Raspberry Pi Compute Module 5 [info](https://thepihut.com/products/raspberry-pi-compute-module-5-io-case)
 
-For the MQTT Subscriber device:
+### For the MQTT Subscriber device:
 - Pimoroni Presto device: [info](https://shop.pimoroni.com/products/presto?variant=54894104019323).
 
-# Publisher device and accessories
+# Publisher device and accessories wiring
+
 For an image of the I2C wiring see [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/images/20250720_202423_hardware.png). Note that this is an edited image. There was another device on the breadboard. I covered that part to not confuse the image with the unused device.
 
-# Known problems:
+# Known problems
 
+### DC Power 
 My advise for the Publisher device: the Adafruit Feather ESP32-S3 TFT (and probably any other device used as MQTT Publisher device) and also the attached BME280 sensor, it is really necessary to use a 5,1 Volt DC power source of good quality. My experience is at this hardware / this sensor needs at least 5,1 Volt DC. For example: the USB port of my desktop PC delivered 5,132 Volt DC. That was OK. I also used an original Raspberry Pi 5,1 Volt DC power apdapter. That was also OK. When I used a power source that delivered 5,058 Volt DC, that was not insufficient. At times the BME280 was not recognized and at times the MQTT Publisher device sent messages containing a wrong NTP Unixtime value as MsgID. When using a good quality 5,1 Volt DC power supply, the MQTT Publisher device runs many hours without problem, resulting in the MQTT Broker receiving MQTT message correctly and the MQTT Subscriber device(s) do the same.
 
- Note about connecting 3 external devices to the same I2C bus:
+### I2C bus - connecting 3 external devices to the same I2C bus
  
- Devices: 
+ #### Devices
   - M5Stack M5Unit-RTC (Address 0x51);
   - Pimoroni multi-sensor-stick, ambient sensor BME280 (Address 0x76);
   - Adafruit Gamepad QT (Address: 0x50).
