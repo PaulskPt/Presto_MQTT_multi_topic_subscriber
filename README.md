@@ -63,7 +63,7 @@ In the section with the key "mqtt" enter:
   "mqtt": {
     "use_local_broker" : 1,                (Note: 1 for local Broker, 0 for remote Broker)
     "broker_local" : "192.168.0.215",      (Note: example address)
-    "broker_external": "5.196.78.28",      (Note.: address of mosquitto.org)
+    "broker_external": "5.196.78.28",      (Note.: address of mosquitto.org MQTT test server)
    [...]
 }
 ```
