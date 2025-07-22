@@ -4,6 +4,11 @@
 
 by Paulus Schulinck (Github handle: @PaulskPt)
 
+## What is it?
+- Receiving, interpreting and displaying ambient data as temperature, pressure and humidity from a remote ambient sensor,
+- executing commands from a remote control device,
+- by means of MQTT messages.
+
 If you do not know what is the MQTT communication protocol see: [MQTT](https://en.wikipedia.org/wiki/MQTT).
 
 For a successful MQTT communication you need: 
