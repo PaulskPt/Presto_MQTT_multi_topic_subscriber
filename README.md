@@ -115,7 +115,7 @@ Each nested Json object has the same definition:
 ```
 
 Here is an example of the contents of a MQTT message with topic "sensors/Feath/ambient"
-my MQTT Publisher device sends every minute:
+my MQTT Publisher device sends, by default, every minute:
 
 ```
 	{"ow":"Feath","de":"PC-Lab","dc":"BME280","sc":"meas","vt":"f","ts":1752189817,
