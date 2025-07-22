@@ -303,6 +303,13 @@ For the ambient lights of the Presto, in this repo, the following colors are def
 ```
 # MQTT Publisher (other functionalities)
 
+## Settings in file secrets.h
+
+Choose the kind of MQTT Broker you want to use. Set it in this line: 
+```
+	#define SECRET_USE_BROKER_LOCAL "1"             (Note: 1 for local Broker, 0 for remote Broker)
+```
+
 To build and upload the Arduino sketch for the MQTT Publisher device I used the Arduino IDE v2.3.5. In the Arduino sketch for the MQTT Publisher (Adafruit Feather ESP32-S3 TFT board) I added functionality to set the display to "sleep" at a time defined in the file ```secrets.h```. In this moment 23h. And a "wakeup" time. In this moment 8h. See in the file secrets.h: 
 ```
 #define SECRET_DISPLAY_SLEEPTIME "23"  // Feather display going to sleep (black) time
@@ -323,6 +330,7 @@ To have the Publisher device be able to connect to the internet, to: a) get, at 
 #define SECRET_PASS "<Your_WiFi_Password_here>"
 #define SECRET_TIMEZONE_OFFSET "1" // Europe/Lisbon (UTC offset in hours)
 // #define TIMEZONE_OFFSET "-4" // America/New_York
+#define SECRET_USE_BROKER_LOCAL "1"  // We usa a local MQTT broker
 #define SECRET_NTP_SERVER1 "1.pt.pool.ntp.org"
 #define SECRET_MQTT_BROKER "5.196.78.28" // test.mosquitto.org"
 #define SECRET_MQTT_BROKER_LOCAL1 "192.168._.___"  // Your Local mosquitto broker app on PC ____
