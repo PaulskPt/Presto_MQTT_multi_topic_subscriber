@@ -26,7 +26,7 @@ For a successful MQTT communication you need:
 ## How to install?
 ### for the Subscriber device
 
-Download the latest version of Pimoroni [Presto FW](https://github.com/pimoroni/presto/releases/tag/v0.1.0). You have two options: download micropython with filesystem (examples etcetera), filename: "presto-v0.1.0-micropython-with-filesystem.uf2" or without filesystem, filename: "presto-v0.1.0-micropython.uf2". Flash the .uf2 file of your choice onto your Presto. You can do this easily by bringing the Presto in download mode by pressing and holding the "Boot" button, then pressing and releasing the "reset" button and next releasing the "Boot" button. If you did this well a disk (for example D:) will appear in the file manager of your PC. In Linux systems there will eppear a disk icon on your desktop. On MS Windows PCs there will popup a window with the name (for example) "RP2350 (D:)". Now you can copy (for example by "dragging" and "dropping") the downloaded .uf2 file onto the "RP2350 (D:)" window. When the copy process has been completed the popup window will disappear from your desktop. Next press the "Reset" button of the Presto.
+Download the latest version of Pimoroni [Presto FW](https://github.com/pimoroni/presto/releases/tag/v0.1.0). You have two options: download micropython with filesystem (examples etcetera), filename: "presto-v0.1.0-micropython-with-filesystem.uf2" or without filesystem, filename: "presto-v0.1.0-micropython.uf2". Flash the .uf2 file of your choice onto your Presto. You can do this easily by bringing the Presto in download mode by pressing and holding the "BOOT" button, then pressing and releasing the "RESET" button and next releasing the "BOOT" button. If you did this well a disk (for example D:) will appear in the file manager of your PC. In Linux systems there will eppear a disk icon on your desktop. On MS Windows PCs there will popup a window with the name (for example) "RP2350 (D:)". Now you can copy (for example by "dragging" and "dropping") the downloaded .uf2 file onto the "RP2350 (D:)" window. When the copy process has been completed the popup window will disappear from your desktop. Next press the "RESET" button of the Presto.
 
 Next step, for this subscriber device, copy the files of this repo from these subfolders [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Subscriber) to a folder of your preference, for example: 
 ```
@@ -47,7 +47,7 @@ You need to have installed on your PC:
 
 ### installing files onto your Presto Subscriber device
 
-Before going to copy files from this repo to your Presto I advise you to first edit the file "secrets.json". 
+Before going to copy files from this repo to your Presto I advise you to first edit the file "\src\Subscriber\secrets.json". 
 
 In the section with the key "wifi" fill-in your Wi-Fi SSID and your W-Fi Password.
 ```
@@ -63,10 +63,10 @@ In the section with the key "mqtt" enter:
   "mqtt": {
     "use_local_broker" : 1,                (Note: 1 for local Broker, 0 for remote Broker)
     "broker_local" : "192.168.0.215",      (Note: example address)
-    "broker_external": "5.196.78.28",      (Note.: address of mosquitto.org)
+    "broker_external": "5.196.78.28",      (Note.: address of mosquitto.org MQTT test server)
    [...]
 }
-
+```
 If your Presto is connected to your PC, disconnect it. If you are going to use an SD-Card it is a good moment to insert the SD-Card into the SD-slot of your Presto.
 If you are using the Thonny IDE, start Thonny. In the "View" menu select "Files". A window in the left side of the Thonny IDE window will appear. 
 Connect your Presto to your PC using a good quality USB-A to USB-C cable. The Presto will boot and will show its opening screen, a carrousel of application icons. Now stop the execution of the running main.py program on the Presto by pressing on the red "STOP" button in the top left side of the window of the Thonny app.
@@ -133,7 +133,29 @@ If, in the "Raspberry Pi Pico" files window part, are not yet present the two di
 
 Next right-click on your mouse. In the small window that pops up, select the menu-item: "New directory". Next type the directory name, for example "lib" or "sd". Then click on "OK". Do this, when necessary, for both directories as shown in the files structure above. Note that the Thonny Shell window only shows "%cd /" or "%cd /lib" or "%cd /sd" for activities inside the "Raspberry Pi Pico" files window part. This will not happen when you move between directories in the "This computer" files window part.
 Now copy all files from the "This computer" files window part to their respective directories (root, /lib or /sd) of the "Raspberry Pi Pico" files window part.
-When you have copied all the files from this repo, part /src/Subscriber/ to the Pimoroni Presto, you can reboot the Presto. After the Presto has been booted an image of a "carrousel" of icons is shown. Tap six times onto the icon shown in the right corner of the display, then you should see an icon with below it the title "Mqtt Presto V3". Tap on this icon to start this micropython script. For some seconds you will see a black screen. The script has to do various checks. Then will appear a first screen with a black background and the following text in navy blue color:
+When you have copied all the files from this repo, part /src/Subscriber/ to the Pimoroni Presto, you can reboot the Presto. After the Presto has been booted an image of a "carrousel" of icons is shown. Tap six times onto the icon shown in the right corner of the display, then you should see an icon with below it the title "Mqtt Presto V3" [photo](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/images/Subscriber/20250721_013544.jpg). Tap on this icon to start this micropython script. For some seconds you will see a black screen. The script has to do various checks, load secret.json, establish Wi-Fi communication. Establish communication with the Broker of your choice. In the "Shell" window of Thonny will appear serial output, like this:
+```
+>>> %Run -c $EDITOR_CONTENT
+
+MPY: soft reboot
+global(): error class object created. It is of class: <class 'ERR'>
+Using local Broker
+main(): Connecting to WiFi...
+main(): WiFi connected.
+setup(): Switching backlight neopixel leds off
+NP_clear(): 🌈 ambient neopixels off
+setup(): Connecting to MQTT broker at 192.168._.___ on port 1883
+setup(): Not deleting log files, flag: "delete_logs" = False
+setup(): Successfully connected to MQTT broker.
+setup(): Subscribed to topic: "sensors/Feath/ambient"
+setup(): Subscribed to topic: "lights/Feath/toggle"
+setup(): Subscribed to topic: "lights/Feath/color_inc"
+setup(): Subscribed to topic: "lights/Feath/color_dec"
+draw(): hh = 0
+--------------------------------------------------
+```
+
+Then will appear a first screen with a black background and the following text in navy blue color (see: [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/images/Subscriber/20250722_100733.jpg)):
 ```
 	mqtt
 	waiting for
@@ -142,7 +164,8 @@ When you have copied all the files from this repo, part /src/Subscriber/ to the 
 	wi-fi OK
 	mqtt OK
 ```
-This screen will be replaced a screen with text in yellow color (during daylight hours) as soon as the Presto has received the first MQTT message.
+As soon as the Presto has received the first MQTT message, a new screen will appear with text in yellow color during daylight hours or in navy blue during night hours.
+See [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/images/Subscriber/20250722_100834.jpg).
 
 
 # MQTT message content
