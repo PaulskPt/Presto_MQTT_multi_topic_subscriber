@@ -1,13 +1,17 @@
 # 2025-06-17 Downloaded from: https://github.com/digitalurban/Presto_MQTT_Display/blob/main/mqtt_presto.py
 # by Andy Hudson-Smith going by @digitalurban
 # Changes by Paulus Schulinck going by @PaulskPt
-# Version 3.0  created on 2026-07-19. Includes handling mqtt messages with topics lights/Feath/toggle, lights/Feath/color_inc and lights/Feath/color_dec
-#                                     Added functions to control the 8 ambient backlight LEDs.
+# Version 3.0  created on 2026-07-19.
+# Includes handling mqtt messages with topics:
+#         sensors/Feath/ambient,
+#         lights/Feath/toggle,
+#         lights/Feath/color_inc and
+#         lights/Feath/color_dec
+# Added functions to control the 7 ambient backlight LEDs
+# by means of MQTT messages sent by a remote MQTT Publisher device.
 #
 import ujson
-#import ubinascii
 import utime
-from datetime import datetime, timezone, timedelta
 from presto import Presto
 from umqtt.simple import MQTTClient
 import os
@@ -15,13 +19,6 @@ import sys # See: https://github.com/dhylands/upy-examples/blob/master/print_exc
 import time
 import exc # own ERR class to print errors to a log file
 from random import randint
-
-use_peterhinch_mqtt = False
-
-if use_peterhinch_mqtt:
-    # The next import needed for connecting to a mqtt server on PC Paul5
-    # import mqtt_as.range
-    from mqtt_as import config
 
 """
    deliveryComplete(IMqttDeliveryToken token) is called when the broker successfully gets your message published,
@@ -39,6 +36,7 @@ WIDTH, HEIGHT = display.get_bounds()
 BRIGHTNESS = 0.17 # The brightness of the LCD backlight (from 0.0 to 1.0)
 display.set_backlight(BRIGHTNESS)
 
+
 # Couple of colours for use later
 BLACK = display.create_pen(0, 0, 0)
 NAVY = display.create_pen(0, 0, 128)
@@ -54,7 +52,6 @@ presto.update()
 
 my_debug = False
 delete_logs = False
-use_local_broker = True # Use the BROKER running on the local MS Windows desktop PC
 msg_rcvd = False
 mqtt_connected = False # Flag to indicate if the MQTT client is connected   
 
@@ -75,9 +72,7 @@ datetime_empty = "0000-00-00T00:00:00"
 publisher_datetime = None
 publisher_time = None
 publisher_msgID = None
-timezone_offset_hrs = None
-timezone_offset_secs = None
-msg_epoch_lowest = None
+
 NUM_LEDS = 7  # bl ambient neopixel leds
 lights_ON = False # light toggle flag
 lights_ON_old = False # remember light toggle flag state
@@ -114,15 +109,17 @@ if err and not my_debug :
 # Get the external definitions
 with open('secrets.json') as fp:
     secrets = ujson.loads(fp.read())
-    
+
+# MQTT setup
+use_local_broker = secrets['mqtt']['use_local_broker']
+#print(f"type(use_local_broker) = {type(use_local_broker)}")
 if use_local_broker:
     print("Using local Broker")
 else:
     print("Using external Broker")
 
-# MQTT setup
 if use_local_broker:
-    BROKER = secrets['mqtt']['broker_local1']  # Use the mosquitto broker app on the RaspberryPi CM5
+    BROKER = secrets['mqtt']['broker_local']  # Use the mosquitto broker app on the RaspberryPi CM5
 else:
     BROKER = secrets['mqtt']['broker_external']
 PORT = int(secrets['mqtt']['port'])
@@ -135,13 +132,6 @@ for i in range(4):
 
 CLIENT_ID = bytes(secrets['mqtt']['client_id'], 'utf-8')
 PUBLISHER_ID = secrets['mqtt']['publisher_id']
-timezone_offset_hrs = secrets['timezone']['utc_offset_in_hrs']
-timezone_offset_secs = secrets['timezone']['utc_offset_in_secs']
-if use_peterhinch_mqtt:
-    config['server'] = secrets['mqtt']['local_server']  # e.g.: 192.168._.__. Change to suit e.g. 'iot.eclipse.org'
-    # Required on Pyboard D and ESP32. On ESP8266 these may be omitted (see above).
-    config['ssid'] = secrets['wifi']['ssid']
-    config['wifi_pw'] = secrets['wifi']['pass']
 
 if my_debug:
     print(f"BROKER = {BROKER}")
@@ -150,9 +140,6 @@ if my_debug:
       print(f"TOPIC_LST[{i}] = {TOPIC_LST[i]}")
     print(f"CLIENT_ID = {CLIENT_ID}")
     print(f"PUBLISHER_ID = {PUBLISHER_ID}")
-    print(f"timezone_offset_hrs = {timezone_offset_hrs}")
-    print(f"timezone_offset_secs = {timezone_offset_secs}")    
-    
 
 # Test the existance of a logfile
 log_fn = None # Note: log_fn is set in the function create_logfile()
@@ -1025,10 +1012,10 @@ def split_msg():
             """ 
             Example output of code below:
             split_msg(): toggle payload.keys() = dict_keys(['u', 'mx', 'mn', 'v'])
-            split_msg(): toggle payload.items() = dict_items([('u', 'i'), ('mx', 1), ('mn', 0), ('v', 0)])
+            split_msg(): toggle payload.items() = dict_items([('u', 'i'), ('mx', 0), ('mn', 1), ('v', 0)])
             split_msg():  key =  u, data =  i
-            split_msg():  key = mx, data =  1
-            split_msg():  key = mn, data =  0
+            split_msg():  key = mx, data =  0
+            split_msg():  key = mn, data =  1
             split_msg():  key =  v, data =  0
             """
             toggle_mx_val = None
@@ -1150,7 +1137,7 @@ def get_payload_member(key):
 
 
 def draw(mode:int = 1):
-    global payload_txt, payloadLst, msg_epoch_lowest, msg_drawn, Publisher_ID, publisher_time, publisher_msgID, topic_idx, lights_ON, lights_ON_old
+    global payload_txt, payloadLst, msg_drawn, Publisher_ID, publisher_time, publisher_msgID, topic_idx, lights_ON, lights_ON_old
     TAG = "draw(): "
     time_draw = "--:--:--" # Also used for setting the day or night text colour
     time_draw_hh = 0
