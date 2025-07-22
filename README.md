@@ -7,7 +7,7 @@ If you do not know what is the MQTT communication protocol see: [MQTT](https://e
 For a successful MQTT communication you need: 
 - a MQTT Publisher device. In my case: an Adafruit Feather ESP32-S3 TFT board;
 - a MQTT Broker device. This can be an online broker or a Broker device in your Local Area Network (LAN). I prefered the latter. In my case: a Raspberry Pi Compute Module 5.
-- one or more MQTT Subscriber device(s). This repo is intended to use a Pimoroni Presto as subscriber device.
+- one or more MQTT Subscriber device(s). This repo is intended to use a Pimoroni Presto as MQTT Subscriber device.
 
 How to install?
 
