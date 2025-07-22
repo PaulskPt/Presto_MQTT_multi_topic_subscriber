@@ -1044,14 +1044,14 @@ def split_msg():
                   value = int(data)
                 lights_ON = True if value == 1 else False # set the global lights_ON flag
                 if lights_ON != lights_ON_old:  # Only change if value differs from last received value
-                    print(TAG+f"Toggling backlight neopixel leds {'on' if lights_ON == True else 'off'}")
+                    print(TAG+f"Toggling ambient light neopixel leds {'on' if lights_ON == True else 'off'}")
                     #lights_ON_old = lights_ON
                     if not lights_ON:
                       NP_clear()  # Switch bl leds off
                     else:
                       NP_color()  # Switch bl leds on and set color of lightsColorIdx
                 else:
-                    print(TAG+f"Not toggling backlight neopixel leds. lights_ON = {lights_ON}, lights_ON_old = {lights_ON_old}")
+                    print(TAG+f"Not toggling ambient light neopixel leds. lights_ON = {lights_ON}, lights_ON_old = {lights_ON_old}")
         elif topicIdx == 2: # lights/Feath/color_inc
             colorInc = payload.get("colorInc")
             if my_debug:
@@ -1352,7 +1352,7 @@ def setup():
         create_err_log_file()
     """
     
-    print(TAG+"Switching backlight neopixel leds off")
+    print(TAG+"Switching ambient light neopixel leds off")
     lights_ON = False
     lights_ON_old = False
     NP_clear()
