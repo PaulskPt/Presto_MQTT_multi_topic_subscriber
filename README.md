@@ -152,7 +152,7 @@ The source of the Arduino sketch for the MQTT Publisher device is [here](https:/
 
 # File secrets.h (for the MQTT Publisher device)
 
-To have the Publisher device be able to connect to the internet, to get, at intervals, a Unixtime datetime stamp from an NTP server, you have to fill-in the WiFi SSID and PASSWORD. Further you can change the following settings in the file secrets.h:
+To have the Publisher device be able to connect to the internet, to: a) get, at intervals, a Unixtime datetime stamp from an NTP server; b) send MQTT messages to the MQTT Broker, you have to fill-in the WiFi SSID and PASSWORD. Further you can change the following settings in the file secrets.h:
 
 ```
 #define SECRET_SSID "<Your_WiFi_SSID_here>"
