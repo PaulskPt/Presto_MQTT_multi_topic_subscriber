@@ -29,7 +29,7 @@ You need to have installed on your PC:
 
 # MQTT message content
 
-The structure for the MQTT message payload is shown below. Except for the members "timestampStr" and "timestamp" the structure members are used in the MQTT messages that my MQTT Publisher device sends. This structure I copied from the firmware for an Unexpected Maker SQUiXL device, however I added three members.
+The structure for the MQTT message payload is shown below. Except for the members "timestampStr" and "timestamp" the structure members are used in the MQTT messages that the MQTT Publisher device sends. This structure I copied from the firmware for an Unexpected Maker SQUiXL device, however I added three members.
 
 ```
 struct MQTT_Payload
@@ -63,7 +63,7 @@ To keep the length of the payload of the MQTT messages under 256 bytes, I have c
 Why keep the payload length under 256 bytes? 
 
 I had a problem when using a Pimoroni Presto device as Subscriber device, which uses Micropython.
-I discovered that MQTT messages received were cutoff. Initially my MQTT Publisher device sent messages with full names of the structure shown above, which made the payload longer than 256 bytes. That is why I decided to abbreviate the names. I managed to reduce the payload length to less than 256 bytes. Since then the MQTT messages sent by the MQTT Publisher device were received complete.
+I discovered that MQTT messages received were cutoff. Initially the MQTT Publisher device sent messages with full names of the structure shown above, which made the payload longer than 256 bytes. That is why I decided to abbreviate the names. I managed to reduce the payload length to less than 256 bytes. Since then the MQTT messages sent by the MQTT Publisher device were received complete.
 
 ```
 In the "doc" section:
@@ -115,7 +115,7 @@ Each nested Json object has the same definition:
 ```
 
 Here is an example of the contents of a MQTT message with topic "sensors/Feath/ambient"
-my MQTT Publisher device sends, by default, every minute:
+the MQTT Publisher device sends, by default, every minute:
 
 ```
 	{"ow":"Feath","de":"PC-Lab","dc":"BME280","sc":"meas","vt":"f","ts":1752189817,
