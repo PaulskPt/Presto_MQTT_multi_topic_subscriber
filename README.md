@@ -135,7 +135,7 @@ the only nested Json object, name "colorDec", contains, for example:
 
 Each nested Json object has the same definition:
 ```
-	"sensor_value"        -> "v"
+	"value"               -> "v"
 	"unit_of_measurement" -> "u"
 	"minimum_value"       -> "mn"
 	"maximum_value"       -> "mx"
