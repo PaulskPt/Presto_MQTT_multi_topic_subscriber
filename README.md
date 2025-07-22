@@ -155,7 +155,7 @@ draw(): hh = 0
 --------------------------------------------------
 ```
 
-Then will appear a first screen with a black background and the following text in navy blue color (see: [here]()):
+Then will appear a first screen with a black background and the following text in navy blue color (see: [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/images/Subscriber/20250722_100733.jpg)):
 ```
 	mqtt
 	waiting for
