@@ -45,7 +45,7 @@ You need to have installed on your PC:
 
 # MQTT message content
 
-The MQTT messages are defined in a Json format. The messages that my Publisher device sends contain one main Json object with the name "doc". Here is an example of the contents of this main Json object:
+The MQTT messages are defined in a Json format. The messages that my Publisher device sends contain a "topic name", for example: "sensors/Feath/ambient" as "message heading" and a "payload" part, containing one main Json object with the name "doc". Here is an example of the contents of this main Json object:
 ```
 	{"ow":"Feath","de":"PC-Lab","dc":"BME280","sc":"meas","vt":"f","ts":1753098395,[...]}
 ```
