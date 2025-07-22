@@ -165,7 +165,8 @@ Then will appear a first screen with a black background and the following text i
 	mqtt OK
 ```
 As soon as the Presto has received the first MQTT message, a new screen will appear with text in yellow color during daylight hours or in navy blue during night hours.
-See [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/images/Subscriber/20250722_100733.jpg).
+See [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/images/Subscriber/20250722_100834.jpg).
+
 
 # MQTT message content
 
