@@ -75,7 +75,8 @@ value_type   -> vt     and the value_type "float"  -> "f", "integer" -> "i", "st
 timestamp    -> ts     value: an unsigned long integer, in fact a unixtime (in local time)
 ```
 In case of a MQTT message with topic: "sensor/Feath/ambient"
-In the MQTT "payload" with name "reads" there are:
+
+The "payload" part of the MQTT message is a nested Json object with name "reads". Inside this object there are
 four nested Json objects for each (term) of the BME280 sensor: "temperature", "pressure", "altitude" and "humidity":
 
 ```
