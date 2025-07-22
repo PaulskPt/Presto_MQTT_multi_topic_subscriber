@@ -133,7 +133,29 @@ If, in the "Raspberry Pi Pico" files window part, are not yet present the two di
 
 Next right-click on your mouse. In the small window that pops up, select the menu-item: "New directory". Next type the directory name, for example "lib" or "sd". Then click on "OK". Do this, when necessary, for both directories as shown in the files structure above. Note that the Thonny Shell window only shows "%cd /" or "%cd /lib" or "%cd /sd" for activities inside the "Raspberry Pi Pico" files window part. This will not happen when you move between directories in the "This computer" files window part.
 Now copy all files from the "This computer" files window part to their respective directories (root, /lib or /sd) of the "Raspberry Pi Pico" files window part.
-When you have copied all the files from this repo, part /src/Subscriber/ to the Pimoroni Presto, you can reboot the Presto. After the Presto has been booted an image of a "carrousel" of icons is shown. Tap six times onto the icon shown in the right corner of the display, then you should see an icon with below it the title "Mqtt Presto V3". Tap on this icon to start this micropython script. For some seconds you will see a black screen. The script has to do various checks. Then will appear a first screen with a black background and the following text in navy blue color:
+When you have copied all the files from this repo, part /src/Subscriber/ to the Pimoroni Presto, you can reboot the Presto. After the Presto has been booted an image of a "carrousel" of icons is shown. Tap six times onto the icon shown in the right corner of the display, then you should see an icon with below it the title "Mqtt Presto V3". Tap on this icon to start this micropython script. For some seconds you will see a black screen. The script has to do various checks, load secret.json, establish Wi-Fi communication. Establish communication with the Broker of your choice. In the "Shell" window of Thonny will appear serial output, like this:
+```
+>>> %Run -c $EDITOR_CONTENT
+
+MPY: soft reboot
+global(): error class object created. It is of class: <class 'ERR'>
+Using local Broker
+main(): Connecting to WiFi...
+main(): WiFi connected.
+setup(): Switching backlight neopixel leds off
+NP_clear(): 🌈 ambient neopixels off
+setup(): Connecting to MQTT broker at 192.168._.___ on port 1883
+setup(): Not deleting log files, flag: "delete_logs" = False
+setup(): Successfully connected to MQTT broker.
+setup(): Subscribed to topic: "sensors/Feath/ambient"
+setup(): Subscribed to topic: "lights/Feath/toggle"
+setup(): Subscribed to topic: "lights/Feath/color_inc"
+setup(): Subscribed to topic: "lights/Feath/color_dec"
+draw(): hh = 0
+--------------------------------------------------
+```
+
+Then will appear a first screen with a black background and the following text in navy blue color (see: [here]()):
 ```
 	mqtt
 	waiting for
@@ -142,8 +164,8 @@ When you have copied all the files from this repo, part /src/Subscriber/ to the 
 	wi-fi OK
 	mqtt OK
 ```
-This screen will be replaced a screen with text in yellow color (during daylight hours) as soon as the Presto has received the first MQTT message.
-
+As soon as the Presto has received the first MQTT message, a new screen will appear with text in yellow color during daylight hours or in navy blue during night hours.
+See [here]().
 
 # MQTT message content
 
