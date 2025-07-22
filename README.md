@@ -412,7 +412,7 @@ Example of the contents of the current log showed after a KeyboardInterrupt:
 {
   "mqtt": {
     "use_local_broker" : 1,
-    "broker_local" : "192.168.1.114",
+    "broker_local" : "192.168._.___",
     "broker_external": "5.196.78.28",
     "port": "1883",
     "topic0": "sensors/Feath/ambient",
