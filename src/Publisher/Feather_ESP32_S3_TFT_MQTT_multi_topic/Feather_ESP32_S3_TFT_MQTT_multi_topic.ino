@@ -1,12 +1,10 @@
 /*
   Sunday 2025-06-16 20h07 utc +1
   Adafruit Feather ESP32-S3 TFT MQTT test
-  This sketch is a port from a sketch for an Adafruit Feather ESP32-S3 TFT board to send BME280 sensor data to a MQTT broker
+  This sketch is a port from a sketch for an Adafruit Feather ESP32S3 TFT to send BME280 sensor data to a MQTT broker
   and to receive and display these MQTT messages onto the display of a Pimoroni Presto device.
   Update Saturday 2025-06-28 13h27 utc +1
-  Successfully added neccesary components to comply with the UM SQUiXL system.
-  The MQTT messages are now displayed in the "MQTT Messages" screen of the UM SQUiXL.
-
+  
   Notes about power consumption (2025-07-13):
   When connected to USB (long cable) of a MS Windows 11 desktop PC, the average voltage is 5,124 V.
   The current draw is average 0.069 A however with incidently increased draw up to 0,143 A.
@@ -1708,6 +1706,7 @@ void handleButtonPress(enum Button i)  //static_cast<Button>(i)) {
       //Serial.println(F("Button A pressed"));
       serialPrintf(PSTR("\n%s A %s\n"), txts[0], txts[1]);
       myMsgType = tpah_sensor;
+      Serial.println(F("changing to temperature, pressure, humidity sensor mode"));
       break;
     }
     case BTN_B:
