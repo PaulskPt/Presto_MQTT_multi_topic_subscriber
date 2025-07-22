@@ -175,6 +175,13 @@ To have the Publisher device be able to connect to the internet, to get, at inte
 #define SECRET_DISPLAY_SLEEPTIME "23"  // Feather display going to sleep (black) time
 #define SECRET_DISPLAY_AWAKETIME "8"   // Feather display wakeup time
 ```
+- Debug output
+  If you want debug serial output, change these lines:
+  ```
+	62 #ifdef MY_DEBUG         into:     62 #ifndef MY_DEBUG
+	63 #undef MY_DEBUG                   63 #define MY_DEBUG
+	64 #endif                            64 #endif
+  ```
 
 # MQTT Subscriber 
 The Pimoroni Presto, in the role of MQTT Subscriber, runs on micropython. The firmware is a special version of micropython. See the link above. The micropython script for this Subscriber device "dims" the screen content during night hours by changing the colour from orange to navy blue (which is more dark). 
