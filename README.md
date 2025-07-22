@@ -411,11 +411,8 @@ Example of the contents of the current log showed after a KeyboardInterrupt:
 ```
 {
   "mqtt": {
-    "broker_local0" : "192.168._.__",
-    "broker_local1" : "192.168._.___",           <<<=== This one is used when you opt for a "local Broker". Fill-in the IP-address.
-    "broker_local2" : "curl mqtt://127.0.0.1",
-    "broker_local3" : "curl mqtt://localhost",
-    "local_server" : "192.168._.__",
+    "use_local_broker" : 1,
+    "broker_local" : "192.168.1.114",
     "broker_external": "5.196.78.28",
     "port": "1883",
     "topic0": "sensors/Feath/ambient",
@@ -425,17 +422,9 @@ Example of the contents of the current log showed after a KeyboardInterrupt:
     "client_id":  "PrestoMQTTClient",
     "publisher_id": "Feath"
   },
-  "wifi" : {
-      "ssid" : "<Your WiFi SSID here>",
-      "pass" : "<Your WiFi Password here>"
-  },
-  "timezone" : {
-      "utc_offset_in_hrs" : "1",
-      "utc_offset_in_secs" : "3600"
-  },
-  "mqtt_server" : {
-      "url" : "mqtt://localhost",
-      "url2" : "mqtt://127.0.0.1"
+   "wifi" : {
+      "ssid" : "<Your WiFi SSID>",
+      "pass" : "<Your WiFi Password>"
   }
 }
 ```
