@@ -32,15 +32,12 @@ TAG = "global(): "
 full_res = False
 # Setup for the Presto display
 presto = Presto()
-#presto = Presto(ambient_light=False)
 
 display = presto.display
 WIDTH, HEIGHT = display.get_bounds()
 
 BRIGHTNESS = 0.17 # The brightness of the LCD backlight (from 0.0 to 1.0)
 display.set_backlight(BRIGHTNESS)
-
-
 
 # Couple of colours for use later
 BLACK = display.create_pen(0, 0, 0)
@@ -141,7 +138,7 @@ PUBLISHER_ID = secrets['mqtt']['publisher_id']
 timezone_offset_hrs = secrets['timezone']['utc_offset_in_hrs']
 timezone_offset_secs = secrets['timezone']['utc_offset_in_secs']
 if use_peterhinch_mqtt:
-    config['server'] = secrets['mqtt']['local_server']  # e.g.: 192.168.1.96. Change to suit e.g. 'iot.eclipse.org'
+    config['server'] = secrets['mqtt']['local_server']  # e.g.: 192.168._.__. Change to suit e.g. 'iot.eclipse.org'
     # Required on Pyboard D and ESP32. On ESP8266 these may be omitted (see above).
     config['ssid'] = secrets['wifi']['ssid']
     config['wifi_pw'] = secrets['wifi']['pass']
@@ -1028,10 +1025,10 @@ def split_msg():
             """ 
             Example output of code below:
             split_msg(): toggle payload.keys() = dict_keys(['u', 'mx', 'mn', 'v'])
-            split_msg(): toggle payload.items() = dict_items([('u', 'i'), ('mx', 0), ('mn', 1), ('v', 0)])
+            split_msg(): toggle payload.items() = dict_items([('u', 'i'), ('mx', 1), ('mn', 0), ('v', 0)])
             split_msg():  key =  u, data =  i
-            split_msg():  key = mx, data =  0
-            split_msg():  key = mn, data =  1
+            split_msg():  key = mx, data =  1
+            split_msg():  key = mn, data =  0
             split_msg():  key =  v, data =  0
             """
             toggle_mx_val = None
