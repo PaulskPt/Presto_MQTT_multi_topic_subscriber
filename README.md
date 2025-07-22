@@ -9,6 +9,13 @@ by Paulus Schulinck (Github handle: @PaulskPt)
 - executing commands from a remote control device,
 - by means of MQTT messages.
 
+## MQTT messages come by "topics".
+### This repo works with four different topics:
+- "sensor/Feath/ambient". Containing ambient data from a remote sensor
+- "lights/Feath/toggle". Containing a lights toggle command from a remote controller
+- "ligths/Feath/color_inc". Containing a lights color increase command from a remote controller
+- "lights/Feath/color_dec". Containing a lights color decrease command from a remote controller
+
 If you do not know what is the MQTT communication protocol see: [MQTT](https://en.wikipedia.org/wiki/MQTT).
 
 For a successful MQTT communication you need: 
@@ -17,17 +24,19 @@ For a successful MQTT communication you need:
 - one or more MQTT Subscriber device(s). This repo is intended to use a Pimoroni Presto as MQTT Subscriber device.
 
 ## How to install?
+### for the Subscriber device
 
 Download the latest version of Pimoroni [Presto FW](https://github.com/pimoroni/presto/releases/tag/v0.1.0). Flash this firmware onto your Presto. This can be done from within the Thonny IDE. For this subscriber device, copy the files of this repo from these subfolders [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Subscriber) to a folder of your preference, for example: 
 ```
 C:\<Users>\<User>\Documents\Hardware\Pimoroni\Presto\Micropython\mqtt\
 ```
-For the Publisher device, copy the files of this repo from these subfolders [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Publisher) to a folder of your preference, for example: 
+### for the Publisher device
+Copy the files of this repo from these subfolders [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Publisher) to a folder of your preference, for example: 
 ```
 C:\<Users>\<User>\Documents\Arduino\Feather_ESP32_S3_TFT_MQTT_multi_topic\
 ```
 
-
+### requirements for the development platform
 You need to have installed on your PC: 
 - Thonny IDE or equivalent. Needed for the Pimoroni Presto device.
 - Arduino IDE v2.3.5. Needed for the Adafruit Feather ESP32-S3-TFT device. Do not use the Arduino (Cloud) online IDE because, AFAIK, that limits the possibility to change library files to your needs.
@@ -36,7 +45,12 @@ You need to have installed on your PC:
 
 # MQTT message content
 
-The structure for the MQTT message payload is shown below. Except for the members "timestampStr" and "timestamp" the structure members are used in the MQTT messages that the MQTT Publisher device sends. This structure I copied from the firmware for an Unexpected Maker SQUiXL device, however I added three members.
+The MQTT messages are defined in a Json format. The messages that my Publisher device sends contain one main Json object with the name "doc". Here is an example of the contents of this main Json object:
+```
+	{"ow":"Feath","de":"PC-Lab","dc":"BME280","sc":"meas","vt":"f","ts":1753098395,[...]}
+```
+
+The structure for payload of the MQTT message is shown below. Except for the members "timestampStr" and "timestamp" the structure members are used in the MQTT messages that the MQTT Publisher device sends. This structure I copied from the firmware for an Unexpected Maker SQUiXL device, however I added three members.
 
 ```
 struct MQTT_Payload
@@ -57,11 +71,8 @@ struct MQTT_Payload
 }
   ```
 
-The mqtt messages are defined in a Json format. The messages that my Publisher device sends contain one main Json object "doc". Here is an example of the contents of this main Json object:
-```
-	{"ow":"Feath","de":"PC-Lab","dc":"BME280","sc":"meas","vt":"f","ts":1753098395,[...]}
-```
-Then, depending on the topic, the MQTT messages my Publisher device sends, contain minimum one nested Json object and maximum four nested Json objects.
+
+Depending on the topic, the MQTT messages my Publisher device sends, contain minimum one nested Json object and maximum four nested Json objects.
 The MQTT messages with topic "sensors/Feath/ambient" have four nested Json objects (see below). The other MQTT messages with topics:
 "lights/Feath/toggle", "lights/Feath/color_dec" or "lights/Feath/color_inc", contain one nested Json object (see below).
 
@@ -69,46 +80,55 @@ To keep the length of the payload of the MQTT messages under 256 bytes, I have c
 
 Why keep the payload length under 256 bytes? 
 
-I had a problem when using a Pimoroni Presto device as Subscriber device, which uses Micropython.
-I discovered that MQTT messages received were cutoff. Initially the MQTT Publisher device sent messages with full names of the structure shown above, which made the payload longer than 256 bytes. That is why I decided to abbreviate the names. I managed to reduce the payload length to less than 256 bytes. Since then the MQTT messages sent by the MQTT Publisher device were received complete.
+I had a problem when using a Pimoroni Presto device as Subscriber device, which uses a modified version of Micropython.
+I discovered that MQTT messages received were cutoff. Initially the MQTT Publisher device sent messages with full names of the payload structure shown above, which made the payload longer than 256 bytes. That is why I decided to abbreviate the names. I managed to reduce the payload length to less than 256 bytes. Since then the MQTT messages sent by the MQTT Publisher device were received complete.
 
 ```
-In the "doc" section:
-owner        -> ow     value: e.g.: the board model, in my case: "Feather" -> "feath"
-description  -> de     value: e.g.: the location of the device, in my case: "PC-Lab"
-device_class -> dc     values: "BME280", "HOME", "INC", "DEC"
-state_class  -> sc     values: "measurement" -> "meas", "light" -> "ligh", "increase" -> "inc" and "decrease" -> "dec"
-value_type   -> vt     and the value_type "float"  -> "f", "integer" -> "i", "string" -> "s" and "boolean" -> "b"
-timestamp    -> ts     value: an unsigned long integer, in fact a unixtime (in local time)
+In the Json object "doc" (in other words: "message heading"):
+key: owner        -> ow     value: e.g.: the board model, in my case: "Feather" -> "feath"
+key: description  -> de     value: e.g.: the location of the device, in my case: "PC-Lab"
+key: device_class -> dc     values: "BME280", "HOME", "INC", "DEC"
+key: state_class  -> sc     values: "measurement" -> "meas", "light" -> "ligh", "increase" -> "inc" and "decrease" -> "dec"
+key: value_type   -> vt     values: "float" -> "f", "integer" -> "i", "string" -> "s" and "boolean" -> "b"
+key: timestamp    -> ts     value: an unsigned long integer, in fact a unixtime (in local time)
 ```
 In case of a MQTT message with topic: "sensor/Feath/ambient"
 
 The "payload" part of the MQTT message is a nested Json object with name "reads". Inside this object there are
-four nested Json objects for each (term) of the BME280 sensor: "temperature", "pressure", "altitude" and "humidity":
+four nested Json objects for each (term) of the BME280 sensor: "temperature" (t), "pressure" (p), "altitude" (a)  and "humidity" (h).
+For example:
 
 ```
-	 nested Json object (term) "temperature" -> "t"
-	 nested Json object (term) "pressure"    -> "p"
-	 nested Json object (term) "altitude"    -> "a"
-	 nested Json object (term) "humidity"    -> "h"
+[...], "reads" : {
+	key: "t"  values: {"v":29,"u":"C","mn":-10,"mx":50}
+	key: "p"  values: {"v":1005.6,"u":"mB","mn":800,"mx":1200}
+	key: "a"  values: {"v":63.9,"u":"m","mn":0,"mx":3000}
+	key: "h"  values: {"v":41.7,"u":"%","mn":0,"mx":100}
+	}
+```
+where for key "t" the item "v":29 stands for a temperature of 29 degrees.
+The "u":"C" stands for unit of measurement: degrees centrigrade.
+The "mn":-10 stands for a minimum temperature of minus ten degrees.
+The "mx":50 stands for a maximum temperature of fifty degrees.
+
+In case of a MQTT message with topic: "lights/Feath/toggle",
+containing a lights toggle command,
+the only nested Json object, name "toggle", contains, for example: 
+```
+	[...],"toggle":{"v":1,"u":"i","mn":0,"mx":1}}, 
 ```
 
-In case of a MQTT message with topic: "lights/Feath/toggle"
-the only nested Json object contains, for example: 
-```
-  	[...]"toggle":{"v":1,"u":"i","mn":0,"mx":1}}, 
-```
 where "v":1 stands for Toggle leds ON.
 
 In case of a MQTT message with topic: "lights/Feath/color_inc",
-the only nested Json object contains, for example: 
+the only nested Json object, name "colorInc", contains, for example: 
 ```
   	[...]"colorInc":{"v":4,"u":"i","mn":0,"mx":9}}
 ```
 where "v":4 stands for ColorIndex value 4 (minim 0 and maximum 9)
 
 In case of a MQTT message with topic: "lights/Feath/color_dec",
-the only nested Json object contains, for example:
+the only nested Json object, name "colorDec", contains, for example:
 ```
   	[...]"colorDec":{"v":3,"u":"i","mn":0,"mx":9}}
 ```
@@ -143,7 +163,19 @@ In case of a MQTT message with topic "lights/Feath/color_dec":
 ```
 	{"ow":"Feath","de":"PC-Lab","dc":"colr","sc":"dec","vt":"i","ts":1753052302,"colorDec":{"v":3,"u":"i","mn":0,"mx":9}}
 ```
-
+For the ambient lights of the Presto, in this repo, the following colors are defined:
+```
+   	0: "BLUE"
+	1: "WHITE"
+  	2: "RED"
+  	3: "ORANGE"
+  	4: "GREEN"
+  	5: "PINK"
+  	6: "CYAN"
+  	7: "MAGENTA"
+  	8: "YELLOW"
+  	9: "GREY"
+```
 # MQTT Publisher (other functionalities)
 
 To build and upload the Arduino sketch for the MQTT Publisher device I used the Arduino IDE v2.3.5. In the Arduino sketch for the MQTT Publisher (Adafruit Feather ESP32-S3 TFT board) I added functionality to set the display to "sleep" at a time defined in the file ```secrets.h```. In this moment 23h. And a "wakeup" time. In this moment 8h. See in the file secrets.h: 
@@ -324,7 +356,7 @@ For an image of the I2C wiring see [here](https://github.com/PaulskPt/Presto_MQT
 ### DC Power 
 My advise for the Publisher device: the Adafruit Feather ESP32-S3 TFT (and probably any other device used as MQTT Publisher device) and also the attached BME280 sensor, it is really necessary to use a 5,1 Volt DC power source of good quality. My experience is at this hardware / this sensor needs at least 5,1 Volt DC. For example: the USB port of my desktop PC delivered 5,132 Volt DC. That was OK. I also used an original Raspberry Pi 5,1 Volt DC power apdapter. That was also OK. When I used a power source that delivered 5,058 Volt DC, that was not insufficient. At times the BME280 was not recognized and at times the MQTT Publisher device sent messages containing a wrong NTP Unixtime value as MsgID. When using a good quality 5,1 Volt DC power supply, the MQTT Publisher device runs many hours without problem, resulting in the MQTT Broker receiving MQTT message correctly and the MQTT Subscriber device(s) do the same.
 
-### I2C bus - connecting 3 external devices to the same I2C bus
+### I2C bus - connecting three external devices to the same I2C bus
  
  #### Devices
   - M5Stack M5Unit-RTC (Address 0x51);
