@@ -1,4 +1,4 @@
-# 1) Receiving and displaying MQTT ambient data;
+# 1) Receiving and displaying ambient data;
 # 2) executing commands;
 # on a Pimoroni Presto device
 
