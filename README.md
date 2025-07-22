@@ -321,6 +321,7 @@ My advise for the Publisher device: the Adafruit Feather ESP32-S3 TFT (and proba
   - M5Stack M5Unit-RTC (Address 0x51);
   - Pimoroni multi-sensor-stick, ambient sensor BME280 (Address 0x76);
   - Adafruit Gamepad QT (Address: 0x50).
+
  Beside these three external I2C devices the Adafruit Feather ESP32-S3 TFT board has other internal devices on the I2C bus:
  The I2C bus scan reported devices found with the following addresses: 0x23, 0x36, 0x50, 0x51, 0x6A, 0x76.
  The three external devices are connected to the Stemma QT/Qwiic connector of the Adafruit Feather ESP32-S3 TFT board, via a M5Stack 3-port Grove Hub. 
