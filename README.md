@@ -126,7 +126,7 @@ the MQTT Publisher device sends, by default, every minute:
 In case of a MQTT message with topic "lights/Feath/toggle":
 
 ```
-	{"ow":"Feath","de":"PC-Lab","dc":"home","sc":"ligh","vt":"i","ts":1753052138,"toggle":{"v":1,"u":"i","mn":1,"mx":0}}
+	{"ow":"Feath","de":"PC-Lab","dc":"home","sc":"ligh","vt":"i","ts":1753052138,"toggle":{"v":1,"u":"i","mn":0,"mx":1}}
 ```
 In case of a MQTT message with topic "lights/Feath/color_inc":
 ```
