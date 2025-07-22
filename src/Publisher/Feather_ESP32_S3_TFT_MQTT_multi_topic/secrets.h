@@ -5,8 +5,8 @@
 #define SECRET_USE_BROKER_LOCAL "1"  // We usa a local MQTT broker
 #define SECRET_NTP_SERVER1 "1.pt.pool.ntp.org"
 #define SECRET_MQTT_BROKER "5.196.78.28" // test.mosquitto.org"
-#define SECRET_MQTT_BROKER_LOCAL1 "192.168.1.96"  // Local mosquitto broker app on PC Paul5
-#define SECRET_MQTT_BROKER_LOCAL2 "192.168.1.114"  // Local mosquitto broker app on RPi CM5
+#define SECRET_MQTT_BROKER_LOCAL1 "192.168._.__"  // Local mosquitto broker app on PC Paul5
+#define SECRET_MQTT_BROKER_LOCAL2 "192.168._.___"  // Local mosquitto broker app on RPi CM5
 #define SECRET_MQTT_PORT "1883"
 #define SECRET_MQTT_TOPIC_PREFIX_SENSORS "sensors"
 #define SECRET_MQTT_TOPIC_PREFIX_LIGHTS "lights"
