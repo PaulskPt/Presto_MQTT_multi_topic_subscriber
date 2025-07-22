@@ -143,7 +143,7 @@ To build and upload the Arduino sketch for the MQTT Publisher device I used the 
 #define SECRET_DISPLAY_SLEEPTIME "23"  // Feather display going to sleep (black) time
 #define SECRET_DISPLAY_AWAKETIME "8"   // Feather display wakeup time
 ```
-During the "sleep" hours, the MQTT Publisher device continues to send MQTT messages at the programmed interval time (in this moment once per minute). It also continues, at intervals of 15 minutes, to synchronize the via I2C connected external M5Stack Unit RTC from a NTP datetime stamp.
+During the "sleep" hours, the MQTT Publisher device continues to send MQTT messages at the programmed interval time (in this moment once per minute). The Publisher repeats to send messages with the same topic as long as the user doesn't change the topic by pressing one of the buttons A, B, X or Y on the Gamepad QT. The Publisher device also continues, at intervals of 15 minutes, to synchronize the external M5Stack Unit RTC from a NTP datetime stamp.
 
 In case the Arduino sketch of the Publisher device encounters that it cannot read the values from the BME280 sensor, the sketch will issue a software reset by calling the function ```reset()``` which calls the function ```ESP.restart()```.
 
