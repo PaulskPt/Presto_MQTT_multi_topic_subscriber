@@ -208,7 +208,7 @@ Example of the contents of the file: "mqtt_latest_log_fn.txt":
 	mqtt_log_2025-07-20T172657.txt
 ```
 
-Example of the log showed after a KeyboardInterrupt:
+Example of the contents of the current log showed after a KeyboardInterrupt:
 ```
 	loop(): KeyboardInterrupt: exiting...
 	
