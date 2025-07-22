@@ -72,7 +72,7 @@ description  -> de     value: e.g.: the location of the device, in my case: "PC-
 device_class -> dc     values: "BME280", "HOME", "INC", "DEC"
 state_class  -> sc     values: "measurement" -> "meas", "light" -> "ligh", "increase" -> "inc" and "decrease" -> "dec"
 value_type   -> vt     and the value_type "float"  -> "f", "integer" -> "i", "string" -> "s" and "boolean" -> "b"
-timestamp    -> ts     value: an unsigned long integer, in fact an unixtime (in local time)
+timestamp    -> ts     value: an unsigned long integer, in fact a unixtime (in local time)
 ```
 In case of a MQTT message with topic: "sensor/Feath/ambient"
 In the MQTT "payload" with name "reads" there are:
