@@ -1,4 +1,6 @@
-# Receiving and displaying MQTT messages on a Pimoroni Presto device
+# 1) Receiving and displaying MQTT ambient data;
+# 2) executing commands;
+# on a Pimoroni Presto device
 
 by Paulus Schulinck (Github handle: @PaulskPt)
 
