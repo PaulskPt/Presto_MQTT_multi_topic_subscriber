@@ -66,7 +66,7 @@ In the section with the key "mqtt" enter:
     "broker_external": "5.196.78.28",      (Note.: address of mosquitto.org)
    [...]
 }
-
+```
 If your Presto is connected to your PC, disconnect it. If you are going to use an SD-Card it is a good moment to insert the SD-Card into the SD-slot of your Presto.
 If you are using the Thonny IDE, start Thonny. In the "View" menu select "Files". A window in the left side of the Thonny IDE window will appear. 
 Connect your Presto to your PC using a good quality USB-A to USB-C cable. The Presto will boot and will show its opening screen, a carrousel of application icons. Now stop the execution of the running main.py program on the Presto by pressing on the red "STOP" button in the top left side of the window of the Thonny app.
