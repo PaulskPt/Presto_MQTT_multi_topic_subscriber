@@ -270,7 +270,7 @@ If you, like me, also use a Raspberry Pi model to host a Mosquitto broker applic
 
 See also photos of sites where to download the mosquitto broker app for Raspberry Pi or for a MS Windows PC [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Broker).
 
-- Broker reset: in the case you reset or reboot your local broker device, after the local broker is running you need to reset both the MQTT Publisher device and the MQTT Subscriber(s) device(s) so that they report themselves to the MQTT local broker device as Publisher and Subscriber(s).
+- Broker reset: in the case you reset or reboot your local broker device: wait until the local broker is running. Then reset both the MQTT Publisher device and the MQTT Subscriber(s) device(s) so that they report themselves to the MQTT local broker device as Publisher and Subscriber(s).
 
 
 # Adafruit Gamepad QT
