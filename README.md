@@ -23,8 +23,8 @@ C:\<Users>\<User>\Documents\Arduino\Feather_ESP32_S3_TFT_MQTT_multi_topic\
 
 You need to have installed on your PC: 
 - Thonny IDE or equivalent. Needed for the Pimoroni Presto device.
-- Arduino IDE v2.3.5. Needed for the Adafruit Feather ESP32-S3-TFT device. Do not use the Arduino (Cloud) online IDE because that limits the possibility to change library files to your needs.
-  For example I added a function to the M5Stack M5Unit-RTC library for the Arduino IDE. I added the function:  ``setUnixTime(unsigned long uxTime)```.
+- Arduino IDE v2.3.5. Needed for the Adafruit Feather ESP32-S3-TFT device. Do not use the Arduino (Cloud) online IDE because, AFAIK, that limits the possibility to change library files to your needs.
+  For example I added a function to the M5Stack M5Unit-RTC library for the Arduino IDE. I added the function:  "setUnixTime(unsigned long uxTime)".
   For your convenience I added this modified library [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Arduino/libraries/).
 
 # MQTT message content
