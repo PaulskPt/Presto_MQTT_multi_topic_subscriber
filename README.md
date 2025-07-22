@@ -305,17 +305,7 @@ For the ambient lights of the Presto, in this repo, the following colors are def
 
 ## Settings in file secrets.h
 
-Choose the kind of MQTT Broker you want to use. Set it in this line: 
-```
-	#define SECRET_USE_BROKER_LOCAL "1"             (Note: 1 for local Broker, 0 for remote Broker)
-```
 
-To build and upload the Arduino sketch for the MQTT Publisher device I used the Arduino IDE v2.3.5. In the Arduino sketch for the MQTT Publisher (Adafruit Feather ESP32-S3 TFT board) I added functionality to set the display to "sleep" at a time defined in the file ```secrets.h```. In this moment 23h. And a "wakeup" time. In this moment 8h. See in the file secrets.h: 
-```
-#define SECRET_DISPLAY_SLEEPTIME "23"  // Feather display going to sleep (black) time
-#define SECRET_DISPLAY_AWAKETIME "8"   // Feather display wakeup time
-```
-During the "sleep" hours, the MQTT Publisher device continues to send MQTT messages at the programmed interval time (in this moment once per minute). The Publisher repeats to send messages with the same topic as long as the user doesn't change the topic by pressing one of the buttons A, B, X or Y on the Gamepad QT. The Publisher device also continues, at intervals of 15 minutes, to synchronize the external M5Stack Unit RTC from a NTP datetime stamp.
 
 In case the Arduino sketch of the Publisher device encounters that it cannot read the values from the BME280 sensor, the sketch will issue a software reset by calling the function ```reset()``` which calls the function ```ESP.restart()```.
 
@@ -323,7 +313,26 @@ The source of the Arduino sketch for the MQTT Publisher device is [here](https:/
 
 ## File secrets.h (for the MQTT Publisher device)
 
-To have the Publisher device be able to connect to the internet, to: a) get, at intervals, a Unixtime datetime stamp from an NTP server; b) send MQTT messages to the MQTT Broker, you have to fill-in the WiFi SSID and PASSWORD. Further you can change the following settings in the file secrets.h:
+To have the Publisher device be able to connect to the internet, to: a) get, at intervals, a Unixtime datetime stamp from an NTP server; b) send MQTT messages to the MQTT Broker, you have to fill-in the WiFi SSID and PASSWORD. 
+
+Set the timezone offset from UTC:
+```
+#define SECRET_TIMEZONE_OFFSET "1" // Europe/Lisbon (UTC offset in hours)
+```
+
+Choose the kind of MQTT Broker you want to use. Set it in this line: 
+```
+	#define SECRET_USE_BROKER_LOCAL "1"             (Note: 1 for local Broker, 0 for remote Broker)
+```
+
+Set the hours to set to sleep and to awake from sleep the display:
+```
+#define SECRET_DISPLAY_SLEEPTIME "23"  // Feather display going to sleep (black) time
+#define SECRET_DISPLAY_AWAKETIME "8"   // Feather display wakeup time
+```
+During the "sleep" hours, the MQTT Publisher device continues to send MQTT messages at the programmed interval time (in this moment once per minute). The Publisher repeats to send messages with the same topic as long as the user doesn't change the topic by pressing one of the buttons A, B, X or Y on the Gamepad QT. The Publisher device also continues, at intervals of 15 minutes, to synchronize the external M5Stack Unit RTC from a NTP datetime stamp.
+
+Below th list of all settings in the file secrets.h:
 
 ```
 #define SECRET_SSID "<Your_WiFi_SSID_here>"
