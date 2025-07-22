@@ -67,12 +67,12 @@ I discovered that MQTT messages received were cutoff. Initially my MQTT Publishe
 
 ```
 In the "doc" section:
-owner        -> ow
-description  -> de
-device_class -> dc
-state_class  -> sc     and its class "measurement" -> "meas"
+owner        -> ow     value: e.g.: the board model, in my case: "Feather" -> "feath"
+description  -> de     value: e.g.: the location of the device, in my case: "PC-Lab"
+device_class -> dc     values: "BME280", "HOME", "INC", "DEC"
+state_class  -> sc     values: "measurement" -> "meas", "light" -> "ligh", "increase" -> "inc" and "decrease" -> "dec"
 value_type   -> vt     and the value_type "float"  -> "f", "integer" -> "i", "string" -> "s" and "boolean" -> "b"
-timestamp    -> ts
+timestamp    -> ts     value: an unsigned long integer, in fact an unixtime (in local time)
 ```
 In case of a MQTT message with topic: "sensor/Feath/ambient"
 In the MQTT "payload" with name "reads" there are:
