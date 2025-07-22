@@ -316,6 +316,7 @@ For an image of the I2C wiring see [here](https://github.com/PaulskPt/Presto_MQT
 My advise for the Publisher device: the Adafruit Feather ESP32-S3 TFT (and probably any other device used as MQTT Publisher device) and also the attached BME280 sensor, it is really necessary to use a 5,1 Volt DC power source of good quality. My experience is at this hardware / this sensor needs at least 5,1 Volt DC. For example: the USB port of my desktop PC delivered 5,132 Volt DC. That was OK. I also used an original Raspberry Pi 5,1 Volt DC power apdapter. That was also OK. When I used a power source that delivered 5,058 Volt DC, that was not insufficient. At times the BME280 was not recognized and at times the MQTT Publisher device sent messages containing a wrong NTP Unixtime value as MsgID. When using a good quality 5,1 Volt DC power supply, the MQTT Publisher device runs many hours without problem, resulting in the MQTT Broker receiving MQTT message correctly and the MQTT Subscriber device(s) do the same.
 
  Note about connecting 3 external devices to the same I2C bus:
+ 
  Devices: 
   - M5Stack M5Unit-RTC (Address 0x51);
   - Pimoroni multi-sensor-stick, ambient sensor BME280 (Address 0x76);
