@@ -198,15 +198,11 @@ MqttClient mqttClient(wifiClient);
 
 // this IP did not work: "85.119.83.194" // for test.mosquitto.org
 // 5.196.0.0 - 5.196.255.255 = FR-OVH-20120823, Country code: FR (info from https://lookup.icann.org/en/lookup)
-#define USE_BROKER_LOCAL   (1)
 
-#ifdef USE_BROKER_LOCAL
-const char broker[]  = SECRET_MQTT_BROKER_LOCAL2; // "192.168._.___";
-#else
-const char broker[]  = SECRET_MQTT_BROKER; // test.mosquitto.org";
-#endif
+bool use_broker_local; 
+const char* broker;  // will be set in setup()
 
-int        port      = atoi(SECRET_MQTT_PORT);   // 1883;
+int        port = atoi(SECRET_MQTT_PORT);                                                            // 1883;
 const char TOPIC_PREFIX_SENSORS[]                = SECRET_MQTT_TOPIC_PREFIX_SENSORS;                 // "sensors"
 const char TOPIC_PREFIX_LIGHTS[]                 = SECRET_MQTT_TOPIC_PREFIX_LIGHTS;                  // "lights"
 const char TOPIC_PREFIX_TODO[]                   = SECRET_MQTT_TOPIC_PREFIX_TODO;                    // "todo"
@@ -1972,6 +1968,13 @@ void setup()
 
   delay(1000);
 
+use_broker_local = (atoi(SECRET_USE_BROKER_LOCAL) == 1);
+
+if (use_broker_local)
+  broker = SECRET_MQTT_BROKER_LOCAL2; // "192.168._.___";
+else
+  broker = SECRET_MQTT_BROKER; // "test.mosquitto.org";
+
  // turn on the TFT / I2C power supply
 #if defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S3_TFT)
   pinMode(TFT_I2C_POWER, OUTPUT);
@@ -2117,8 +2120,8 @@ void setup()
           delay(5000);
       }
 
-      Serial.print(F("✅ MQTT You're connected to broker: "));
-      serialPrintf(PSTR("%s:%s\n"), broker, String(port).c_str());
+      Serial.print(F("✅ MQTT You're connected to "));
+      serialPrintf(PSTR("%s broker %s:%s\n"), (use_broker_local) ? "local" : "remote", broker, String(port).c_str());
     }
   }
   composeMsgTopic(); // Prepare the MQTT default topic (global variable msg_topic)
