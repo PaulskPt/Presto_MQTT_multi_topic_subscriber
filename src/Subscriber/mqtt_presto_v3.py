@@ -1274,7 +1274,7 @@ def draw(mode:int = 1):
             y += line_space + 5
             display.text(toggle_draw2, x, y, WIDTH, scale = my_scale)
             y += line_space
-        elif topic_idx in (2,3): # lights/Feath/color_inc
+        elif topic_idx in (2,3): # lights/Feath/color_inc or lights/Feath/color_dec
             display.text(color_txt1_draw, x, y, WIDTH, scale = my_scale) 
             y += line_space + 5
             display.text(color_txt2_draw, x, y, WIDTH, scale = my_scale)
