@@ -142,7 +142,6 @@ global(): error class object created. It is of class: <class 'ERR'>
 Using local Broker
 main(): Connecting to WiFi...
 main(): WiFi connected.
-setup(): Switching ambient neopixel leds off
 NP_clear(): 🌈 ambient neopixels off
 setup(): Connecting to MQTT broker at 192.168._.___ on port 1883
 setup(): Not deleting log files, flag: "delete_logs" = False
@@ -166,7 +165,15 @@ Then will appear a first screen with a black background and the following text i
 ```
 As soon as the Presto has received the first MQTT message, a new screen will appear with text in orange color during daylight hours or in navy blue during night hours.
 See [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/images/Subscriber/20250722_100834.jpg).
-
+In the Thonny Shell window will appear info about the received message, like this:
+```
+mqtt_callback(): Received a mqtt message on topic: "sensors/Feath/ambient", timestamp: 1753276934
+mqtt_callback(): Decoded raw_msg length: 251
+mqtt_callback(): raw_msg: {"ow":"Feath","de":"PC-Lab","dc":"BME280","sc":"meas","vt":"f","ts":1753276934,
+"reads":{"t":{"v":28,"u":"C","mn":-10,"mx":50},"p":{"v":1005.6,"u":"mB","mn":800,"mx":1200},
+"a":{"v":63.9,"u":"m","mn":0,"mx":3000},"h":{"v":39.5,"u":"%","mn":0,"mx":100}}}
+--------------------------------------------------
+```
 
 # MQTT message content
 
