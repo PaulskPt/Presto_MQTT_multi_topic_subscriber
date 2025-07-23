@@ -112,6 +112,12 @@ int select_btn_max = 1;
 #ifndef NEOPIXEL_POWER
 #define NEOPIXEL_POWER 34
 #endif
+
+#ifndef TFT_BACKLITE
+#define TFT_BACKLITE 45
+#endif
+bool backLite = true;
+
 // NEOPIXEL_POWER_ON
 
 // Which pin on the Arduino is connected to the NeoPixels?
@@ -1957,6 +1963,18 @@ bool preButtonChecks()
   return btnPressed2;
 }
 
+void backlite_toggle() {
+  if (backLite) {
+      backLite = false;
+      digitalWrite(TFT_BACKLITE, LOW); // Switch off
+  }
+  else {
+      backLite = true;
+      digitalWrite(TFT_BACKLITE, HIGH); // Switch off
+  }
+
+}
+
 void setup() 
 {
   //Initialize serial and wait for port to open:
@@ -1982,6 +2000,8 @@ else
 #endif
 
   pinMode(led, OUTPUT); // for the builtin single color (red) led
+
+  pinMode(TFT_BACKLITE, OUTPUT);
 
   pinMode(NEOPIXEL_POWER, OUTPUT);
   digitalWrite(NEOPIXEL_POWER, HIGH); // Switch off the Neopixel LED
@@ -2235,6 +2255,8 @@ void loop()
           // Clear the display
           canvas.fillScreen(ST77XX_BLACK);
           display.drawRGBBitmap(0, 0, canvas.getBuffer(), canvas_width, canvas_height);
+          if (backLite)
+            backlite_toggle(); // switch off the TFT backLite
           //digitalWrite(TFT_I2C_POWER, LOW); // This probably also cuts off the I2C connection with the BME280
           displayIsAsleep = true;
         }
@@ -2252,6 +2274,8 @@ void loop()
           serialPrintf(PSTR("isItBedtime = %s\n"), (isItBedtime) ? "true" : "false");
 #endif
         }
+        if (!backLite)
+          backlite_toggle(); // switch on the backLite
         digitalWrite(TFT_I2C_POWER, HIGH);
         if (!preButtonChecks()) {  // Check and handle gamepad keypresses first
           // disp_goodmorning();
