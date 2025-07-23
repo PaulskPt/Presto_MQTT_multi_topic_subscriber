@@ -728,10 +728,7 @@ def topic_in_lst():
 def mqtt_callback(topic, msg):
     global topic_rcvd, msg_rcvd, payload, last_update_time, topic_idx
     TAG = "mqtt_callback(): "
-    if not my_debug:
-        raw_msg = msg.decode('utf-8')
-        print(TAG+f"Decoded raw_msg length: {len(raw_msg)}")
-        print(TAG+f"raw_msg: {raw_msg}") # may reveal the broken JSON
+    
     try:
         if my_debug:
             print(TAG+f"type(topic) = {type(topic)}")
@@ -763,6 +760,10 @@ def mqtt_callback(topic, msg):
             print(f"msg: {msg}")
         if len(msg) > 0:
             msg_rcvd = True
+        if not my_debug:
+            raw_msg = msg.decode('utf-8')
+            print(TAG+f"Decoded raw_msg length: {len(raw_msg)}")
+            print(TAG+f"raw_msg: {raw_msg}") # may reveal the broken JSON
     except Exception as e:
         print(TAG+"Unhandled exception:", str(e))
 
@@ -1141,7 +1142,7 @@ def draw(mode:int = 1):
     
     CURRENT_COLOUR = None
     
-    if not my_debug:
+    if my_debug:
         print(TAG+f"hh = {hh}")
     
     if  hh >= 9 and hh < 21:
@@ -1168,7 +1169,8 @@ def draw(mode:int = 1):
         #display.clear()
         clean()
         time_draw = get_payload_member("tm")
-        print(TAG+f"time_draw = {time_draw}")
+        if my_debug:
+            print(TAG+f"time_draw = {time_draw}")
         if time_draw != "--:--:--":
             time_draw_hh = int(time_draw[:2])
         else:
@@ -1257,7 +1259,7 @@ def draw(mode:int = 1):
         y += line_space
         display.text("msgID: " + timestamp_draw, x, y, WIDTH, scale = my_scale)
         y += line_space
-        if not my_debug:
+        if my_debug:
             print(TAG+f"topic_idx: {topic_idx} = topic: \"{TOPIC_LST[topic_idx]}\"")
         if topic_idx == 0: # sensors/Feath/ambient
             display.text(temp_draw, x, y, WIDTH, scale = my_scale)
