@@ -364,7 +364,9 @@ Below th list of all settings in the file secrets.h:
 
 # MQTT Subscriber 
 The Pimoroni Presto, in the role of MQTT Subscriber, runs on micropython. The firmware is a special version of micropython. See the link above. The micropython script for this Subscriber device "dims" the screen content during night hours by changing the colour from orange to navy blue (which is more dark). 
+
 The commands of the MQTT messages with topics "lights/Feath/color_inc" and "lights/Feath/color_dec" will only be executed when before has been received a MQTT message with topic "lights/Feath/toggle". If this is not the case the message: "REMOTE: PRESS BTN B!" will be shown on the bottom of the display. See [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/images/Subscriber/20250723_064539.jpg)
+
 The choice to use a "local MQTT broker" or an "external MQTT broker" is defined in this line of the micropython script:
 ```
 	60 use_local_broker = True # Use the BROKER running on a local PC (in my case a Raspberry Pi Compute Module 5).
