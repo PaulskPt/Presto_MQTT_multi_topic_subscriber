@@ -150,7 +150,6 @@ setup(): Subscribed to topic: "sensors/Feath/ambient"
 setup(): Subscribed to topic: "lights/Feath/toggle"
 setup(): Subscribed to topic: "lights/Feath/color_inc"
 setup(): Subscribed to topic: "lights/Feath/color_dec"
-draw(): hh = 0
 --------------------------------------------------
 ```
 
