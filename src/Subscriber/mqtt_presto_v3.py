@@ -1328,7 +1328,7 @@ def setup():
         create_err_log_file()
     """
     
-    print(TAG+"Switching ambient light neopixel leds off")
+    # print(TAG+"Switching ambient light neopixel leds off")
     lights_ON = False
     lights_ON_old = False
     NP_clear()
