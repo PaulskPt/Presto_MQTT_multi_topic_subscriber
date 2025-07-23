@@ -142,7 +142,6 @@ global(): error class object created. It is of class: <class 'ERR'>
 Using local Broker
 main(): Connecting to WiFi...
 main(): WiFi connected.
-setup(): Switching ambient neopixel leds off
 NP_clear(): 🌈 ambient neopixels off
 setup(): Connecting to MQTT broker at 192.168._.___ on port 1883
 setup(): Not deleting log files, flag: "delete_logs" = False
