@@ -1046,14 +1046,14 @@ def split_msg():
                   value = int(data)
                 lights_ON = True if value == 1 else False # set the global lights_ON flag
                 if lights_ON != lights_ON_old:  # Only change if value differs from last received value
-                    print(TAG+f"Toggling ambient light neopixel leds {'on' if lights_ON == True else 'off'}")
+                    print(TAG+f"toggling ambient light neopixel leds {'on' if lights_ON == True else 'off'}")
                     #lights_ON_old = lights_ON
                     if lights_ON:
                       NP_color()  # Switch bl leds off
                     else:
                       NP_clear()  # Switch bl leds on and set color of lightsColorIdx
                 else:
-                    print(TAG+f"Not toggling ambient light neopixel leds. lights_ON = {lights_ON}, lights_ON_old = {lights_ON_old}")
+                    print(TAG+f"not toggling ambient light neopixel leds. lights_ON = {lights_ON}, lights_ON_old = {lights_ON_old}")
         elif topicIdx in (2, 3):  # lights/Feath/color_inc or color_dec
             if not lights_ON:
                 return
