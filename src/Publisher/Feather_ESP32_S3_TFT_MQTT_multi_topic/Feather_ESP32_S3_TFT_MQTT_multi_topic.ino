@@ -100,7 +100,7 @@ static constexpr const char *weekdays[] PROGMEM = {"Sun", "Mon", "Tues", "Wednes
 const char *msgTypes[] = {"sensors", "lights_toggle", "lights_color_inc", "lights_color_dec", "todo"};
 int colorIndex = 0;
 int colorIndexMin = 0;
-int colorIndexMax = 10;
+int colorIndexMax = 9;
 
 int select_btn_idx = 0;
 int select_btn_max = 1;
@@ -1724,14 +1724,14 @@ void handleButtonPress(enum Button i)  //static_cast<Button>(i)) {
         myMsgType = lights_color_increase;
         colorIndex++;
         if (colorIndex > colorIndexMax)
-          colorIndex = colorIndexMax;
+          colorIndex = colorIndexMin;  // wrap around
       } else {
         // Serial.println(F("Button Y pressed"));
         serialPrintf(PSTR("\n%s Y %s\n"), txts[0], txts[1]);
         myMsgType = lights_color_decrease;
         colorIndex--;
         if (colorIndex < 0)
-          colorIndex = 0;
+          colorIndex = colorIndexMax; // wrap around
       }
       Serial.print(F("colorIndex = "));
       Serial.println(colorIndex);
