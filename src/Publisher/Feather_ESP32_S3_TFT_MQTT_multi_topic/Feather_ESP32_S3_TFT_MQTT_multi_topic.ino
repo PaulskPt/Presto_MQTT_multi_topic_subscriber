@@ -2243,7 +2243,11 @@ void loop()
         if (try_cnt >= try_cnt_max)
           break;
         delay(50);
-      } 
+      }
+      // After the other type of messages have been sent
+      // reset to the default message type
+      myMsgType = tpah_sensor;
+      composeMsgTopic(myMsgType); // Prepare the MQTT topic based on the new message type (global variable msg_topic)
     }
     
     // Only display the messages if not in bedtime mode
