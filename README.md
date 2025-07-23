@@ -373,9 +373,22 @@ The Pimoroni Presto, in the role of MQTT Subscriber, runs on micropython. The fi
 
 The commands of the MQTT messages with topics "lights/Feath/color_inc" and "lights/Feath/color_dec" will only be executed when before has been received a MQTT message with topic "lights/Feath/toggle". If this is not the case the message: "REMOTE: PRESS BTN B!" will be shown on the bottom of the display. See [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/images/Subscriber/20250723_064539.jpg)
 
-The choice to use a "local MQTT broker" or an "external MQTT broker" is defined in this line of the micropython script:
+The choice to use a "local MQTT broker" or an "external MQTT broker" is defined in the file "secrets.json".
+In the script these lines load the broker choice and print info about this choice as shown below:
 ```
-	60 use_local_broker = True # Use the BROKER running on a local PC (in my case a Raspberry Pi Compute Module 5).
+113 # MQTT setup
+114 use_local_broker = secrets['mqtt']['use_local_broker']
+115 #print(f"type(use_local_broker) = {type(use_local_broker)}")
+116 if use_local_broker:
+117     print("Using local Broker")
+118 else:
+119     print("Using external Broker")
+120
+121 if use_local_broker:
+122     BROKER = secrets['mqtt']['broker_local']  # Use the mosquitto broker app on the RaspberryPi CM5
+123 else:
+124     BROKER = secrets['mqtt']['broker_external']
+
 ```
 The "publisher_id" and "subscriber_id" are also defined in the file "secrets.json". They are read into the script as follows:
 ```
