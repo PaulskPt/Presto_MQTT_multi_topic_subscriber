@@ -326,7 +326,7 @@ Set the hours to set to sleep and to awake from sleep the display:
 #define SECRET_DISPLAY_SLEEPTIME "23"  // Feather display going to sleep (black) time
 #define SECRET_DISPLAY_AWAKETIME "8"   // Feather display wakeup time
 ```
-During the "sleep" hours, the MQTT Publisher device continues to send MQTT messages at the programmed interval time (in this moment once per minute). The Publisher repeats to send messages with the same topic as long as the user doesn't change the topic by pressing one of the buttons A, B, X or Y on the Gamepad QT. The Publisher device also continues, at intervals of 15 minutes, to synchronize the external M5Stack Unit RTC from a NTP datetime stamp.
+During the "sleep" hours, the MQTT Publisher device continues to send MQTT messages at the programmed interval time (in this moment once per minute). When one of the buttons A, B, X or Y on the Gamepad QT is pressed the message topic will be changed accordingly and a message with the new topic will be send immediately. Next, if no other of the mentioned buttons has been pressed within the time inverval, the topic will change back to the default topic. Then, at the scheduled time interval, messages of the default topic will continue to be transmitted. The Publisher device also continues, at intervals of 15 minutes, to synchronize the external M5Stack Unit RTC from a NTP datetime stamp.
 
 Below th list of all settings in the file secrets.h:
 
