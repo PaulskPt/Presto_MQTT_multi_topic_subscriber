@@ -1,0 +1,40 @@
+Wednesday 2025-07-23 13h37 utc+1
+Board: Pimoroni Presto
+IDE: Thonny
+Script: mqtt_presto_v3.py
+
+Note:
+After three print statements in function draw() from "if not my_debug:" set to "if my_debug:"
+and after changing the order of print statements in function mqtt_callback().
+
+Shell output:
+
+
+>>> %Run -c $EDITOR_CONTENT
+
+MPY: soft reboot
+global(): error class object created. It is of class: <class 'ERR'>
+Using local Broker
+main(): Connecting to WiFi...
+main(): WiFi connected.
+NP_clear(): 🌈 ambient neopixels off
+setup(): Connecting to MQTT broker at 192.168.1.114 on port 1883
+setup(): Not deleting log files, flag: "delete_logs" = False
+setup(): Successfully connected to MQTT broker.
+setup(): Subscribed to topic: "sensors/Feath/ambient"
+setup(): Subscribed to topic: "lights/Feath/toggle"
+setup(): Subscribed to topic: "lights/Feath/color_inc"
+setup(): Subscribed to topic: "lights/Feath/color_dec"
+--------------------------------------------------
+mqtt_callback(): Received a mqtt message on topic: "sensors/Feath/ambient", timestamp: 1753277654
+mqtt_callback(): Decoded raw_msg length: 253
+mqtt_callback(): raw_msg: {"ow":"Feath","de":"PC-Lab","dc":"BME280","sc":"meas","vt":"f","ts":1753277654,"reads":{"t":{"v":28.1,"u":"C","mn":-10,"mx":50},"p":{"v":1005.5,"u":"mB","mn":800,"mx":1200},"a":{"v":64.9,"u":"m","mn":0,"mx":3000},"h":{"v":39.8,"u":"%","mn":0,"mx":100}}}
+--------------------------------------------------
+mqtt_callback(): Received a mqtt message on topic: "sensors/Feath/ambient", timestamp: 1753277714
+mqtt_callback(): Decoded raw_msg length: 253
+mqtt_callback(): raw_msg: {"ow":"Feath","de":"PC-Lab","dc":"BME280","sc":"meas","vt":"f","ts":1753277714,"reads":{"t":{"v":28.2,"u":"C","mn":-10,"mx":50},"p":{"v":1005.4,"u":"mB","mn":800,"mx":1200},"a":{"v":65.7,"u":"m","mn":0,"mx":3000},"h":{"v":39.9,"u":"%","mn":0,"mx":100}}}
+--------------------------------------------------
+mqtt_callback(): Received a mqtt message on topic: "sensors/Feath/ambient", timestamp: 1753277774
+mqtt_callback(): Decoded raw_msg length: 253
+mqtt_callback(): raw_msg: {"ow":"Feath","de":"PC-Lab","dc":"BME280","sc":"meas","vt":"f","ts":1753277774,"reads":{"t":{"v":28.1,"u":"C","mn":-10,"mx":50},"p":{"v":1005.4,"u":"mB","mn":800,"mx":1200},"a":{"v":65.8,"u":"m","mn":0,"mx":3000},"h":{"v":39.9,"u":"%","mn":0,"mx":100}}}
+--------------------------------------------------
