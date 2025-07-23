@@ -133,7 +133,7 @@ If, in the "Raspberry Pi Pico" files window part, are not yet present the two di
 
 Next right-click on your mouse. In the small window that pops up, select the menu-item: "New directory". Next type the directory name, for example "lib" or "sd". Then click on "OK". Do this, when necessary, for both directories as shown in the files structure above. Note that the Thonny Shell window only shows "%cd /" or "%cd /lib" or "%cd /sd" for activities inside the "Raspberry Pi Pico" files window part. This will not happen when you move between directories in the "This computer" files window part.
 Now copy all files from the "This computer" files window part to their respective directories (root, /lib or /sd) of the "Raspberry Pi Pico" files window part.
-When you have copied all the files from this repo, part /src/Subscriber/ to the Pimoroni Presto, you can reboot the Presto. After the Presto has been booted an image of a "carrousel" of icons is shown. Tap six times onto the icon shown in the right corner of the display, then you should see an icon with below it the title "Mqtt Presto V3" [photo](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/images/Subscriber/20250721_013544.jpg). Tap on this icon to start this micropython script. For some seconds you will see a black screen. The script has to do various checks, load secret.json, establish Wi-Fi communication. Establish communication with the Broker of your choice. In the "Shell" window of Thonny will appear serial output, like this:
+When you have copied all the files from this repo, part /src/Subscriber/ to the Pimoroni Presto, you can reboot the Presto. After the Presto has been booted an image of a "carrousel" of icons is shown. Tap six times onto the icon shown in the right corner of the display, then you should see an icon with below it the title "Mqtt Presto V3" [photo](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/images/Subscriber/20250721_013544.png). Tap on this icon to start this micropython script. For some seconds you will see a black screen. The script has to do various checks, load secret.json, establish Wi-Fi communication. Establish communication with the Broker of your choice. In the "Shell" window of Thonny will appear serial output, like this:
 ```
 >>> %Run -c $EDITOR_CONTENT
 
@@ -153,7 +153,7 @@ setup(): Subscribed to topic: "lights/Feath/color_dec"
 --------------------------------------------------
 ```
 
-Then will appear a first screen with a black background and the following text in navy blue color (see: [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/images/Subscriber/20250722_100733.jpg)):
+Then will appear a first screen with a black background and the following text in navy blue color (see: [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/images/Subscriber/20250722_100733.png)):
 ```
 	mqtt
 	waiting for
@@ -163,7 +163,7 @@ Then will appear a first screen with a black background and the following text i
 	mqtt OK
 ```
 As soon as the Presto has received the first MQTT message, a new screen will appear with text in orange color during daylight hours or in navy blue during night hours.
-See [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/images/Subscriber/20250722_100834.jpg).
+See [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/images/Subscriber/20250722_100834.png).
 In the Thonny Shell window will appear info about the received message, like this:
 ```
 mqtt_callback(): Received a mqtt message on topic: "sensors/Feath/ambient", timestamp: 1753276934
@@ -371,7 +371,7 @@ Below th list of all settings in the file secrets.h:
 # MQTT Subscriber 
 The Pimoroni Presto, in the role of MQTT Subscriber, runs on micropython. The firmware is a special version of micropython. See the link above. The micropython script for this Subscriber device "dims" the screen content during night hours by changing the colour from orange to navy blue (which is more dark). 
 
-The commands of the MQTT messages with topics "lights/Feath/color_inc" and "lights/Feath/color_dec" will only be executed when before has been received a MQTT message with topic "lights/Feath/toggle". If this is not the case the message: "REMOTE: PRESS BTN B!" will be shown on the bottom of the display. See [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/images/Subscriber/20250723_064539.jpg)
+The commands of the MQTT messages with topics "lights/Feath/color_inc" and "lights/Feath/color_dec" will only be executed when before has been received a MQTT message with topic "lights/Feath/toggle". If this is not the case the message: "REMOTE: PRESS BTN B!" will be shown on the bottom of the display. See [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/images/Subscriber/20250723_064539.png)
 
 The choice to use a "local MQTT broker" or an "external MQTT broker" is defined in the file "secrets.json".
 In the script these lines load the broker choice and print info about this choice as shown below:
