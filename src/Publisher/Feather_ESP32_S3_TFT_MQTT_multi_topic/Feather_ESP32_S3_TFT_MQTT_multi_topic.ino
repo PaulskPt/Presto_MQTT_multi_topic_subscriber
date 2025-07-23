@@ -133,6 +133,8 @@ bool backLite = true;
 
 Adafruit_NeoPixel pixel(NUMPIXELS, PIN_NEOPIXEL, NEO_GRB + NEO_KHZ800);
 
+bool displayIsAsleep = false;
+
 Adafruit_ST7789 display = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);
 
 GFXcanvas16 canvas(240, 135);
@@ -634,6 +636,9 @@ void disp_msg(const char* arr[], size_t size, bool disp_on_serial = false) {
   if (size == 0)
     return;
 
+  if (!backLite)
+    backlite_toggle();
+
   canvas.fillScreen(ST77XX_BLACK);
 
   for (uint8_t i = 0; i < size; i++) {
@@ -657,6 +662,11 @@ void disp_msg(const char* arr[], size_t size, bool disp_on_serial = false) {
   }
 
   display.drawRGBBitmap(0, 0, canvas.getBuffer(), canvas_width, canvas_height);
+
+  if (backLite && displayIsAsleep) {
+    delay(3000);
+    backlite_toggle();
+  }
 }
 
 void disp_intro(bool disp_on_serial = false) {
@@ -1741,6 +1751,7 @@ void handleButtonPress(enum Button i)  //static_cast<Button>(i)) {
       }
       Serial.print(F("colorIndex = "));
       Serial.println(colorIndex);
+      //remote_led_is_on = true;
       break;
     }
     case BTN_SELECT:
@@ -1972,7 +1983,6 @@ void backlite_toggle() {
       backLite = true;
       digitalWrite(TFT_BACKLITE, HIGH); // Switch off
   }
-
 }
 
 void setup() 
@@ -2183,7 +2193,6 @@ void loop()
   uint8_t interval_in_mins = mqtt_interval_t / (60 * 1000);
   serialPrintf(PSTR("%sMQTT message send interval = %d minute%s\n"), txt0, interval_in_mins, interval_in_mins <= 1 ? "" : "s");
   bool dummy = false;
-  bool displayIsAsleep = false;
   bool newBtnPressed = false;
   unsigned long currentTime;
   

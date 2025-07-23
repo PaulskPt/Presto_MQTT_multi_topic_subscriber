@@ -181,7 +181,7 @@ def NP_clear():  # NeoPixels clear (switch off)
     time.sleep(0.02)
         
 def NP_color():
-    global lightsColorIdx
+    global lightsColorIdx, lights_ON, lights_ON_old
     TAG = "NP_color(): "
     r = g = b = 0
     if lightsColorIdx == -1: # Check if color index not is set yet
@@ -197,6 +197,7 @@ def NP_color():
         for n in range(NUM_LEDS):
             presto.set_led_rgb(n, r, g, b)
         time.sleep(0.02)
+        lights_ON = True # set the lights_ON flag to True
       else:
           print(f"lightColorIdx: {lightsColorIdx} not in blColorsDict.keys(): {blColorsDict.keys()}")
     else:
@@ -1046,74 +1047,48 @@ def split_msg():
                 if lights_ON != lights_ON_old:  # Only change if value differs from last received value
                     print(TAG+f"Toggling ambient light neopixel leds {'on' if lights_ON == True else 'off'}")
                     #lights_ON_old = lights_ON
-                    if not lights_ON:
-                      NP_clear()  # Switch bl leds off
+                    if lights_ON:
+                      NP_color()  # Switch bl leds off
                     else:
-                      NP_color()  # Switch bl leds on and set color of lightsColorIdx
+                      NP_clear()  # Switch bl leds on and set color of lightsColorIdx
                 else:
                     print(TAG+f"Not toggling ambient light neopixel leds. lights_ON = {lights_ON}, lights_ON_old = {lights_ON_old}")
-        elif topicIdx == 2: # lights/Feath/color_inc
-            colorInc = payload.get("colorInc")
+        elif topicIdx in (2, 3):  # lights/Feath/color_inc or color_dec
+            if not lights_ON:
+                return
+            colorData = payload.get("colorInc") if topicIdx == 2 else payload.get("colorDec")
             if my_debug:
-                print(TAG+f"colorInc payload.items() = {colorInc.items()}")
-            for key, data in colorInc.items():
-              if my_debug:
-                  if isinstance(data, int):
-                    print(TAG+"key = {:>2s}, data = {:>2d}".format(key, data))
-                  elif isinstance(data, str):
-                    print(TAG+"key = {:>2s}, data = {:>2s}".format(key, data))
-              if key == "u": # unit of measurement
-                unit = data
-              elif key == "mx":
-                lightsColorMax = data
-              elif key == "mn":
-                lightsColorMin = data
-              if key == "v": # value
-                if unit == "i": # integer
-                  value = data
-                elif unit == "s":  # string
-                  value = int(data) # convert to int
+                print(TAG + f"colorData payload.items() = {colorData.items()}")
+            
+            for key, data in colorData.items():
                 if my_debug:
-                    print(TAG+f"value = {value}, lightsColorMin = {lightsColorMin}, lightsColorMax = {lightsColorMax}")
-                if value >= lightsColorMin and value <= lightsColorMax:
-                    lightsColorIdx = value
-                    if my_debug:
-                        print(TAG+f"lightsColorIdx set to: {lightsColorIdx}")
-                    NP_color()  # set the color of the ambient bg leds
-                else:
-                  lightsColorIdx = -1
-                        
-        elif topicIdx == 3:  # lights/Feath/color_dec
-            colorDec = payload.get("colorDec")
-            if my_debug:
-                print(TAG+f"colorDec payload.items() = {colorDec.items()}")
-            for key, data in colorDec.items():
-              if my_debug:
-                if isinstance(data, int):
-                    print(TAG+"key = {:>2s}, data = {:>2d}".format(key, data))
-                elif isinstance(data, str):
-                    print(TAG+"key = {:>2s}, data = {:>2s}".format(key, data))
-              if key == "u": # unit of measurement
-                unit = data
-              elif key == "mx":
-                lightsColorMax = data
-              elif key == "mn":
-                lightsColorMin = data
-              if key == "v": # value
-                if unit == "i": # integer
-                    value = data
-                elif unit == "s":  # string
-                    value = int(data) # convert to int
-                if my_debug:
-                    print(TAG+f"value = {value}, lightsColorMin ={lightsColorMin}, lightsColorMax = {lightsColorMax}")
-                if value >= lightsColorMin and value <= lightsColorMax:
-                    if my_debug:
-                      print(TAG+f"lightsColorIdx set to: {lightsColorIdx}")
-                    lightsColorIdx = value
-                    NP_color()  # set the color of the ambient bg leds
-                else:
-                    lightsColorIdx = -1
+                    if isinstance(data, int):
+                        print(TAG + "key = {:>2s}, data = {:>2d}".format(key, data))
+                    elif isinstance(data, str):
+                        print(TAG + "key = {:>2s}, data = {:>2s}".format(key, data))
 
+                if key == "u":  # unit of measurement
+                    unit = data
+                elif key == "mx":
+                    lightsColorMax = data
+                elif key == "mn":
+                    lightsColorMin = data
+                elif key == "v":  # value
+                    if unit == "i":
+                        value = data
+                    elif unit == "s":
+                        value = int(data)
+
+                    if my_debug:
+                        print(TAG + f"value = {value}, lightsColorMin = {lightsColorMin}, lightsColorMax = {lightsColorMax}")
+                    
+                    if lightsColorMin <= value <= lightsColorMax:
+                        lightsColorIdx = value
+                        if my_debug:
+                            print(TAG + f"lightsColorIdx set to: {lightsColorIdx}")
+                        NP_color()
+                    else:
+                        lightsColorIdx = -1
     except Exception as e:
         print(TAG+"error:", str(e))
 
@@ -1253,9 +1228,8 @@ def draw(mode:int = 1):
             if not my_debug:
                 print(TAG+f"toggle_draw1 = {toggle_draw1}")
                 print(TAG+f"toggle_draw2 = {toggle_draw2}")
-        elif topic_idx == 2 or topic_idx == 3:
+        elif topic_idx in (2,3):
             color_txt1_draw = "lightsColorIdx = {:d}".format(lightsColorIdx)
-            
             if lightsColorIdx in blColorNamesDict.keys():
                 color_txt2_draw = blColorNamesDict[lightsColorIdx]
             else:
@@ -1298,11 +1272,13 @@ def draw(mode:int = 1):
             y += line_space + 5
             display.text(toggle_draw2, x, y, WIDTH, scale = my_scale)
             y += line_space
-        elif topic_idx == 2 or topic_idx == 3: # lights/Feath/color_inc
+        elif topic_idx in (2,3): # lights/Feath/color_inc
             display.text(color_txt1_draw, x, y, WIDTH, scale = my_scale) 
             y += line_space + 5
             display.text(color_txt2_draw, x, y, WIDTH, scale = my_scale)
             y += line_space
+            if not lights_ON:
+                display.text("Remote: press Btn B!", x, y, WIDTH, scale = my_scale)
     
     presto.update()
     
