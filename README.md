@@ -141,7 +141,6 @@ When you have copied all the files from this repo, part /src/Subscriber/ to the 
 
 MPY: soft reboot
 global(): error class object created. It is of class: <class 'ERR'>
-Using local Broker
 main(): Connecting to WiFi...
 main(): WiFi connected.
 NP_clear(): 🌈 ambient neopixels off
