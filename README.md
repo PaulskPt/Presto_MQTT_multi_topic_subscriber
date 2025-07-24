@@ -6,6 +6,7 @@ by Paulus Schulinck (Github handle: @PaulskPt)
 
 ## What is it?
 - Receiving, interpreting and displaying ambient data as temperature, pressure and humidity from a remote ambient sensor,
+- Receiving $SYS topic MQTT messages,
 - executing commands from a remote control device,
 - by means of MQTT messages.
 
