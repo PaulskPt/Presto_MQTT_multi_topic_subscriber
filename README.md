@@ -464,17 +464,20 @@ Contents of sys_broker json file: "/sys_broker.json"
 pr_log():  01) {"sys_broker": {"clients/connected": 2}}
 ```
 
-
-
-
-
-## File broker
+# MQTT Broker
 
 If you, like me, also use a Raspberry Pi model to host a Mosquitto broker application, see the files in the folder [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Broker/etc)
 - ```/etc/hosts.allow``` : insert in this file the ip-addres of your mosquitto broker. In my case: ```mosquitto: 127.0.0.1```
 - ```/etc/mosquitto/mosquitto.conf```. See the contents of the mosquitto.conf file that I use in the folder [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Broker/etc/mosquitto).
 
+### Broker log
+The broker application saves its log in ```\var\log\mosquitto\mosquitto.log```.
+
+For more information about logging for the mosquitto app see: [how to log](http://www.steves-internet-guide.com/mosquitto-logging/#:~:text=conf%20file.,and%20has%20no%20console%20attached.)
+
 See also photos of sites where to download the mosquitto broker app for Raspberry Pi or for a MS Windows PC [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Broker).
+
+
 
 - Broker reset: in the case you reset or reboot your local broker device: wait until the local broker is running. Then reset both the MQTT Publisher device and the MQTT Subscriber(s) device(s) so that they report themselves to the MQTT local broker device as Publisher and Subscriber(s).
 
