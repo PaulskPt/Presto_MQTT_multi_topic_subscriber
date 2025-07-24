@@ -384,15 +384,16 @@ In the script these lines load the broker choice and print info about this choic
 151 # MQTT setup
 152 use_local_broker = mqtt_config_dict['use_local_broker']
 153 #print(f"type(use_local_broker) = {type(use_local_broker)}")
-154 if use_local_broker:
-155    print("Using local Broker")
-156 else:
-157    print("Using external Broker")
-158
-159 if use_local_broker:
-160    BROKER = mqtt_config_dict['broker_local'] # Use the mosquitto broker app on the RaspberryPi CM5
-161 else:
-162    BROKER = mqtt_config_dict['broker_external']
+154 if my_debug:
+155   if use_local_broker:
+156      print("Using local Broker")
+157   else:
+158      print("Using external Broker")
+159
+160 if use_local_broker:
+161    BROKER = mqtt_config_dict['broker_local'] # Use the mosquitto broker app on the RaspberryPi CM5
+162 else:
+163    BROKER = mqtt_config_dict['broker_external']
 
 ```
 The "publisher_id" and "subscriber_id" are also defined in the file "secrets.json". They are read into the script as follows:
