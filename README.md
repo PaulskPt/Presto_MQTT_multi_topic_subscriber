@@ -524,7 +524,7 @@ Equipment connected to the Publisher device:
 ### For the MQTT Subscriber device:
 - Pimoroni Presto device: [info](https://shop.pimoroni.com/products/presto?variant=54894104019323).
 
-# Publisher device and accessories wiring
+# Publisher device and external I2C devices wiring
 
 For an image of the I2C wiring see [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/images/20250720_202423_hardware.png). Note that this is an edited image. There was another device on the breadboard. I covered that part to not confuse the image with the unused device.
 
