@@ -145,6 +145,7 @@ Using local Broker
 main(): Connecting to WiFi...
 main(): WiFi connected.
 NP_clear(): 🌈 ambient neopixels off
+setup(): Display hours wakeup: 7, gotosleep: 23
 setup(): Connecting to MQTT local broker on port 1883
 setup(): Not deleting log files, flag: "delete_logs" = False
 setup(): Successfully connected to MQTT broker.
