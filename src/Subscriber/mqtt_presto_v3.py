@@ -106,12 +106,50 @@ err = exc.ERR(10) # create an instance of the ERR class
 if err and not my_debug :
     print(TAG+f"error class object created. It is of class: {type(err)}")
 
+def clear_broker_json():
+    ret = -1
+    fn = "sys_broker.json"
+    if not my_debug:
+        print("clear_broker_json(): entering...")
+    try:
+        sBroker = {"sys_broker": {}}  # create a clean sBroker
+        with open(fn, "w") as fp:
+            fp.write(ujson.dumps(sBroker))
+        ret = 1
+        if not my_debug:
+            print(f"file: \"{fn}\" has been reset.")
+    except OSError as exc:
+        print(f"Error: {exc}")
+    
+    return ret
+
 # Get the external definitions
-with open('secrets.json') as fp:
-    secrets = ujson.loads(fp.read())
+#with open('secrets.json') as fp: # method I used, manually reads file content first, then parses it
+#    secrets = ujson.loads(fp.read())
+clear_broker_json()
+time.sleep(1)
+with open('sys_broker.json') as f:  # method used by Copilot. This reads and parses in one step
+    sBroker = ujson.load(f)
+
+# "$SYS/broker/" keys in sys_broker.json are loaded
+# however these keys lack the "$SYS/broker/" prefix
+sysBrokerDictModified = False
+
+sys_broker_dict = sBroker.get("sys_broker", {})
+
+if len(sys_broker_dict) > 0:
+    if not my_debug:
+        print("sys_broker_dict: key, value list = ")
+        for k,v in sys_broker_dict.items():
+            print(f"/$SYS/broker/{k} : {v}")
+
+with open('secrets.json') as f:  # method used by Copilot. This reads and parses in one step
+    secrets = ujson.load(f)
+
+mqtt_config_dict = secrets.get("mqtt", {})
 
 # MQTT setup
-use_local_broker = secrets['mqtt']['use_local_broker']
+use_local_broker = mqtt_config_dict['use_local_broker'] # secrets['mqtt']['use_local_broker']
 #print(f"type(use_local_broker) = {type(use_local_broker)}")
 if use_local_broker:
     print("Using local Broker")
@@ -119,19 +157,28 @@ else:
     print("Using external Broker")
 
 if use_local_broker:
-    BROKER = secrets['mqtt']['broker_local']  # Use the mosquitto broker app on the RaspberryPi CM5
+    BROKER = mqtt_config_dict['broker_local'] # secrets['mqtt']['broker_local']  # Use the mosquitto broker app on the RaspberryPi CM5
 else:
-    BROKER = secrets['mqtt']['broker_external']
-PORT = int(secrets['mqtt']['port'])
+    BROKER = mqtt_config_dict['broker_external'] # secrets['mqtt']['broker_external']
+PORT = int(mqtt_config_dict['port']) # int(secrets['mqtt']['port'])
 
 TOPIC_LST = []
-for i in range(4):
-    topicStr = "topic" + str(i)
-    #TOPIC_LST.append(bytes(secrets['mqtt'][topicStr], 'utf-8')) 
-    TOPIC_LST.append(secrets['mqtt'][topicStr]) 
+#for i in range(5):
+#    topicStr = "topic" + str(i)
+#    #TOPIC_LST.append(bytes(secrets['mqtt'][topicStr], 'utf-8')) 
+#    TOPIC_LST.append(secrets['mqtt'][topicStr]) 
 
-CLIENT_ID = bytes(secrets['mqtt']['client_id'], 'utf-8')
-PUBLISHER_ID = secrets['mqtt']['publisher_id']
+# Loop through keys and create globals for keys starting with "topic"
+for key, value in mqtt_config_dict.items():
+    if key.startswith("topic"):
+        #globals()[key] = value  # Dynamically assign global variable
+        TOPIC_LST.append(value) 
+        if not my_debug:
+            print(f"{key} = {value}")
+
+CLIENT_ID = bytes(mqtt_config_dict['client_id'],'utf-8') # bytes(secrets['mqtt']['client_id'], 'utf-8')
+PUBLISHER_ID = mqtt_config_dict['publisher_id'] # secrets['mqtt']['publisher_id']
+
 
 if my_debug:
     print(f"BROKER = {BROKER}")
@@ -710,8 +757,66 @@ def del_logfiles():
     
     except OSError as e:
         print(TAG+f"Could not list directory: {log_dir} for deletion. Error: {e}")
+        
+def save_broker_dict():
+    global sBroker, sysBrokerDictModified
+    ret = -1
+    fn = "sys_broker.json"
+    if not sysBrokerDictModified:
+        return 1
+    try:
+        sBroker["sys_broker"] = sys_broker_dict  # Update the wrapper dict
+        with open(fn, "w") as fp:
+            fp.write(ujson.dumps(sBroker))
+        ret = 1
+    except OSError as exc:
+        print(f"Error: {exc}")
+        
+    if ret == 1:
+        if not my_debug:
+            print(f"sys_broker_dict written to file: \"{fn}\"")
+        sysBrokerDictModified = False # reset flag
+    return ret
+
+def broker_topic_in_db():
+    global sBroker, sys_broker_dict, topic_rcvd, payload, sysBrokerDictModified
+    TAG = "broker_topic_in_db(): "
+    ret = -1
+    if topic_rcvd.startswith("$SYS"):
+        if payload:
+            # "$SYS/broker/"
+            short_key = topic_rcvd[len("$SYS/broker/"):]
+            if "retained messages/count" == short_key: # correct this faulty topic (containing a space)
+                faulty_key = short_key
+                short_key = "messages/retained/count"
+                if not my_debug:
+                    print(TAG+f"changing faulty key: {faulty_key} into: {short_key}")
+            if short_key in sys_broker_dict.keys():
+                ret = 1
+                sysBrokerDictModified = True
+                old_value = sys_broker_dict[short_key]
+                if my_debug:
+                    print(TAG+f"topic_rcvd = \"{topic_rcvd}\", key = \"{short_key}\", old value = {old_value}")
+                sys_broker_dict[short_key] = payload
+                new_value = sys_broker_dict[short_key]
+                if my_debug:
+                    print(TAG+f"topic_rcvd = \"{topic_rcvd}\", key = \"{short_key}\", value updated to: {new_value}")
+            else:
+                sys_broker_dict[short_key] = payload
+                sysBrokerDictModified = True
+                ret = 1
+        else:
+            print(TAG+f"msg topic: \"{topic_rcvd}\", payload empty? : {payload}")
+            
+        if sysBrokerDictModified:
+            if my_debug:
+                print(TAG+f"topic_rcvd = \"{topic_rcvd}\", short_key \"{short_key}\", added to: sys_broker_dict")
+    return ret 
 
 def topic_in_lst():
+    if topic_rcvd.startswith("$SYS"):
+        return 1  # Accept all topic_rcvd starting with '$SYS'
+    TAG = "topic_in_lst(): "
     ret = -1
     topic_idx = 0
     le = len (TOPIC_LST)
@@ -720,10 +825,15 @@ def topic_in_lst():
             if TOPIC_LST[i] == topic_rcvd:
                 ret = i
                 break
+    if my_debug:
+        print(TAG+f"topic received: \"{topic_rcvd}\" ", end='')
     if ret < 0:
-        if not my_debug:
-            print(f"topic received: {topic_rcvd} not in TOPIC_LST")
+        if my_debug:
+            print(" not ", end='')
+    if my_debug:
+        print("found in TOPIC_LST")
     return ret
+
 # MQTT callback function
 def mqtt_callback(topic, msg):
     global topic_rcvd, msg_rcvd, payload, last_update_time, topic_idx
@@ -743,14 +853,27 @@ def mqtt_callback(topic, msg):
             return
         else:
             topic_idx = n
+            
+        payload = ujson.loads(msg)
+        
         if msg.endswith(b'}'):
-            payload = ujson.loads(msg)
+            # payload = ujson.loads(msg)
             last_update_time = time.time()  # Update the last update time
             if my_debug:
                 print(TAG+f"type(payload) = {type(payload)}")
+        
+        elif topic_rcvd.startswith("$SYS"):
+            if isinstance(payload, bytes):
+                payloadStr = payload.decode("utf-8")
+            elif isinstance(payload, int):
+                payloadStr = str(payload)
+            if broker_topic_in_db():
+                if not my_debug:
+                    print(TAG+f"$SYS topic_rcvd: \"{topic_rcvd}\", payloadStr: \"{payloadStr}\"")
+                return
         else:
             payload = None
-            print(TAG+"Incomplete message received, skipping.")
+            print(TAG+f"Incomplete message \"{msg}\" received, skipping.")
             return
 
         ts = payload.get("ts", datetime_empty)
@@ -1029,31 +1152,32 @@ def split_msg():
                 print(TAG+f"toggle payload.keys() = {toggle.keys()}")
                 print(TAG+f"toggle payload.items() = {toggle.items()}")
             for key, data in toggle.items():
-              if isinstance(data, int):
-                print("{:s} key = {:>2s}, data = {:>2d}".format(TAG, key, data))
-              elif isinstance(data, str):
-                print("{:s} key = {:>2s}, data = {:>2s}".format(TAG, key, data))
-              if key == "u": # unit of measurement
-                unit = data
-              elif key == "mx":
-                toggle_mx_val = data
-              elif key == "mn":
-                toggle_mn_val = data
-              if key == "v": # value
-                if unit == "i":
-                  value = data
-                elif unit == "s":
-                  value = int(data)
-                lights_ON = True if value == 1 else False # set the global lights_ON flag
-                if lights_ON != lights_ON_old:  # Only change if value differs from last received value
-                    print(TAG+f"toggling ambient light neopixel leds {'on' if lights_ON == True else 'off'}")
-                    #lights_ON_old = lights_ON
-                    if lights_ON:
-                      NP_color()  # Switch bl leds off
+                if my_debug:
+                    if isinstance(data, int):
+                        print("{:s} key = {:>2s}, data = {:>2d}".format(TAG, key, data))
+                    elif isinstance(data, str):
+                        print("{:s} key = {:>2s}, data = {:>2s}".format(TAG, key, data))
+                if key == "u": # unit of measurement
+                    unit = data
+                elif key == "mx":
+                    toggle_mx_val = data
+                elif key == "mn":
+                    toggle_mn_val = data
+                if key == "v": # value
+                    if unit == "i":
+                        value = data
+                    elif unit == "s":
+                        value = int(data)
+                    lights_ON = True if value == 1 else False # set the global lights_ON flag
+                    if lights_ON != lights_ON_old:  # Only change if value differs from last received value
+                        print(TAG+f"toggling ambient light neopixel leds {'on' if lights_ON == True else 'off'}")
+                        #lights_ON_old = lights_ON
+                        if lights_ON:
+                            NP_color()  # Switch bl leds off
+                        else:
+                            NP_clear()  # Switch bl leds on and set color of lightsColorIdx
                     else:
-                      NP_clear()  # Switch bl leds on and set color of lightsColorIdx
-                else:
-                    print(TAG+f"not toggling ambient light neopixel leds. lights_ON = {lights_ON}, lights_ON_old = {lights_ON_old}")
+                        print(TAG+f"not toggling ambient light neopixel leds. lights_ON = {lights_ON}, lights_ON_old = {lights_ON_old}")
         elif topicIdx in (2, 3):  # lights/Feath/color_inc or color_dec
             if not lights_ON:
                 return
@@ -1336,7 +1460,8 @@ def setup():
     NP_clear()
     
     #rx_bfr=1024  # ← Increase to 1024 or higher
-    print(TAG+f"Connecting to MQTT broker at {BROKER} on port {PORT}") # , recv_buffer {rx_bfr}")
+    #print(TAG+f"Connecting to MQTT broker at {BROKER} on port {PORT}") # , recv_buffer {rx_bfr}")
+    print(TAG+f"Connecting to MQTT {"local" if use_local_broker else "external"} broker on port {PORT}") # , recv_buffer {rx_bfr}")
     
     client = MQTTClient(CLIENT_ID, BROKER, port=PORT) #, recv_buffer=rx_bfr)
     
@@ -1397,6 +1522,12 @@ start_t = time.time()
 current_t = start_t
 elapsed_t = 0
 interval_t = 5 * 60  # Interval to check for call rotate_log_if_needed() in seconds (300 seconds = 5 minutes)
+
+save_broker_dict_interval_t = 15 * 60 # 15 minutes
+save_broker_dict_start_t = 0
+save_broker_dict_curr_t = 0
+save_broker_dict_elapsed_t = 0
+
 msg_rx_timeout_interval_t = 3 * 60 # 3 minutes
 msg_rx_timeout_start_t = start_t # same as start_t
 msg_rx_timeout_curr_t = 0
@@ -1408,6 +1539,12 @@ while True:
     try:
         current_t = time.time()
         elapsed_t = current_t - start_t
+        
+        save_broker_dict_elapsed_t = save_broker_dict_curr_t - save_broker_dict_start_t
+        if save_broker_dict_elapsed_t >= save_broker_dict_interval_t:
+            save_broker_dict_start_t = save_broker_dict_curr_t
+            save_broker_dict()
+            
         if my_debug:
             if elapsed_t % 10 == 0 and (elapsed_t != last_triggered or last_triggered == -1):
                 last_triggered = elapsed_t
@@ -1490,6 +1627,7 @@ while True:
         # sys.print_exception(e)
         # err.log(e)
         add_to_log("Session interrupted by user — logging and exiting.")
+        save_broker_dict()
         cleanup()
         pr_ref()
         pr_log()
