@@ -151,10 +151,11 @@ mqtt_config_dict = secrets.get("mqtt", {})
 # MQTT setup
 use_local_broker = mqtt_config_dict['use_local_broker'] # secrets['mqtt']['use_local_broker']
 #print(f"type(use_local_broker) = {type(use_local_broker)}")
-if use_local_broker:
-    print("Using local Broker")
-else:
-    print("Using external Broker")
+if my_debug:
+    if use_local_broker:
+        print("Using local Broker")
+    else:
+        print("Using external Broker")
 
 if use_local_broker:
     BROKER = mqtt_config_dict['broker_local'] # secrets['mqtt']['broker_local']  # Use the mosquitto broker app on the RaspberryPi CM5
