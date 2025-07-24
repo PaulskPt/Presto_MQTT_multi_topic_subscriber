@@ -473,6 +473,13 @@ If you, like me, also use a Raspberry Pi model to host a Mosquitto broker applic
 ### Broker log
 The broker application saves its log in ```\var\log\mosquitto\mosquitto.log```.
 
+To see the status of the broker app on a Raspberry Pi, from a terminal session, type 
+```
+sudo systemctl status mosquitto.service
+```
+
+Photo of the result of this command see: [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/images/Broker/20250724_20h56m18s_mosquitto.service_status.png)
+
 For more information about logging for the mosquitto app see: [how to log](http://www.steves-internet-guide.com/mosquitto-logging/#:~:text=conf%20file.,and%20has%20no%20console%20attached.)
 
 See also photos of sites where to download the mosquitto broker app for Raspberry Pi or for a MS Windows PC [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Broker).
