@@ -145,7 +145,7 @@ Using local Broker
 main(): Connecting to WiFi...
 main(): WiFi connected.
 NP_clear(): 🌈 ambient neopixels off
-setup(): Connecting to MQTT broker at 192.168._.___ on port 1883
+setup(): Connecting to MQTT local broker on port 1883
 setup(): Not deleting log files, flag: "delete_logs" = False
 setup(): Successfully connected to MQTT broker.
 setup(): Subscribed to topic: "sensors/Feath/ambient"
