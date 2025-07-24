@@ -10,11 +10,13 @@ by Paulus Schulinck (Github handle: @PaulskPt)
 - by means of MQTT messages.
 
 ## MQTT messages come by "topics".
-### This repo works with four different topics:
+### This repo works with four different topics for the Publisher device and six topics for the Subscriber device:
 - "sensor/Feath/ambient". Containing ambient data from a remote sensor
 - "lights/Feath/toggle". Containing a lights toggle command from a remote controller
 - "ligths/Feath/color_inc". Containing a lights color increase command from a remote controller
 - "lights/Feath/color_dec". Containing a lights color decrease command from a remote controller
+- "$SYS/broker/clients/disconnected". Subscriber device only. 
+- "$SYS/broker/clients/connected". Subscriber device only.
 
 If you do not know what is the MQTT communication protocol see: [MQTT](https://en.wikipedia.org/wiki/MQTT).
 
@@ -441,6 +443,8 @@ Example of the contents of the current log showed after a KeyboardInterrupt:
     "topic1": "lights/Feath/toggle",
     "topic2": "lights/Feath/color_inc",
     "topic3": "lights/Feath/color_dec",
+    "topic4": "$SYS/broker/clients/connected",
+    "topic5": "$SYS/broker/clients/disconnected",
     "client_id":  "PrestoMQTTClient",
     "publisher_id": "Feath"
   },
@@ -450,7 +454,21 @@ Example of the contents of the current log showed after a KeyboardInterrupt:
   }
 }
 ```
-# MQTT broker
+## File sys_broker.json  (for the MQTT Subscriber device)
+The file "/sys_broker.json" will be cleared at the start of the Subscriber script. As soon as arrive a $SYS topic message of one of the $SYS topics subscribed, the topic name and its value will be added to sys_broker.json. As soon as the running of the sketch is interrupted by a key-combo: <Ctrl+C>, the contents of the file sys_broker.json will be printed to the Thonny Shell window.
+
+```
+sys_broker_dict written to file: "sys_broker.json"
+Size of sys_broker json file: 40.
+Contents of sys_broker json file: "/sys_broker.json"
+pr_log():  01) {"sys_broker": {"clients/connected": 2}}
+```
+
+
+
+
+
+## File broker
 
 If you, like me, also use a Raspberry Pi model to host a Mosquitto broker application, see the files in the folder [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Broker/etc)
 - ```/etc/hosts.allow``` : insert in this file the ip-addres of your mosquitto broker. In my case: ```mosquitto: 127.0.0.1```
