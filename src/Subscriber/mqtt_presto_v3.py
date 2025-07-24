@@ -179,6 +179,11 @@ for key, value in mqtt_config_dict.items():
 CLIENT_ID = bytes(mqtt_config_dict['client_id'],'utf-8') # bytes(secrets['mqtt']['client_id'], 'utf-8')
 PUBLISHER_ID = mqtt_config_dict['publisher_id'] # secrets['mqtt']['publisher_id']
 
+display_hrs_config_dict = secrets.get("display", {})
+# print(f"display_hrs_config_dict.items() = {display_hrs_config_dict.items()}")
+DISPLAY_HOUR_GOTOSLEEP = display_hrs_config_dict['gotosleep']
+DISPLAY_HOUR_WAKEUP = display_hrs_config_dict['wakeup']
+del display_hrs_config_dict
 
 if my_debug:
     print(f"BROKER = {BROKER}")
@@ -1300,7 +1305,7 @@ def draw(mode:int = 1):
         else:
            time_draw_hh = 0
         hh = time_draw_hh    
-        if  hh >= 9 and hh < 21:
+        if  hh >= DISPLAY_HOUR_WAKEUP and hh < DISPLAY_HOUR_GOTOSLEEP:
             display.set_pen(ORANGE)
             CURRENT_COLOUR = ORANGE
         else:
@@ -1465,6 +1470,9 @@ def setup():
     lights_ON = False
     lights_ON_old = False
     NP_clear()
+    
+    if not my_debug:
+        print(TAG+f"Display hours wakeup: {DISPLAY_HOUR_WAKEUP}, gotosleep: {DISPLAY_HOUR_GOTOSLEEP}")
     
     #rx_bfr=1024  # ← Increase to 1024 or higher
     #print(TAG+f"Connecting to MQTT broker at {BROKER} on port {PORT}") # , recv_buffer {rx_bfr}")
