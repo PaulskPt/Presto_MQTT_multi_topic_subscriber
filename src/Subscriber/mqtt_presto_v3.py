@@ -1412,30 +1412,37 @@ def draw(mode:int = 1):
     
     if not my_debug:
         do_line()
-        
 
+def print_file_contents(tag, file_path, file_label):
+    try:
+        file_size = os.stat(file_path)[6]
+        if file_size > 0:
+            print(f"Size of {file_label}: {file_size}.")
+            print(f"Contents of {file_label}: \"{file_path}\"")
+            with open(file_path, 'r') as file_obj:
+                for i, line in enumerate(file_obj, start=1):
+                    print(f"{tag} {i:02d}) {line.strip()}")
+            do_line()
+        else:
+            print(tag + f"{file_label} \"{file_path}\" is empty")
+    except OSError as e:
+        print(tag + f"{file_label} not found or unable to open. Error: {e}")
+        
 def pr_log():
     global log_path, log_obj, log_size_max
     TAG = "pr_log(): "
-    try:
-        if log_obj:
-            log_obj.close()
-        
-        if log_path:
-            log_size = os.stat(log_path)[6]  # File size in bytess
-            if log_size > 0:
-                print(f"Size of log file: {log_size}. Max log file size can be: {log_size_max} bytes.")
-                print(f"Contents of log file: \"{log_path}\"")
-                with open(log_path, 'r') as log_obj:
-                    f_cnt = 0
-                    for line in log_obj:
-                        f_cnt += 1
-                        print("{:s} {:02d}) {:s}".format(TAG, f_cnt, line.strip())) # Remove trailing newline for cleaner output
-                    do_line()
-            else:
-                print(TAG+f"log file \"{log_path}\" is empty")
-    except OSError as e:
-        print(TAG+f"No log file found or unable to open. Error: {e}")
+    sys_broker_path = "/sys_broker.json" # get_prefix() + "sys_broker.json"
+
+    # Print sys_broker.json contents
+    print_file_contents(TAG, sys_broker_path, "sys_broker json file")
+
+    # Close log object if open
+    if log_obj:
+        log_obj.close()
+
+    # Print log file contents
+    print_file_contents(TAG, log_path, "log file")
+
 
 def cleanup():
     global ref_exist, ref_obj, ref_path, log_exist, log_obj, log_path
