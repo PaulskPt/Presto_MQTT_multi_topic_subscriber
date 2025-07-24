@@ -152,6 +152,8 @@ setup(): Subscribed to topic: "sensors/Feath/ambient"
 setup(): Subscribed to topic: "lights/Feath/toggle"
 setup(): Subscribed to topic: "lights/Feath/color_inc"
 setup(): Subscribed to topic: "lights/Feath/color_dec"
+setup(): Subscribed to topic: "$SYS/broker/clients/disconnected"
+setup(): Subscribed to topic: "$SYS/broker/clients/connected"
 --------------------------------------------------
 ```
 
