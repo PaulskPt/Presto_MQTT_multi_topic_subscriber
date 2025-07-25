@@ -1,5 +1,5 @@
-#define SECRET_SSID "Vodafone-8D96F1"
-#define SECRET_PASS "z2pTqpFMMX6jXdv3"
+#define SECRET_SSID "<Your WiFi SSID here>"
+#define SECRET_PASS "<Your WiFi Password here>"
 #define SECRET_TIMEZONE_OFFSET "1" // Europe/Lisbon
 // #define TIMEZONE_OFFSET "-4" // America/New_York
 #define SECRET_USE_BROKER_LOCAL "1"  // We usa a local MQTT broker
