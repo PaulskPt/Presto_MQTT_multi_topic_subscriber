@@ -106,6 +106,7 @@ err.log
 mqtt_log_2025-07-02T140505.txt
 presto_mqtt_v3.py
 secrets.json
+sys_broker.json
 
 ```
 
@@ -125,6 +126,7 @@ err.log
 mqtt_log_2025-07-02T140505.txt
 mqtt_presto_v3.py
 secrets.json
+sys_broker.json
 [all other files from the Pimoroni (firmware) like main.py and all their example .py files]
 
 ```
