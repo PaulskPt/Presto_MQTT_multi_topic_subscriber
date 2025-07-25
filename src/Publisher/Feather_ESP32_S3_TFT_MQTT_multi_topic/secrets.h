@@ -8,6 +8,7 @@
 #define SECRET_MQTT_BROKER_LOCAL1 "192.168._.__"  // Local mosquitto broker app on PC Paul5
 #define SECRET_MQTT_BROKER_LOCAL2 "192.168._.___"  // Local mosquitto broker app on RPi CM5
 #define SECRET_MQTT_PORT "1883"
+#define SECRET_MQTT_CLIENT_ID "Adafruit_Feather_ESP32S3TFT"
 #define SECRET_MQTT_TOPIC_PREFIX_SENSORS "sensors"
 #define SECRET_MQTT_TOPIC_PREFIX_LIGHTS "lights"
 #define SECRET_MQTT_TOPIC_PREFIX_TODO "todo"

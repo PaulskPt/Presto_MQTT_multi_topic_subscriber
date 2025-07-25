@@ -1,0 +1,15 @@
+2025-07-25 11h16 utc +1
+MQTT Publisher activity logged at Broker.
+Log from MQTT Broker:
+
+jul 25 11:16:25 RPiCM5 mosquitto[824]: 2025-07-25T11:16:25: Sending CONNACK to Adafruit_Feather_ESP32S3TFT (0, 0)
+jul 25 11:16:25 RPiCM5 mosquitto[824]: 2025-07-25T11:16:25: Client Adafruit_Feather_ESP32S3TFT closed its connection.
+jul 25 11:16:25 RPiCM5 mosquitto[824]: 2025-07-25T11:16:25: New connection from 192.168._.___:55005 on port 1883.
+jul 25 11:16:25 RPiCM5 mosquitto[824]: 2025-07-25T11:16:25: New client connected from 192.168._.___:55005 as Adafruit_Feather_ESP32S3T>
+jul 25 11:16:25 RPiCM5 mosquitto[824]: 2025-07-25T11:16:25: No will message specified.
+jul 25 11:16:25 RPiCM5 mosquitto[824]: 2025-07-25T11:16:25: Sending CONNACK to Adafruit_Feather_ESP32S3TFT (0, 0)
+jul 25 11:16:25 RPiCM5 mosquitto[824]: 2025-07-25T11:16:25: Client Adafruit_Feather_ESP32S3TFT closed its connection.
+jul 25 11:16:25 RPiCM5 mosquitto[824]: 2025-07-25T11:16:25: New connection from 192.168._.___:55006 on port 1883.
+jul 25 11:16:25 RPiCM5 mosquitto[824]: 2025-07-25T11:16:25: New client connected from 192.168._.___:55006 as Adafruit_Feather_ESP32S3T>
+jul 25 11:16:25 RPiCM5 mosquitto[824]: 2025-07-25T11:16:25: No will message specified.
+

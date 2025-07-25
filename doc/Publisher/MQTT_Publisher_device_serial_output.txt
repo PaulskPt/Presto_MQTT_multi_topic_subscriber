@@ -1,4 +1,4 @@
-Sunday 2025-07-20 11h57 utc+1
+Friday 2025-07-25 10h37 utc +1
 board: Adafruit Feather ESP32-S3 TFT
 IDE: Arduino v2.3.5
 Sketch: Feather_ESP32_S3_TFT_MQTT_multi_topic.ino
@@ -8,6 +8,7 @@ Notes: 1) moved global variable "remote_led_is_on" from function send_msg()  to 
 	      remote_led_is_on.
 		  
 Serial Monitor output:
+
 
 ❌ Couldn't find Adafruit LC709203F?
 Checking for Adafruit MAX1704X..
@@ -19,40 +20,37 @@ Default port (Wire) I2C scan: 0x23, 0x36, 0x50, 0x51, 0x6A, 0x76,
 ✅ gamepad QT address: 0x50
 ✅ seesaw started
 ✅ Found Product 5743
-✅ Connected to SSID: <Your_WiFi_SSID>
-IP Address: 192.168._.___
+✅ Connected to SSID: Vodafone-8D96F1
+IP Address: 192.168.1.222
+
 Timezone offset = 1 hour(s)
 Starting connection to NTP server...
-✅ MQTT You're connected to broker: 192.168._.___:1883
+MQTT client ID: "Adafruit_Feather_ESP32S3TFT"
+✅ MQTT You're connected to local broker 192.168.1.114:1883
 🕒 ===>>> Update from NTP Server
-✅ NTP Unix time (UTC) = 1753009057
+✅ NTP Unix time (UTC) = 1753439823
 ✅ RTC successfully set from Unix time.
-getUnixTimeFromRTC(): RTCdate and time: Sunday, 2025-07-20T10:57:37 UTC
+getUnixTimeFromRTC(): RTCdate and time: Friday, 2025-07-25T10:37:03 UTC
 getUnixTimeFromRTC(): HoursLocal = 11, HoursLocal_old = 255
 -------------------------------------------------------
-
-board ID = "Feather"
-loop(): MQTT message send interval = 1 minute
-Joystick x: 504, y: 505
-🕒 ===>>> ✅ NTP Unix time (UTC) = 1753009057
-✅ RTC successfully set from Unix time.
-getUnixTimeFromRTC(): RTCdate and time: Sunday, 2025-07-20T10:57:37 UTC
-getUnixTimeFromRTC(): HoursLocal = 11, HoursLocal_old = 11
--------------------------------------------------------
-getUnixTimeFromRTC(): RTCdate and time: Sunday, 2025-07-20T10:57:37 UTC
+Free heap: 2238168 bytes
+Minimum free heap ever: 2224680 bytes
+Largest block available: 2064372 bytes
+getUnixTimeFromRTC(): RTCdate and time: Friday, 2025-07-25T10:37:03 UTC
 getUnixTimeFromRTC(): HoursLocal = 11, HoursLocal_old = 11
 Bytes written by composePayload(): 253
 Topic: "sensors/Feath/ambient"
 contents payloadBuffer: 
-{"ow":"Feath","de":"PC-Lab","dc":"BME280","sc":"meas","vt":"f","ts":1753012657,"reads":{"t":{"v":28.7,"u":"C","mn":-10,"mx":50},
-"p":{"v":1002.3,"u":"mB","mn":800,"mx":1200},"a":{"v":91.4,"u":"m","mn":0,"mx":3000},"h":{"v":48.5,"u":"%","mn":0,"mx":100}}}
+{"ow":"Feath","de":"PC-Lab","dc":"BME280","sc":"meas","vt":"f","ts":1753443423,"reads":{"t":{"v":29.3,"u":"C","mn":-10,"mx":50},
+"p":{"v":1002.2,"u":"mB","mn":800,"mx":1200},"a":{"v":92.3,"u":"m","mn":0,"mx":3000},"h":{"v":36.5,"u":"%","mn":0,"mx":100}}}
 Topic length: 21
 Payload length: 253
-MQTT message ID: 1753012657 = 2025-07-20T11:57:37+01:00
+MQTT message ID: 1753443423 = 2025-07-25T11:37:03+01:00
+✅ MQTT message sent
 MQTT message group:   1 sent
 -------------------------------------------------------
-
-✅ gamepad QT address: 0x50
+[...]
+ gamepad QT address: 0x50
 
 Button B pressed
 remote light changed. Light = On
@@ -60,17 +58,60 @@ remote light changed. Light = On
 New Msg type:
 lights_toggle
 
-getUnixTimeFromRTC(): RTCdate and time: Sunday, 2025-07-20T10:58:37 UTC
+getUnixTimeFromRTC(): RTCdate and time: Friday, 2025-07-25T10:42:15 UTC
 getUnixTimeFromRTC(): HoursLocal = 11, HoursLocal_old = 11
 Bytes written by composePayload(): 116
 Topic: "lights/Feath/toggle"
 contents payloadBuffer: 
 {"ow":"Feath","de":"PC-Lab","dc":"home","sc":"ligh","vt":"i",
-"ts":1753012717,"toggle":{"v":1,"u":"i","mn":1,"mx":0}}                 <<<=== see: "v":1
+"ts":1753443735,"toggle":{"v":1,"u":"i","mn":0,"mx":1}}
 Topic length: 19
 Payload length: 116
-MQTT message ID: 1753012717 = 2025-07-20T11:58:37+01:00
-MQTT message group:   2 sent
+MQTT message ID: 1753443735 = 2025-07-25T11:42:15+01:00
+✅ MQTT message sent
+MQTT message group:   7 sent
+-------------------------------------------------------
+✅ gamepad QT address: 0x50
+
+Button X pressed
+colorIndex = 1
+
+New Msg type:
+lights_color_inc
+
+getUnixTimeFromRTC(): RTCdate and time: Friday, 2025-07-25T10:42:42 UTC
+getUnixTimeFromRTC(): HoursLocal = 11, HoursLocal_old = 11
+Bytes written by composePayload(): 117
+Topic: "lights/Feath/color_inc"
+contents payloadBuffer: 
+{"ow":"Feath","de":"PC-Lab","dc":"colr","sc":"inc","vt":"i",
+"ts":1753443762,"colorInc":{"v":1,"u":"i","mn":0,"mx":9}}
+Topic length: 22
+Payload length: 117
+MQTT message ID: 1753443762 = 2025-07-25T11:42:42+01:00
+✅ MQTT message sent
+MQTT message group:   8 sent
+-------------------------------------------------------
+✅ gamepad QT address: 0x50
+
+Button Y pressed
+colorIndex = 0
+
+New Msg type:
+lights_color_dec
+
+getUnixTimeFromRTC(): RTCdate and time: Friday, 2025-07-25T10:43:03 UTC
+getUnixTimeFromRTC(): HoursLocal = 11, HoursLocal_old = 11
+Bytes written by composePayload(): 117
+Topic: "lights/Feath/color_dec"
+contents payloadBuffer: 
+{"ow":"Feath","de":"PC-Lab","dc":"colr","sc":"dec","vt":"i",
+"ts":1753443783,"colorDec":{"v":0,"u":"i","mn":0,"mx":9}}
+Topic length: 22
+Payload length: 117
+MQTT message ID: 1753443783 = 2025-07-25T11:43:03+01:00
+✅ MQTT message sent
+MQTT message group:   9 sent
 -------------------------------------------------------
 ✅ gamepad QT address: 0x50
 
@@ -80,14 +121,16 @@ remote light changed. Light = Off
 New Msg type:
 lights_toggle
 
-getUnixTimeFromRTC(): RTCdate and time: Sunday, 2025-07-20T11:04:37 UTC
-getUnixTimeFromRTC(): HoursLocal = 12, HoursLocal_old = 12
+getUnixTimeFromRTC(): RTCdate and time: Friday, 2025-07-25T10:43:20 UTC
+getUnixTimeFromRTC(): HoursLocal = 11, HoursLocal_old = 11
 Bytes written by composePayload(): 116
 Topic: "lights/Feath/toggle"
 contents payloadBuffer: 
 {"ow":"Feath","de":"PC-Lab","dc":"home","sc":"ligh","vt":"i",
-"ts":1753013077,"toggle":{"v":0,"u":"i","mn":1,"mx":0}}                 <<<=== see: "v":0
+"ts":1753443800,"toggle":{"v":0,"u":"i","mn":0,"mx":1}}
 Topic length: 19
 Payload length: 116
-MQTT message ID: 1753013077 = 2025-07-20T12:04:37+01:00
-MQTT message group:   8 sent
+MQTT message ID: 1753443800 = 2025-07-25T11:43:20+01:00
+✅ MQTT message sent
+MQTT message group:  10 sent
+-------------------------------------------------------

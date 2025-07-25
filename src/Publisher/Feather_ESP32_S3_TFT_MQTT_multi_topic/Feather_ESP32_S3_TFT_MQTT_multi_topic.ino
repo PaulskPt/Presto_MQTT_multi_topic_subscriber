@@ -56,6 +56,7 @@
 #include <Adafruit_seesaw.h>
 //#include <Fonts/FreeSans12pt7b.h>
 #include <Fonts/FreeMono12pt7b.h>
+#include "esp_heap_caps.h"
 
 // #define IRQ_PIN   5
 
@@ -210,7 +211,8 @@ MqttClient mqttClient(wifiClient);
 bool use_broker_local; 
 const char* broker;  // will be set in setup()
 
-int        port = atoi(SECRET_MQTT_PORT);                                                            // 1883;
+int        port = atoi(SECRET_MQTT_PORT); 
+const char MQTT_CLIENT_ID[]                      = SECRET_MQTT_CLIENT_ID;                                                           // 1883;
 const char TOPIC_PREFIX_SENSORS[]                = SECRET_MQTT_TOPIC_PREFIX_SENSORS;                 // "sensors"
 const char TOPIC_PREFIX_LIGHTS[]                 = SECRET_MQTT_TOPIC_PREFIX_LIGHTS;                  // "lights"
 const char TOPIC_PREFIX_TODO[]                   = SECRET_MQTT_TOPIC_PREFIX_TODO;                    // "todo"
@@ -333,6 +335,21 @@ void composeMsgTopic(enum mqtt_msg_type msgType = tpah_sensor) {  // default mes
   }
   //return msg_topic;
 }
+
+void printFreeMemory() {
+  Serial.print("Free heap: ");
+  Serial.print(esp_get_free_heap_size());
+  Serial.println(" bytes");
+
+  Serial.print("Minimum free heap ever: ");
+  Serial.print(esp_get_minimum_free_heap_size());
+  Serial.println(" bytes");
+
+  Serial.print("Largest block available: ");
+  Serial.print(heap_caps_get_largest_free_block(MALLOC_CAP_DEFAULT));
+  Serial.println(" bytes");
+}
+
 
 void setupDisplayTimes() {
   // displaySleepTime and displayAwakeTime are global variables
@@ -1445,6 +1462,27 @@ void prettyPrintPayload(const char* buffer, int length) {
     Serial.println(); // Final newline
 }
 
+void ensureMqttConnection() {
+  if (!mqttClient.connected()) {
+    Serial.println("MQTT disconnected. Attempting reconnect...");
+
+    // Customize your client ID
+    mqttClient.setId("Arduino-GamepadClient");
+    
+    // Optional: set credentials
+    // mqttClient.setUsernamePassword("username", "password");
+
+    int result = mqttClient.connect("your.mqtt.broker", 1883);
+
+    if (result == 1) {
+      Serial.println("MQTT connected ✅");
+    } else {
+      Serial.print("MQTT connect failed ❌ Error code: ");
+      Serial.println(mqttClient.connectError());
+    }
+  }
+}
+
 
 bool send_msg()
 {
@@ -1594,14 +1632,25 @@ bool send_msg()
     Serial.print(F(" = "));
     Serial.println(isoBufferLocal);
     
-    mqttClient.beginMessage(msg_topic);
-    mqttClient.print(payloadBuffer);
-    mqttClient.endMessage();
-    // delay(1000);  // spread the four messages 1 second
-    Serial.print(F("MQTT message group: "));
-    serialPrintf(PSTR("%3d sent\n"), msgGrpID);
-    ret = true;
+    ensureMqttConnection();
 
+    if (mqttClient.connected()) {
+      mqttClient.beginMessage(msg_topic);
+      mqttClient.print(payloadBuffer);
+      bool success = mqttClient.endMessage();
+      // delay(1000);  // spread the four messages 1 second
+      if (success) {
+        Serial.println("✅ MQTT message sent");
+      } else {
+        Serial.println("❌ Failed to send MQTT message ");
+      }
+      Serial.print(F("MQTT message group: "));
+      serialPrintf(PSTR("%3d sent\n"), msgGrpID);
+      ret = true;
+    }
+    else {
+      Serial.println("❌ MQTT still disconnected. Message not sent.");
+    }
   } else {
     Serial.println("⚠️ Failed to compose JSON payload");
   }
@@ -2121,7 +2170,9 @@ else
       */
       //Serial.print(F("\nMQTT Attempting to connect to broker: "));
       //serialPrintf(PSTR("%s:%s\n"), broker, String(port).c_str());
-  
+      mqttClient.setId(MQTT_CLIENT_ID);  // Set the client ID to identify your device
+      Serial.print(F("MQTT client ID: "));
+      serialPrintf(PSTR("\"%s\"\n"), MQTT_CLIENT_ID);
       bool mqtt_connected = false;
       for (uint8_t i=0; i < 10; i++)
       {
@@ -2149,7 +2200,6 @@ else
         while (true)
           delay(5000);
       }
-
       Serial.print(F("✅ MQTT You're connected to "));
       serialPrintf(PSTR("%s broker %s:%s\n"), (use_broker_local) ? "local" : "remote", broker, String(port).c_str());
     }
@@ -2220,6 +2270,9 @@ void loop()
     {
       ntp_start_t = ntp_curr_t;
       rtc_sync();
+//#ifdef MY_DEBUG
+      printFreeMemory();
+//#endif 
     }
 
     if (!ck_timeIsValid())
@@ -2248,8 +2301,7 @@ void loop()
       // reset to the default message type
       myMsgType = tpah_sensor;
       composeMsgTopic(myMsgType); // Prepare the MQTT topic based on the new message type (global variable msg_topic)
-    }
-    
+    }   
     // Only display the messages if not in bedtime mode
     isItBedtime = isItDisplayBedtime();
 
