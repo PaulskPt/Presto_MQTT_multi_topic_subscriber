@@ -484,6 +484,7 @@ To see the status of the broker app on a Raspberry Pi, from a terminal session, 
 ```
 sudo systemctl status mosquitto.service
 ```
+See an example of the mosquitto.service status log [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/doc/Broker/Broker.service_log.txt).
 
 Photo of the result of this command see: [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/images/Broker/20250724_20h56m18s_mosquitto.service_status.png)
 
