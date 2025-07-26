@@ -64,6 +64,9 @@
 #undef MY_DEBUG
 #endif
 
+// Make this definition in your application code to use std::functions for onMessage callbacks instead of C-pointers:
+#define MQTT_CLIENT_STD_FUNCTION_CALLBACK
+
 Adafruit_LC709203F lc_bat;
 Adafruit_MAX17048 max_bat;
 extern Adafruit_TestBed TB;
@@ -224,6 +227,9 @@ const char TOPIC_SUFFIX_LIGHTS_TOGGLE[]          = SECRET_MQTT_TOPIC_SUFFIX_LIGH
 const char TOPIC_SUFFIX_LIGHTS_COLOR_DECREASE[]  = SECRET_MQTT_TOPIC_SUFFIX_LIGHTS_COLOR_DECREASE;   // "color_dec"
 const char TOPIC_SUFFIX_LIGHTS_COLOR_INCREASE[]  = SECRET_MQTT_TOPIC_SUFFIX_LIGHTS_COLOR_INCREASE;   // "color_inc"
 const char TOPIC_SUFFIX_TODO[]                   = SECRET_MQTT_TOPIC_SUFFIX_TODO;                    // "todo"
+
+const char topic1[]                              = SECRET_MQTT_SYS_TOPIC1;                           // "$SYS/broker/clients/connected";
+const char topic2[]                              = SECRET_MQTT_SYS_TOPIC2;                           // "$SYS/broker/clients/disconnected";
 
 WiFiUDP ntpUDP; // A UDP instance to let us send and receive packets over UDP
 int tzOffset = atoi(SECRET_TIMEZONE_OFFSET); // can be negative or positive (hours)
@@ -1462,25 +1468,109 @@ void prettyPrintPayload(const char* buffer, int length) {
     Serial.println(); // Final newline
 }
 
-void ensureMqttConnection() {
+uint8_t ensureMqttConnection() {
   if (!mqttClient.connected()) {
     Serial.println("MQTT disconnected. Attempting reconnect...");
 
     // Customize your client ID
-    mqttClient.setId("Arduino-GamepadClient");
+    mqttClient.setId(MQTT_CLIENT_ID);
     
     // Optional: set credentials
     // mqttClient.setUsernamePassword("username", "password");
 
-    int result = mqttClient.connect("your.mqtt.broker", 1883);
-
+    mqttClient.connect(broker, 1883);
+    if (mqtt_connect_fail())
+      ;
+    /*
     if (result == 1) {
       Serial.println("MQTT connected ✅");
     } else {
       Serial.print("MQTT connect failed ❌ Error code: ");
       Serial.println(mqttClient.connectError());
     }
+    */
   }
+  return (mqttClient.connected());
+}
+
+void onMqttMessage(int messageSize) {
+  static constexpr const char txt0[] PROGMEM = "onMqttMessage(): ";
+  Serial.print(F(txt0));
+  Serial.print(F("Received a message, topic: \""));
+  String topic = mqttClient.messageTopic();
+  Serial.print(topic);
+  Serial.print(F("\", length: "));
+  Serial.print(messageSize);
+  Serial.println(F(" bytes:"));
+
+  char msg_lines[5][18] = {};  // 5 lines, 17 chars max (+1 null terminator)
+  uint8_t line_idx = 0;
+  uint8_t col_idx = 0;
+  uint16_t c_cnt = 0;
+
+  // Line 0 holds the topic
+  String formatted_topic = "TOPIC: " + topic;
+  strncpy(msg_lines[0], formatted_topic.c_str(), 17);
+  msg_lines[0][17] = '\0';
+
+  // Line 1 gets "MSG: " prefix
+  strncpy(msg_lines[1], "MSG: ", 5);
+  col_idx = 5;
+  line_idx = 1;
+
+  // Prepare buffer for raw payload (separate from msg_lines)
+  char payloadBuffer[8] = {};
+  uint8_t p_idx = 0;
+
+  // Fill in the payload character by character
+  Serial.print(F("msg received: \""));
+  while (mqttClient.available()) {
+    char c = (char)mqttClient.read();
+    Serial.print(c);
+    c_cnt++;
+
+    // Store in display buffer
+    if (line_idx < 5 && col_idx < 17) {
+      msg_lines[line_idx][col_idx++] = c;
+      msg_lines[line_idx][col_idx] = '\0';
+    } else if (line_idx < 4) {
+      line_idx++;
+      col_idx = 0;
+      msg_lines[line_idx][col_idx++] = c;
+      msg_lines[line_idx][col_idx] = '\0';
+    }
+
+    // Store in clean payload buffer
+    if (p_idx < sizeof(payloadBuffer) - 1) {
+      payloadBuffer[p_idx++] = c;
+      payloadBuffer[p_idx] = '\0';
+    }
+  }
+  Serial.println("\"");
+
+  // Smart message formatting based on topic type
+  if (topic.indexOf("connect") >= 0) {
+    int clientCount = atoi(payloadBuffer);
+    snprintf(msg_lines[1], 18, "Connected: %d", clientCount);
+  } else if (topic.indexOf("disconnect") >= 0) {
+    int clientCount = atoi(payloadBuffer);
+    snprintf(msg_lines[1], 18, "Disconnected: %d", clientCount);
+  } else {
+    snprintf(msg_lines[1], 18, "MSG: %s", payloadBuffer);
+  }
+
+  Serial.print(F(txt0));
+  Serial.print("characters rcvd: ");
+  Serial.println(c_cnt);
+
+  // Prepare pointers for display
+  const char* line_ptrs[5];
+  for (int i = 0; i < 5; i++) {
+    line_ptrs[i] = msg_lines[i];
+  }
+
+  disp_msg(line_ptrs, line_idx + 1, true);
+  delay(5000);
 }
 
 
@@ -1631,10 +1721,8 @@ bool send_msg()
     Serial.print(mqttMsgID);
     Serial.print(F(" = "));
     Serial.println(isoBufferLocal);
-    
-    ensureMqttConnection();
 
-    if (mqttClient.connected()) {
+    if (ensureMqttConnection()) {
       mqttClient.beginMessage(msg_topic);
       mqttClient.print(payloadBuffer);
       bool success = mqttClient.endMessage();
@@ -2034,8 +2122,83 @@ void backlite_toggle() {
   }
 }
 
+// ------------- IF USE KEEP-ALIVE SYSTEM and LAST-WILL --------------------------
+
+bool mqtt_connect_fail()
+{
+  bool stop = false;
+  uint8_t mqtt_err_code = mqttClient.connectError();
+
+  switch (mqtt_err_code) {
+    case -2:  // refused
+    {
+      Serial.println(F("❌ MQTT Connection refused."));
+      stop = true;
+      break;
+    }
+    case -1:  // timeout
+    {
+      Serial.println(F("❌ MQTT Connection timed-out."));
+      stop = true;
+      break;
+    }
+    case 3:
+    {
+      Serial.println(F("❌ MQTT Server not available."));
+      stop = true;
+      break;
+    }
+    case 5: // = Connection refused. Client is not authorized
+    {
+      Serial.println(F("❌ MQTT Client not authorized."));
+      stop = true;
+      break;
+    }
+    default:
+    {
+      stop = true;
+      break;
+    }
+  }
+  return stop;
+}
+
+const char* will_topic = "will";
+const char* will_payload = "offline";
+uint8_t qos = 1;
+bool retain = true;
+
+void setupMQTTClient() {
+  // Set client ID, credentials, etc.
+  mqttClient.setId(MQTT_CLIENT_ID);
+
+  /*
+  // Optional keepalive interval
+  mqttClient.setKeepAliveInterval(90); // was: 60
+
+  // Begin Will message
+  if (mqttClient.beginWill(will_topic, strlen(will_payload), retain, qos)) {
+    mqttClient.print(will_payload); // Write the payload
+    if(!mqttClient.endWill())
+      Serial.print(F("❌ failed call to mqttClient.endWill()"));  // Finish Will message
+  } else {
+    Serial.println("⚠️ Failed to begin Will message!");
+  }
+  */
+  // Now connect
+  Serial.println("🔌 Connecting to MQTT...");
+  if (mqttClient.connect(broker, 1883)) {
+    Serial.println("✅ Connected to MQTT broker");
+  } else {
+    bool dummy = mqtt_connect_fail();
+  }
+}
+
+// ------------- END OF - IF USE KEEP-ALIVE SYSTEM and LAST-WILL --------------------------
+
 void setup() 
 {
+  static constexpr const char txt0[] PROGMEM = "setup(): ";
   //Initialize serial and wait for port to open:
   Serial.begin(115200);  
   //while (!Serial) { // Do not use this wait loop. It blocks mqtt transmissions when only on 5Volt power source!
@@ -2045,12 +2208,12 @@ void setup()
 
   delay(1000);
 
-use_broker_local = (atoi(SECRET_USE_BROKER_LOCAL) == 1);
+  use_broker_local = (atoi(SECRET_USE_BROKER_LOCAL) == 1);
 
-if (use_broker_local)
-  broker = SECRET_MQTT_BROKER_LOCAL2; // "192.168._.___";
-else
-  broker = SECRET_MQTT_BROKER; // "test.mosquitto.org";
+  if (use_broker_local)
+    broker = SECRET_MQTT_BROKER_LOCAL2; // "192.168._.___";
+  else
+    broker = SECRET_MQTT_BROKER; // "test.mosquitto.org";
 
  // turn on the TFT / I2C power supply
 #if defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S3_TFT)
@@ -2170,40 +2333,53 @@ else
       */
       //Serial.print(F("\nMQTT Attempting to connect to broker: "));
       //serialPrintf(PSTR("%s:%s\n"), broker, String(port).c_str());
-      mqttClient.setId(MQTT_CLIENT_ID);  // Set the client ID to identify your device
-      Serial.print(F("MQTT client ID: "));
-      serialPrintf(PSTR("\"%s\"\n"), MQTT_CLIENT_ID);
-      bool mqtt_connected = false;
-      for (uint8_t i=0; i < 10; i++)
-      {
-        if (!mqttClient.connect(broker, port))
+      bool use_mqtt_keepalive_system = false;
+
+      if (use_mqtt_keepalive_system) {
+        setupMQTTClient();
+      }
+      else {
+        bool mqtt_connected = false;
+        bool show_broker_ip = false;
+
+        mqttClient.setId(MQTT_CLIENT_ID);  // Set the client ID to identify your device
+        Serial.print(F("MQTT client ID: "));
+        serialPrintf(PSTR("\"%s\"\n"), MQTT_CLIENT_ID);
+
+        for (uint8_t i=0; i < 10; i++)
         {
-          if (mqttClient.connectError() == 5) // = Connection refused. Client is not authorized
+          if (mqttClient.connect(broker, port))
           {
-            Serial.println(F("❌ MQTT connection refused. Client not authorized."));
+            mqtt_connected = true;
+            Serial.print(F("✅ MQTT You're connected to "));
+            serialPrintf(PSTR("%s broker %s:%s\n"), (use_broker_local) ? "local" : "remote", (show_broker_ip) ? broker : "___.___._.___", String(port).c_str());
+            // set the message receive callback
+            mqttClient.onMessage(onMqttMessage);
+            mqttClient.subscribe(topic1);
+            mqttClient.subscribe(topic2);
+            Serial.print(txt0);
+            Serial.print(F("subscribed to topic(s): "));
+            serialPrintf(PSTR("%s, %s\n"), topic1, topic2);
             break;
-          }
-          else
+          } else 
           {
-            serialPrintf(PSTR("❌ MQTT connection to broker failed! Error code = %s\n"), String(mqttClient.connectError()).c_str() );        
-            delay(1000);
+            if (mqtt_connect_fail()) {
+              //serialPrintf(PSTR("❌ MQTT connection to broker failed! Error code = %s\n"), String(mqtt_err_code).c_str() );        
+              delay(1000);
+            }
           }
         }
-        else
+        if (!mqtt_connected)
         {
-          mqtt_connected = true;
+          Serial.print(F("❌ MQTT Unable to connect to broker in LAN. Going into infinite loop..."));
+          while (true)
+            delay(5000);
         }
+
       }
-      if (!mqtt_connected)
-      {
-        Serial.print(F("❌ MQTT Unable to connect to broker in LAN. Going into infinite loop..."));
-        while (true)
-          delay(5000);
-      }
-      Serial.print(F("✅ MQTT You're connected to "));
-      serialPrintf(PSTR("%s broker %s:%s\n"), (use_broker_local) ? "local" : "remote", broker, String(port).c_str());
     }
   }
+  
   composeMsgTopic(); // Prepare the MQTT default topic (global variable msg_topic)
   /*
   disp_topic_types();
