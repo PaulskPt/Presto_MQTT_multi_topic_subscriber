@@ -1,0 +1,83 @@
+mosquitto.service - Mosquitto MQTT Broker
+     Loaded: loaded (/lib/systemd/system/mosquitto.service; enabled; preset: enabled)
+     Active: active (running) since Thu 2025-07-24 20:50:24 WEST; 1 day 14h ago
+       Docs: man:mosquitto.conf(5)
+             man:mosquitto(8)
+    Process: 785 ExecStartPre=/bin/mkdir -m 740 -p /var/log/mosquitto (code=exited, status=0/SUCCESS)
+    Process: 801 ExecStartPre=/bin/chown mosquitto /var/log/mosquitto (code=exited, status=0/SUCCESS)
+    Process: 807 ExecStartPre=/bin/mkdir -m 740 -p /run/mosquitto (code=exited, status=0/SUCCESS)
+    Process: 815 ExecStartPre=/bin/chown mosquitto /run/mosquitto (code=exited, status=0/SUCCESS)
+   Main PID: 824 (mosquitto)
+      Tasks: 1 (limit: 4757)
+        CPU: 6.585s
+     CGroup: /system.slice/mosquitto.service
+             └─824 /usr/sbin/mosquitto -c /etc/mosquitto/mosquitto.conf
+
+jul 26 10:53:23 RPiCM5 mosquitto[824]: 2025-07-26T10:51:40: Saving in-memory database to mosquitto.db.
+jul 26 10:53:23 RPiCM5 mosquitto[824]: 2025-07-26T10:51:40: Error saving in-memory database, unable to open mosquitto.db.new for writing.
+jul 26 10:53:23 RPiCM5 mosquitto[824]: 2025-07-26T10:51:40: Error: Permission denied.
+jul 26 10:53:23 RPiCM5 mosquitto[824]: 2025-07-26T10:52:08: Received PINGREQ from Adafruit_Feather_ESP32S3TFT
+jul 26 10:53:23 RPiCM5 mosquitto[824]: 2025-07-26T10:52:08: Sending PINGRESP to Adafruit_Feather_ESP32S3TFT
+jul 26 10:53:23 RPiCM5 mosquitto[824]: 2025-07-26T10:52:23: Received PUBLISH from Adafruit_Feather_ESP32S3TFT (d0, q0, r0, m0, 'sensors/Feath/ambient', ... (253 bytes))
+jul 26 10:53:23 RPiCM5 mosquitto[824]: 2025-07-26T10:52:23: Sending PUBLISH to PrestoMQTTClient (d0, q0, r0, m0, 'sensors/Feath/ambient', ... (253 bytes))
+jul 26 10:53:23 RPiCM5 mosquitto[824]: 2025-07-26T10:53:08: Received PINGREQ from Adafruit_Feather_ESP32S3TFT
+jul 26 10:53:23 RPiCM5 mosquitto[824]: 2025-07-26T10:53:08: Sending PINGRESP to Adafruit_Feather_ESP32S3TFT
+jul 26 10:53:23 RPiCM5 mosquitto[824]: 2025-07-26T10:53:23: Received PUBLISH from Adafruit_Feather_ESP32S3TFT (d0, q0, r0, m0, 'sensors/Feath/ambient', ... (253 bytes))
+
+
+----------------------------------
+From the /var/log/journal/7ea5333e9dd24e39bde86d26b15a912f $ journalctl --system | grep "mosquitto"
+[...]
+ul 26 09:51:23 RPiCM5 mosquitto[824]: 2025-07-26T09:51:23: Received PUBLISH from Adafruit_Feather_ESP32S3TFT (d0, q0, r0, m0, 'sensors/Feath/ambient', ... (253 bytes))
+jul 26 10:12:23 RPiCM5 mosquitto[824]: 2025-07-26T09:51:23: Sending PUBLISH to PrestoMQTTClient (d0, q0, r0, m0, 'sensors/Feath/ambient', ... (253 bytes))
+jul 26 10:12:23 RPiCM5 mosquitto[824]: 2025-07-26T09:51:38: Saving in-memory database to mosquitto.db.
+jul 26 10:12:23 RPiCM5 mosquitto[824]: 2025-07-26T09:51:38: Error saving in-memory database, unable to open mosquitto.db.new for writing.
+jul 26 10:12:23 RPiCM5 mosquitto[824]: 2025-07-26T09:51:38: Error: Permission denied.
+[...]                                                       ========================= !!!
+
+
+---------------------------
+After changing /var/lib/mosquitto ownership to mosquitto:mosquitto instead mosquitto:root 
+and after changing /var/log/mosquitto ownership to mosquitto:mosquitto instead mosquitto:root
+then restarting mosquitto.service,
+the last lines in command: journalctl --system | grep "mosquitto" is:
+[...]
+jul 26 11:42:45 RPiCM5 mosquitto[819]: 2025-07-26T11:41:54: Received PINGREQ from Adafruit_Feather_ESP32S3TFT
+jul 26 11:42:45 RPiCM5 mosquitto[819]: 2025-07-26T11:41:54: Sending PINGRESP to Adafruit_Feather_ESP32S3TFT
+jul 26 11:42:45 RPiCM5 mosquitto[819]: 2025-07-26T11:42:45: mosquitto version 2.0.11 terminating
+jul 26 11:42:45 RPiCM5 mosquitto[819]: 2025-07-26T11:42:45: Saving in-memory database to /var/lib/mosquitto/mosquitto.db.
+jul 26 11:42:45 RPiCM5 systemd[1]: mosquitto.service: Deactivated successfully.
+jul 26 11:42:45 RPiCM5 systemd[1]: Stopped mosquitto.service - Mosquitto MQTT Broker.
+jul 26 11:42:45 RPiCM5 systemd[1]: Starting mosquitto.service - Mosquitto MQTT Broker...
+jul 26 11:42:45 RPiCM5 systemd[1]: Started mosquitto.service - Mosquitto MQTT Broker.
+
+After this restart, I also rebooted the current Publisher/Subscriber (two $SYS topics) : Adafruit Feather ESP32-S3 TFT and the current Subscriber: Pimoroni Presto.
+---------------------------------
+Result of command: $ sudo systemctl status mosquitto.service
+
+● mosquitto.service - Mosquitto MQTT Broker
+     Loaded: loaded (/lib/systemd/system/mosquitto.service; enabled; preset: enabled)
+     Active: active (running) since Sat 2025-07-26 11:42:45 WEST; 9min ago
+       Docs: man:mosquitto.conf(5)
+             man:mosquitto(8)
+    Process: 2034 ExecStartPre=/bin/mkdir -m 740 -p /var/log/mosquitto (code=exited, status=0/SUCCESS)
+    Process: 2035 ExecStartPre=/bin/chown mosquitto /var/log/mosquitto (code=exited, status=0/SUCCESS)
+    Process: 2036 ExecStartPre=/bin/mkdir -m 740 -p /run/mosquitto (code=exited, status=0/SUCCESS)
+    Process: 2037 ExecStartPre=/bin/chown mosquitto /run/mosquitto (code=exited, status=0/SUCCESS)
+   Main PID: 2038 (mosquitto)
+      Tasks: 1 (limit: 4757)
+        CPU: 39ms
+     CGroup: /system.slice/mosquitto.service
+             └─2038 /usr/sbin/mosquitto -c /etc/mosquitto/mosquitto.conf
+
+jul 26 11:51:27 RPiCM5 mosquitto[2038]: 2025-07-26T11:49:22: Sending PUBLISH to PrestoMQTTClient (d0, q0, r0, m0, 'lights/Feath/toggle', ... (116 bytes))
+jul 26 11:51:27 RPiCM5 mosquitto[2038]: 2025-07-26T11:49:27: Received PUBLISH from Adafruit_Feather_ESP32S3TFT (d0, q0, r0, m0, 'lights/Feath/toggle', ... (116 bytes))
+jul 26 11:51:27 RPiCM5 mosquitto[2038]: 2025-07-26T11:49:27: Sending PUBLISH to PrestoMQTTClient (d0, q0, r0, m0, 'lights/Feath/toggle', ... (116 bytes))
+jul 26 11:51:27 RPiCM5 mosquitto[2038]: 2025-07-26T11:50:18: Received PINGREQ from Adafruit_Feather_ESP32S3TFT
+jul 26 11:51:27 RPiCM5 mosquitto[2038]: 2025-07-26T11:50:18: Sending PINGRESP to Adafruit_Feather_ESP32S3TFT
+jul 26 11:51:27 RPiCM5 mosquitto[2038]: 2025-07-26T11:50:27: Received PUBLISH from Adafruit_Feather_ESP32S3TFT (d0, q0, r0, m0, 'sensors/Feath/ambient', ... (251 bytes))
+jul 26 11:51:27 RPiCM5 mosquitto[2038]: 2025-07-26T11:50:27: Sending PUBLISH to PrestoMQTTClient (d0, q0, r0, m0, 'sensors/Feath/ambient', ... (251 bytes))
+jul 26 11:51:27 RPiCM5 mosquitto[2038]: 2025-07-26T11:51:18: Received PINGREQ from Adafruit_Feather_ESP32S3TFT
+jul 26 11:51:27 RPiCM5 mosquitto[2038]: 2025-07-26T11:51:18: Sending PINGRESP to Adafruit_Feather_ESP32S3TFT
+jul 26 11:51:27 RPiCM5 mosquitto[2038]: 2025-07-26T11:51:27: Received PUBLISH from Adafruit_Feather_ESP32S3TFT (d0, q0, r0, m0, 'sensors/Feath/ambient', ... (253 bytes))
+
