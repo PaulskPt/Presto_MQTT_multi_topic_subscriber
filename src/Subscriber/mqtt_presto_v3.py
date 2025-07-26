@@ -109,7 +109,7 @@ if err and not my_debug :
 def clear_broker_json():
     ret = -1
     fn = "sys_broker.json"
-    if not my_debug:
+    if my_debug:
         print("clear_broker_json(): entering...")
     try:
         sBroker = {"sys_broker": {}}  # create a clean sBroker
