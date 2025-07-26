@@ -16,6 +16,7 @@ mosquitto.service - Mosquitto MQTT Broker
 jul 26 10:53:23 RPiCM5 mosquitto[824]: 2025-07-26T10:51:40: Saving in-memory database to mosquitto.db.
 jul 26 10:53:23 RPiCM5 mosquitto[824]: 2025-07-26T10:51:40: Error saving in-memory database, unable to open mosquitto.db.new for writing.
 jul 26 10:53:23 RPiCM5 mosquitto[824]: 2025-07-26T10:51:40: Error: Permission denied.
+//                                                          ========================= !!!
 jul 26 10:53:23 RPiCM5 mosquitto[824]: 2025-07-26T10:52:08: Received PINGREQ from Adafruit_Feather_ESP32S3TFT
 jul 26 10:53:23 RPiCM5 mosquitto[824]: 2025-07-26T10:52:08: Sending PINGRESP to Adafruit_Feather_ESP32S3TFT
 jul 26 10:53:23 RPiCM5 mosquitto[824]: 2025-07-26T10:52:23: Received PUBLISH from Adafruit_Feather_ESP32S3TFT (d0, q0, r0, m0, 'sensors/Feath/ambient', ... (253 bytes))
