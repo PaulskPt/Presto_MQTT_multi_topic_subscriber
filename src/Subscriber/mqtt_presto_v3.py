@@ -932,7 +932,7 @@ def convert_to_dtStr(uxTime):
     if uxTime <= uxMinimum() or uxTime >= uxMaximum():  # max for 32-bit
         return datetime_empty
     # Convert to local time tuple
-    t = time.localtime(uxTime)
+    t = time.gmtime(uxTime) # do not use time.localtime(uxTime) because we end up in Lisbon time +1 = Amsterdam time
     # Format as ISO 8601 string: YYYY-MM-DDTHH:MM:SS
     return "{:04d}-{:02d}-{:02d}T{:02d}:{:02d}:{:02d}".format(
             t[0], t[1], t[2], t[3], t[4], t[5])

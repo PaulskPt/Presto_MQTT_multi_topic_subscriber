@@ -82,3 +82,15 @@ jul 26 11:51:27 RPiCM5 mosquitto[2038]: 2025-07-26T11:51:18: Received PINGREQ fr
 jul 26 11:51:27 RPiCM5 mosquitto[2038]: 2025-07-26T11:51:18: Sending PINGRESP to Adafruit_Feather_ESP32S3TFT
 jul 26 11:51:27 RPiCM5 mosquitto[2038]: 2025-07-26T11:51:27: Received PUBLISH from Adafruit_Feather_ESP32S3TFT (d0, q0, r0, m0, 'sensors/Feath/ambient', ... (253 bytes))
 
+[...]
+
+jul 26 17:04:40 RPiCM5 mosquitto[2038]: 2025-07-26T17:02:28: Sending PUBLISH to PrestoMQTTClient (d0, q0, r0, m0, 'sensors/Feath/ambient', ... (251 bytes))
+jul 26 17:04:40 RPiCM5 mosquitto[2038]: 2025-07-26T17:03:20: Received PINGREQ from Adafruit_Feather_ESP32S3TFT
+jul 26 17:04:40 RPiCM5 mosquitto[2038]: 2025-07-26T17:03:20: Sending PINGRESP to Adafruit_Feather_ESP32S3TFT
+jul 26 17:04:40 RPiCM5 mosquitto[2038]: 2025-07-26T17:03:28: Received PUBLISH from Adafruit_Feather_ESP32S3TFT (d0, q0, r0, m0, 'sensors/Feath/ambient', ... (251 bytes))
+jul 26 17:04:40 RPiCM5 mosquitto[2038]: 2025-07-26T17:03:28: Sending PUBLISH to PrestoMQTTClient (d0, q0, r0, m0, 'sensors/Feath/ambient', ... (251 bytes))
+jul 26 17:04:40 RPiCM5 mosquitto[2038]: 2025-07-26T17:03:40: Received PUBLISH from Adafruit_Feather_ESP32S3TFT (d0, q0, r0, m0, 'lights/Feath/toggle', ... (116 bytes))
+jul 26 17:04:40 RPiCM5 mosquitto[2038]: 2025-07-26T17:03:40: Sending PUBLISH to PrestoMQTTClient (d0, q0, r0, m0, 'lights/Feath/toggle', ... (116 bytes))
+jul 26 17:04:40 RPiCM5 mosquitto[2038]: 2025-07-26T17:04:20: Received PINGREQ from Adafruit_Feather_ESP32S3TFT
+jul 26 17:04:40 RPiCM5 mosquitto[2038]: 2025-07-26T17:04:20: Sending PINGRESP to Adafruit_Feather_ESP32S3TFT
+jul 26 17:04:40 RPiCM5 mosquitto[2038]: 2025-07-26T17:04:40: Received PUBLISH from Adafruit_Feather_ESP32S3TFT (d0, q0, r0, m0, 'sensors/Feath/ambient', ... (253 bytes))
