@@ -522,7 +522,7 @@ Accessories for the MQTT Publisher device:
 Equipment connected to the Publisher device:
 - Pimoroni multi-sensor-stick (PIM 745) [info](https://shop.pimoroni.com/products/multi-sensor-stick?variant=42169525633107);
 - M5Stack Unit-RTC [info](https://docs.m5stack.com/en/unit/UNIT%20RTC);
-- M5Stack Grove 1 to 3 Expansion Unit [info](https://shop.m5stack.com/products/mini-hub-module)
+- M5Stack Grove 1 to 3 HUB Expansion Unit [info](https://shop.m5stack.com/products/mini-hub-module)
 
 ### For the MQTT Broker device:
 - a Raspberry Pi Compute Module 5 [info](https://www.raspberrypi.com/products/compute-module-5/?variant=cm5-104032);
