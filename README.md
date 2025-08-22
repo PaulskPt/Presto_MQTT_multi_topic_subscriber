@@ -583,8 +583,8 @@ Added:
 - in a file on SD-Card.
 - functionality to write a certain maximum of received messages in a file on SD-Card (/sd/msg_hist.json);
 
-- In the Arduino sketch for the MQTT Publisher device I have added functionality to read the state of the buttons and the joystick.
-The joystick is not used yet. The buttons are defined as follows:
+- In the Arduino sketch for the MQTT Publisher device I have added functionality to read the state of the buttons.
+The buttons of the Pimoroni Qw/ST I2C game controller are defined as follows:
 
 # Pimoroni Qw/ST I2C game controller
 ```
