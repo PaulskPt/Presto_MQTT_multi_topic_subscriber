@@ -546,10 +546,38 @@ My advise for the Publisher device: the Adafruit Feather ESP32-S3 TFT (and proba
  #### Devices
   - M5Stack M5Unit-RTC (Address 0x51);
   - Pimoroni multi-sensor-stick, ambient sensor BME280 (Address 0x76);
-  - Adafruit Gamepad QT (Address: 0x50).
+  - Adafruit Gamepad QT (Address: 0x50);
+  - Pimoroni Qw/ST Pad (I2C game controller (Addressses: 0x21, 0x23) 1x or 2x to be used with Version 2 of the sketch.
 
  Beside these three external I2C devices the Adafruit Feather ESP32-S3 TFT board has other internal devices on the I2C bus:
  The I2C bus scan reported devices found with the following addresses: 0x23, 0x36, 0x50, 0x51, 0x6A, 0x76.
  The three external devices are connected to the Stemma QT/Qwiic connector of the Adafruit Feather ESP32-S3 TFT board, via a M5Stack 3-port Grove Hub. 
  Initially I had the Adafruit Gamepad QT connected in series with the Pimoroni multi-sensor-stick, however this caused I2C bus problems. In fact the M5Unit-RTC was giving unreliable datetime values after having been set with a correct NTP unixtime.  After disconnecting the Gamepad QT from the multi-sensor-stick and then connecting the Gamepad QT to the 3-port Grove Hub, the I2C bus problems were history. From then on the Arduino sketch running on the Adafruit Feather ESP32-S3 TFT received correct datetime data from the M5Unit-RTC.
 
+# Updates
+
+## 2025-08-18 Version 2 of the Publisher sketch
+Added:
+- Using another type of game controller, the Pimoroni Qw/ST Pad I2C game controller.
+- For this I ported a Pimoroni qwstpad-micropython library for micropython to C++. See the files qwstpad.h and qwstpad.cpp.
+- Functionality to use one or (up to four) of these Pimoroni Qw/ST Pad I2C game controllers. They have more buttons than the Adafruit Gamepad Qt controller that I used for version 1. The buttons L(eft) and R(ight) are defined to change the color of the display text of the remote Pimoroni Presto subscriber.
+- Added functionality to blink all or one of the four LEDs on the Qw/ST Pad game controllers. I tested up to two Qw/ST game controllers. However, because I have also other I2C devices connected to the Adafruit ESP32-S3 TFT board. So, I had to connect the game controllers to the second I2C port.
+- Added two MQTT message topics: 
+- "ligths/Feath/dclr_inc". Containing a display text color increase command from a remote controller
+- "lights/Feath/dclr_dec". Containing a display text color decrease command from a remote controller
+- changed the contents of the MQTT message structure. In version 1 for the sensor/Feath/ambient topic message the first part, containing general data, had no name, the data part had the name "reads". In version 2 the general data section, in fact a nested JSon object, is given the name "head". Because of length of MQTT message problem on the Presto subscriber (micropython limitation?) the name "head" is shortened to "hd". The payload part of the MQTT message can be maximum 256 bytes. The new general section is as follows (example): "head": {"ow": "Feath", "de": "Lab", "dc": "BME280", "sc": "meas", "vt": "f", "ts": 1755622875}," while the data section "read" stays the same as in Version 1.
+
+## 2025-08-22 Version 7 of the Subscriber script
+Added:
+- functionality to remotely change the color of the display text (using buttons L(eft) and R(ight) on a Qw/ST I2C game controller, connected to the MQTT Publisher device);
+- to change the display color added function draw_sd(), beside the already existing draw() function.
+- The idea is: when a MQTT message containing a display text color change, the display is cleared,
+- the text color is set to the new color and the screen is build-up using the data from the latest received
+- MQTT message with topic "sensor/Feath/ambient". To show that not the most recent data is shown, the text "SD"
+- will be shown in the top-right corner of the screen. As soon as a next MQTT message with topic "sensor/Feath/ambient"
+- is received, the normal draw() function will buid-up the screen, continuing to use the new text color.
+- objects for each of the non $SYS topics (sensor_obj, toggle_obj, amb_obj, disp_obj and metar_obj) are created and
+- maintained. They act as "memory" for some settings, while "memory" of received MQTT messages is done by saving them
+- in a file on SD-Card.
+- functionality to write a certain maximum of received messages in a file on SD-Card (/sd/msg_hist.json);
+  
