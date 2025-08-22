@@ -518,6 +518,8 @@ The joystick is not used yet. The buttons are defined as follows:
 
 ### For the MQTT Publisher device: Adafruit Feather ESP32-S3 TFT [info](https://www.adafruit.com/product/5483);
 
+and for version 2: Pimoroni Qw/ST I2C Game controller (PIM752) [info](https://shop.pimoroni.com/products/qwst-pad?variant=53514400596347);
+
 Accessories for the MQTT Publisher device:
 Equipment connected to the Publisher device:
 - Pimoroni multi-sensor-stick (PIM 745) [info](https://shop.pimoroni.com/products/multi-sensor-stick?variant=42169525633107);
@@ -561,7 +563,7 @@ Added:
 - Using another type of game controller, the Pimoroni Qw/ST Pad I2C game controller.
 - For this I ported a Pimoroni qwstpad-micropython library for micropython to C++. See the files qwstpad.h and qwstpad.cpp.
 - Functionality to use one or (up to four) of these Pimoroni Qw/ST Pad I2C game controllers. They have more buttons than the Adafruit Gamepad Qt controller that I used for version 1. The buttons L(eft) and R(ight) are defined to change the color of the display text of the remote Pimoroni Presto subscriber.
-- Added functionality to blink all or one of the four LEDs on the Qw/ST Pad game controllers. I tested up to two Qw/ST game controllers. However, because I have also other I2C devices connected to the Adafruit ESP32-S3 TFT board. So, I had to connect the game controllers to the second I2C port.
+- Added functionality to blink all or one of the four LEDs on the Qw/ST Pad game controllers. I tested up to two Qw/ST game controllers. However, because I have also other I2C devices connected to the Adafruit ESP32-S3 TFT board, I had to connect the game controllers to the second I2C port.
 - Added two MQTT message topics: 
 - "ligths/Feath/dclr_inc". Containing a display text color increase command from a remote controller
 - "lights/Feath/dclr_dec". Containing a display text color decrease command from a remote controller
@@ -580,4 +582,23 @@ Added:
 - maintained. They act as "memory" for some settings, while "memory" of received MQTT messages is done by saving them
 - in a file on SD-Card.
 - functionality to write a certain maximum of received messages in a file on SD-Card (/sd/msg_hist.json);
+
+- In the Arduino sketch for the MQTT Publisher device I have added functionality to read the state of the buttons and the joystick.
+The joystick is not used yet. The buttons are defined as follows:
+
+# Pimoroni Qw/ST I2C game controller
+```
++----------+------------------------------------------------------------+
+| Button   |  Function                                                  |
++----------+------------------------------------------------------------+
+|   A      | switch to MQTT topic "sensors/Feath/ambient"               |
+|   B      | switch to MQTT topic "lights/Feath/toggle"                 |
+|  X/U     | switch to MQTT topic "lights/Feath/color_inc"              |
+|  Y/D     | switch to MQTT topic "lights/Feath/color_dec"              |
+|   L      | decrease display text color, topic "lights/Feath/dclr_dec" |
+|   R      | increase display text color, topic "lights/Feath/dclr_inc" |
+|   -      | show information about button functions etc.               |
+|   +      | execute a software reset                                   |
++----------+------------------------------------------------------------+
+```
   
