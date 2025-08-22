@@ -567,7 +567,7 @@ Added:
 - Added two MQTT message topics: 
 - "ligths/Feath/dclr_inc". Containing a display text color increase command from a remote controller
 - "lights/Feath/dclr_dec". Containing a display text color decrease command from a remote controller
-- changed the contents of the MQTT message structure. In version 1 for the sensor/Feath/ambient topic message the first part, containing general data, had no name, the data part had the name "reads". In version 2 the general data section, in fact a nested JSon object, is given the name "head". Because of length of MQTT message problem on the Presto subscriber (micropython limitation?) the name "head" is shortened to "hd". The payload part of the MQTT message can be maximum 256 bytes. The new general section is as follows (example): "head": {"ow": "Feath", "de": "Lab", "dc": "BME280", "sc": "meas", "vt": "f", "ts": 1755622875}," while the data section "read" stays the same as in Version 1.
+- changed the contents of the MQTT message structure. In version 1 for the sensor/Feath/ambient topic message the first part, containing general data, had no name, the data part had the name "reads". In version 2 the general data section, in fact a nested JSon object, is given the name "head". Because of length of MQTT message problem on the Presto subscriber (micropython limitation?) the name "head" is shortened to "hd". The payload part of the MQTT message can be maximum 256 bytes. The new general section is as follows (example): "hd": {"ow": "Feath", "de": "Lab", "dc": "BME280", "sc": "meas", "vt": "f", "ts": 1755622875}," while the data section "read" stays the same as in Version 1.
 
 ## 2025-08-22 Version 7 of the Subscriber script
 Added:
