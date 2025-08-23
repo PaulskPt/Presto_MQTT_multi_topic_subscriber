@@ -580,7 +580,7 @@ Added:
   is received, the normal draw() function will continue to buid-up the screen, using the new text color.
 - objects for each of the non $SYS topics (sensor_obj, toggle_obj, amb_obj, disp_obj and metar_obj) are created and
   maintained. They act as "memory" for some settings, while "memory" of received MQTT messages is done by saving them
-- in a file on SD-Card.
+  in a file on SD-Card.
 - functionality to maintain certain maximum of received messages in a file on SD-Card (/sd/msg_hist.json);
 
 - In the Arduino sketch for the MQTT Publisher device I have added functionality to read the state of the buttons.
