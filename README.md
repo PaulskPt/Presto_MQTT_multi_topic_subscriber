@@ -588,17 +588,17 @@ The buttons of the Pimoroni Qw/ST I2C game controller are defined as follows:
 
 # Pimoroni Qw/ST I2C game controller
 ```
-+----------+------------------------------------------------------------+
-| Button   |  Function                                                  |
-+----------+------------------------------------------------------------+
-|   A      | switch to MQTT topic "sensors/Feath/ambient"               |
-|   B      | switch to MQTT topic "lights/Feath/toggle"                 |
-|  X/U     | switch to MQTT topic "lights/Feath/color_inc"              |
-|  Y/D     | switch to MQTT topic "lights/Feath/color_dec"              |
-|   L      | decrease display text color, topic "lights/Feath/dclr_dec" |
-|   R      | increase display text color, topic "lights/Feath/dclr_inc" |
-|   -      | show information about button functions etc.               |
-|   +      | execute a software reset                                   |
-+----------+------------------------------------------------------------+
++----------+----------------------------------------------------------------+
+| Button   |  Function                                                      |
++----------+----------------------------------------------------------------+
+|   A      | switch to MQTT topic "sensors/Feath/ambient"                   |
+|   B      | switch to MQTT topic "lights/Feath/toggle"                     |
+|  X/U     | switch to MQTT topic "lights/Feath/color_inc" (= Ambient LEDs) |
+|  Y/D     | switch to MQTT topic "lights/Feath/color_dec" (= same          |
+|   L      | decrease display text color, topic "lights/Feath/dclr_dec"     |
+|   R      | increase display text color, topic "lights/Feath/dclr_inc"     |
+|   -      | show information about button functions etc.                   |
+|   +      | execute a software reset                                       |
++----------+----------------------------------------------------------------+
 ```
   
