@@ -571,13 +571,13 @@ Added:
 
 ## 2025-08-22 Version 7 of the Subscriber script
 Added:
-- functionality to remotely change the color of the display text (using buttons L(eft) and R(ight) on a Qw/ST I2C game controller, connected to the MQTT Publisher device);
-  to change the display color added function redraw(), beside the already existing draw() function.
-  The idea is: when a MQTT message containing a display text color change, the display is cleared,
+- functionality to remotely change the color of the display text (using buttons L(eft) and R(ight) on a Qw/ST I2C game controller, connected to the MQTT Publisher device).
+  To change the display text color, I added the function redraw(). This new function is similar to the draw() function. The difference is that draw() uses data from the MQTT message received at that moment while redraw() uses data from the latest received and stored MQTT message.
+  The idea is: upon receiving a MQTT message containing a display text color change command, the display is cleared,
   the text color is set to the new color and the screen is build-up using the data from the latest received
   MQTT message with topic "sensor/Feath/ambient". To show that not the most recent data is shown, the text "RD"
   will be shown in the top-right corner of the screen. As soon as a next MQTT message with topic "sensor/Feath/ambient"
-  is received, the normal draw() function will buid-up the screen, continuing to use the new text color.
+  is received, the normal draw() function will continue to buid-up the screen, using the new text color.
 - objects for each of the non $SYS topics (sensor_obj, toggle_obj, amb_obj, disp_obj and metar_obj) are created and
   maintained. They act as "memory" for some settings, while "memory" of received MQTT messages is done by saving them
 - in a file on SD-Card.
