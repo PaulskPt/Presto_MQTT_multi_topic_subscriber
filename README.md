@@ -549,10 +549,10 @@ My advise for the Publisher device: the Adafruit Feather ESP32-S3 TFT (and proba
  #### Devices
   - M5Stack M5Unit-RTC (Address 0x51);
   - Pimoroni multi-sensor-stick, ambient sensor BME280 (Address 0x76);
-  - Adafruit Gamepad QT (Address: 0x50);
+  - Adafruit Gamepad QT (Address: 0x50) or:
   - Pimoroni Qw/ST Pad (I2C game controller (Addressses: 0x21, 0x23) 1x or 2x to be used with Version 2 of the sketch.
 
- Beside these three external I2C devices the Adafruit Feather ESP32-S3 TFT board has other internal devices on the I2C bus:
+ Beside these three or more external I2C devices the Adafruit Feather ESP32-S3 TFT board has other internal devices on the I2C bus:
  The I2C bus scan reported devices found with the following addresses: 0x23, 0x36, 0x50, 0x51, 0x6A, 0x76.
  The three external devices are connected to the Stemma QT/Qwiic connector of the Adafruit Feather ESP32-S3 TFT board, via a M5Stack 3-port Grove Hub. 
  Initially I had the Adafruit Gamepad QT connected in series with the Pimoroni multi-sensor-stick, however this caused I2C bus problems. In fact the M5Unit-RTC was giving unreliable datetime values after having been set with a correct NTP unixtime.  After disconnecting the Gamepad QT from the multi-sensor-stick and then connecting the Gamepad QT to the 3-port Grove Hub, the I2C bus problems were history. From then on the Arduino sketch running on the Adafruit Feather ESP32-S3 TFT received correct datetime data from the M5Unit-RTC.
