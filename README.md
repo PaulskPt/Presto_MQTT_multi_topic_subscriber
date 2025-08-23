@@ -572,16 +572,16 @@ Added:
 ## 2025-08-22 Version 7 of the Subscriber script
 Added:
 - functionality to remotely change the color of the display text (using buttons L(eft) and R(ight) on a Qw/ST I2C game controller, connected to the MQTT Publisher device);
-- to change the display color added function draw_sd(), beside the already existing draw() function.
-- The idea is: when a MQTT message containing a display text color change, the display is cleared,
-- the text color is set to the new color and the screen is build-up using the data from the latest received
-- MQTT message with topic "sensor/Feath/ambient". To show that not the most recent data is shown, the text "SD"
-- will be shown in the top-right corner of the screen. As soon as a next MQTT message with topic "sensor/Feath/ambient"
-- is received, the normal draw() function will buid-up the screen, continuing to use the new text color.
+  to change the display color added function redraw(), beside the already existing draw() function.
+  The idea is: when a MQTT message containing a display text color change, the display is cleared,
+  the text color is set to the new color and the screen is build-up using the data from the latest received
+  MQTT message with topic "sensor/Feath/ambient". To show that not the most recent data is shown, the text "RD"
+  will be shown in the top-right corner of the screen. As soon as a next MQTT message with topic "sensor/Feath/ambient"
+  is received, the normal draw() function will buid-up the screen, continuing to use the new text color.
 - objects for each of the non $SYS topics (sensor_obj, toggle_obj, amb_obj, disp_obj and metar_obj) are created and
-- maintained. They act as "memory" for some settings, while "memory" of received MQTT messages is done by saving them
+  maintained. They act as "memory" for some settings, while "memory" of received MQTT messages is done by saving them
 - in a file on SD-Card.
-- functionality to write a certain maximum of received messages in a file on SD-Card (/sd/msg_hist.json);
+- functionality to maintain certain maximum of received messages in a file on SD-Card (/sd/msg_hist.json);
 
 - In the Arduino sketch for the MQTT Publisher device I have added functionality to read the state of the buttons.
 The buttons of the Pimoroni Qw/ST I2C game controller are defined as follows:
