@@ -516,7 +516,8 @@ The joystick is not used yet. The buttons are defined as follows:
 
 # Hardware used
 
-### For the MQTT Publisher device: Adafruit Feather ESP32-S3 TFT [info](https://www.adafruit.com/product/5483);
+### For the MQTT Publisher device: 
+Adafruit Feather ESP32-S3 TFT [info](https://www.adafruit.com/product/5483);
 
 and for version 2: Pimoroni Qw/ST I2C Game controller (PIM752) [info](https://shop.pimoroni.com/products/qwst-pad?variant=53514400596347);
 
