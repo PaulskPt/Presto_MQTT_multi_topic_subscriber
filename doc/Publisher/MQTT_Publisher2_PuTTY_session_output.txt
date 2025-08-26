@@ -32,7 +32,6 @@ send_msg(): length written: 165
 send_msg(): MQTT message ID: 1756247079
 send_msg(): in IS8601 = 2025-08-26T22:24:39+00:00
 send_msg(): Topic = "b'weather/PL2XLW/metar'"
-send_msg(): msg = b'{"metar": {"raw": "METAR LPPT 262200Z 34014KT 310V010 CAVOK 19/15'
-        b' Q1014"}, "hd": {"de": "Ext", "sc": "meas", "vt": "s", "t": 1756245600, "dc": "wx", "ow": "PL2XLW"}}'
+send_msg(): msg = b'{"metar": {"raw": "METAR LPPT 262200Z 34014KT 310V010 CAVOK 19/15 Q1014"}, "hd": {"de": "Ext", "sc": "meas", "vt": "s", "t": 1756245600, "dc": "wx", "ow": "PL2XLW"}}'
 MQTT message group:   1 sent
 -------------------------------------------------------
