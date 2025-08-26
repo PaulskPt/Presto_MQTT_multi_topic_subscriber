@@ -610,7 +610,7 @@ This Publisher2 [info](https://shop.pimoroni.com/products/pimoroni-pico-lipo-2-x
 ### Added a Version 3 ("Subscriber_V8") for the Subscriber.
 This version is adapted to receive and display MQTT messages with topic ```weather/PL2XLW/metar```.
 
-See: [photo](https://imgur.com/a/SKHAVRJ) and [video](https://imgur.com/a/Mbb5P9i)
+See: [photo](https://imgur.com/a/SKHAVRJ) [latest photos](https://imgur.com/a/MmotOGn) and [video](https://imgur.com/a/Mbb5P9i)
 
   
 
