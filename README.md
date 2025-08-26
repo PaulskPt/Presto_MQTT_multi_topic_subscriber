@@ -10,6 +10,8 @@ by Paulus Schulinck (Github handle: @PaulskPt)
 - executing commands from a remote control device,
 - by means of MQTT messages.
 
+See at the end also info about a second Publisher device for sending MQTT messages with topic "weather/PL2XLW/metar".
+
 ## MQTT messages come by "topics".
 ### This repo works with four different topics for the Publisher device and six topics for the Subscriber device:
 - "sensor/Feath/ambient". Containing ambient data from a remote sensor
