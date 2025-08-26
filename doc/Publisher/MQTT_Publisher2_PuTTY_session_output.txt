@@ -1,0 +1,38 @@
+Tuesday 2025-08-26 23h24 utc+1
+Board: Pimoroni Pico LiPo 2XL W
+Micropython script "metar_mqtt_v1.py
+
+PuTTY SSH session from desktop PC Paul5 into the Pico LiPo 2XL W:
+
+Output:
+
+global(): PUBLISHER_ID = PL2XLW
+global(): broker = 192.168._.___
+global(): port = 1883
+
+Connecting to Vodafone-8D96F1....Timed out after 5 seconds...
+Unix time: 1756247079
+setup(): trying to mqtt.connect()
+main(): Starting non-blocking METAR loop...
+main(): MQTT message send interval: 60 seconds
+sync_time_fm_ntp(): ✅ Time synced: (2025, 8, 26, 22, 24, 39, 1, 238)
+sync_time_fm_ntp(): 🕒 Unix time: 1756247079
+main(): ISO 8601 time: 2025-08-26T23:24:39+01:00
+main(): Time to fetch METAR!
+fetchMetar(): start to send request
+fetchMetar(): Raw response (first 30 char's): "{"status":true,"credits":1545,"
+fetchMetar(): my_status = True
+fetchMetar(): my_credits = 1545
+fetchMetar(): wx observed = 1756245600
+fetchMetar(): metar = METAR LPPT 262200Z 34014KT 310V010 CAVOK 19/15 Q1014
+main(): Time to publish MQTT message!
+composePayload(): PUBLISHER_ID = PL2XLW
+send_msg(): Topic length: 20
+send_msg(): length written: 165
+send_msg(): MQTT message ID: 1756247079
+send_msg(): in IS8601 = 2025-08-26T22:24:39+00:00
+send_msg(): Topic = "b'weather/PL2XLW/metar'"
+send_msg(): msg = b'{"metar": {"raw": "METAR LPPT 262200Z 34014KT 310V010 CAVOK 19/15'
+        b' Q1014"}, "hd": {"de": "Ext", "sc": "meas", "vt": "s", "t": 1756245600, "dc": "wx", "ow": "PL2XLW"}}'
+MQTT message group:   1 sent
+-------------------------------------------------------
