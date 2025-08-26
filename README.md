@@ -610,5 +610,7 @@ This Publisher2 is dedicated to receive, at intervals, weather messages from ser
 ### Added a Version 3 ("Subscriber_V8") for the Subscriber.
 This version is adapted to receive and display MQTT messages with topic ```weather/PL2XLW/metar```.
 
+See: [photo](https://imgur.com/a/SKHAVRJ) and [video](https://imgur.com/a/Mbb5P9i)
+
   
 
