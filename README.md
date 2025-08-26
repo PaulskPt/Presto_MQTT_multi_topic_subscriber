@@ -602,4 +602,13 @@ The buttons of the Pimoroni Qw/ST I2C game controller are defined as follows:
 |   +      | execute a software reset                                       |
 +----------+----------------------------------------------------------------+
 ```
+## Update 2025-08-26
+
+### Added a second Publisher device (Pimoroni Pico Lipo 2XL W)
+This Publisher2 is dedicated to receive, at intervals, weather messages from server ```metar-taf.com```, filter the METAR section, compose and send, at other intervals, MQTT messages with the topic ```weather/PL2XLW/metar```.
+
+### Added a Version 3 for the Subscriber.
+This version is adapted to receive and display MQTT messages with topic ```weather/PL2XLW/metar```.
+
   
+
