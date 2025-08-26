@@ -613,5 +613,5 @@ This version is adapted to receive and display MQTT messages with topic ```weath
 See: [photo](https://imgur.com/a/SKHAVRJ), [latest photos](https://imgur.com/a/MmotOGn) and [video](https://imgur.com/a/Mbb5P9i)
 
 ### Note about Publisher unixTime(s)
-In the latest version of the Publishers, the unixTime they send is in GMT. It is up to the algorithm of the MQTT Subscriber to present the received unixTime as localTime or GMT.
+In the latest version of the Publishers, the unixTime they send is in GMT. It is up to the algorithm of the MQTT Subscriber to present the received unixTime as localTime or GMT. I have chosen to have the Subscriber device convert the received unixTime to ISO6801 format (example "hh:mm:ss+01:00").
 
