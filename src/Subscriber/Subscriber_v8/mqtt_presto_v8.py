@@ -2084,6 +2084,8 @@ def redraw() -> bool:
     
     if latest_uxTime > 0:
         dtStr = record["rcvd"]
+        if my_debug:
+            print(TAG+f"dtStr = {dtStr}. Line 2088")
         #dtStr = convert_to_dtStr(latest_uxTime)
         if isinstance(dtStr, str):
             if len(dtStr) > 0:
@@ -2148,6 +2150,8 @@ def redraw() -> bool:
         # As soon as I changed line 36 into: presto = Presto(full_res=True), the interpreter gave the error: "set_layer: layer out of range!"
         if not full_res:
             display.set_layer(1)
+            display.set_pen(BLACK)
+            display.clear()
             # Clear the screen with a black background
         
         # Get the changed color value from the disp_obj
@@ -2181,8 +2185,14 @@ def redraw() -> bool:
         
         my_scale = 2
         y = 25 # restart y position
-        display.text("RD", WIDTH-40, y, WIDTH, scale = my_scale) # Indicate that this is a Redraw'n screen
-        display.text(hdg + " " + time_draw, x, y, WIDTH, scale = my_scale)
+        display.text("RD", WIDTH-30, y-20, WIDTH, scale = my_scale) # Indicate that this is a Redraw'n screen
+        #display.text(hdg + " " + time_draw, x, y, WIDTH, scale = my_scale)
+        n = datetime_rcvd.find("T")
+        if n >= 0:
+            time_rcvd = datetime_rcvd[n+1:]
+        else:
+            time_rcvd = time_draw
+        display.text(hdg + " " + time_rcvd, x, y, WIDTH, scale = my_scale)
         y += line_space
         display.text(ow_draw + " " + de_draw + " " + dc_draw, x, y, WIDTH, scale = my_scale)
         y += line_space
@@ -2249,9 +2259,13 @@ def draw(mode:int = 1):
     #    return
     
     display.set_font("font14_outline")  # was ("bitmap8")
-    # As soon as I changed line 36 into: presto = Presto(full_res=True), the interpreter gave the error: "set_layer: layer out of range!"
+    # As soon as I changed line 36 into: presto = Presto(full_res=True), 
+    # the interpreter gave the error: "set_layer: layer out of range!"
     if not full_res:
+        # display.set_layer(1)
         display.set_layer(1)
+        display.set_pen(BLACK)
+        display.clear()
 
     # Clear the screen with a black background
     #display.set_pen(BLACK)  # Black background
@@ -2294,7 +2308,7 @@ def draw(mode:int = 1):
         if not lightsDclrChanged:
             clean()
         if my_debug:
-            print(TAG+f"type(hh_rcvd) = {type(hh_rcvd)}, hh_received = {hh_rcvd}")
+            print(TAG+f"hh_received = {hh_rcvd}, type(hh_rcvd) = {type(hh_rcvd)}")
         if  hh_rcvd is not None:
             if isinstance(datetime_rcvd, int):
                 time_draw_hh = hh_rcvd
@@ -2304,8 +2318,8 @@ def draw(mode:int = 1):
             if my_debug:
                 print(TAG+f"time_draw = {time_draw}")
             if time_draw != td_default: # "--:--:--"
-                if my_debug:
-                    print(TAG+f"type(time_draw) = {type(time_draw)}, time_draw = \'{time_draw}\'")
+                if not my_debug:
+                    print(TAG+f"time_draw = \'{time_draw}\', type(time_draw) = {type(time_draw)}")
                 if isinstance(time_draw, str):
                     if len(time_draw) >= 3:
                         time_draw_hh = int(time_draw[:2])
@@ -2358,6 +2372,8 @@ def draw(mode:int = 1):
             dc_draw = get_payload_member("dc")        # → "BME280", "home", "colr", "colr"
             # sc_draw = get_payload_member("sc");     # → "meas", "ligh", "inc", "dec"
             timestamp_draw = get_payload_member("t")  # → "1748945128" = Tue Jun 03 2025 10:05:28 GMT+0000
+            if my_debug:
+                print(TAG+f"timestamp_draw = {timestamp_draw}")
             
             if topic_idx == 0:
                 temp_draw = get_payload_member("temp")    # → "Temperature: 30.3 °C"
@@ -2420,6 +2436,8 @@ def draw(mode:int = 1):
                 clean()
             
             display.set_pen(CURRENT_COLOR)
+            if not my_debug:
+                print(TAG+f"time_draw = {time_draw}. Line 2434")
             display.text(hdg + " " + time_draw, x, y, WIDTH, scale = my_scale)
             y += line_space
             if topic_idx == 6:
@@ -2548,8 +2566,14 @@ def pr_log():
 
     # Print log file contents
     print_file_contents(TAG, log_path, "log file")
-
-
+    
+def clr_displays():
+    for i in range(2):
+        display.set_layer(i)
+        display.set_pen(BLACK)
+        display.clear()
+    presto.update()
+        
 def cleanup():
     global ref_exist, ref_obj, ref_path, log_exist, log_obj, log_path, lightsDclrChanged
     if ref_obj: # and ref_path is not None and ref_exist:
@@ -2614,14 +2638,19 @@ def setup():
                 print(TAG+f"Subscribed to topic: \'{v}\'")
             add_to_log("Subscribed to topic: \'{}\'".format(v))
         msg_drawn = False
-        # As soon as I changed line 36 into: presto = Presto(full_res=True), the interpreter gave the error: "set_layer: layer out of range!"
+        # As soon as I changed line 36 into: presto = Presto(full_res=True), 
+        # the interpreter gave the error: "set_layer: layer out of range!"
         if not full_res:
-            display.set_layer(0)
+            clr_displays()
+            display.set_layer(1)
         #display.set_pen(display.create_pen(0, 0, 0))  # Black background
         #display.clear()
         #presto.update()
         clean()
         
+    except AttributeError as e:
+        print(TAG+f"⚠️ AttributeError: {e}")
+        raise RuntimeError
     except Exception as e:
         if e.args[0] == 113: # EHOSTUNREACH
             t = f"⚠️ Failed to reach the host with address: {BROKER} and port: {PORT}"
