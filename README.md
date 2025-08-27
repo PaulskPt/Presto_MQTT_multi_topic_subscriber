@@ -564,7 +564,7 @@ My advise for the Publisher device: the Adafruit Feather ESP32-S3 TFT (and proba
 ## 2025-08-18 Version 2 of the Publisher sketch
 Added:
 - Using another type of game controller, the Pimoroni Qw/ST Pad I2C game controller.
-- For this I ported a Pimoroni qwstpad-micropython library for micropython to C++. See the files qwstpad.h and qwstpad.cpp.
+- For this I ported a Pimoroni qwstpad-micropython library for micropython to C++. See the files qwstpad.h and qwstpad.cpp. See [repo about port](https://github.com/PaulskPt/qwstpad-arduino)
 - Functionality to use one or (up to four) of these Pimoroni Qw/ST Pad I2C game controllers. They have more buttons than the Adafruit Gamepad Qt controller that I used for version 1. The buttons L(eft) and R(ight) are defined to change the color of the display text of the remote Pimoroni Presto subscriber.
 - Added functionality to blink all or one of the four LEDs on the Qw/ST Pad game controllers. I tested up to two Qw/ST game controllers. However, because I have also other I2C devices connected to the Adafruit ESP32-S3 TFT board, I had to connect the game controllers to the second I2C port.
 - Added two MQTT message topics: 
