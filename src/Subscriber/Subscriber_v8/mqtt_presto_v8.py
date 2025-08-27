@@ -2085,7 +2085,7 @@ def redraw() -> bool:
     if latest_uxTime > 0:
         dtStr = record["rcvd"]
         if my_debug:
-            print(TAG+f"dtStr = {dtStr}. Line 2088")
+            print(TAG+f"dtStr = {dtStr}")
         #dtStr = convert_to_dtStr(latest_uxTime)
         if isinstance(dtStr, str):
             if len(dtStr) > 0:
@@ -2138,6 +2138,7 @@ def redraw() -> bool:
             de_draw = head["de"] # Lab
             vt = head["vt"]      # float
             uxTime = head["t"]   # 1755776794
+            #timestamp_draw = get_payload_member("t")
             
             temp_draw = format_sensor_value(payload, "t")  # Temperature: 31.1 °C
             pres_draw = format_sensor_value(payload, "p")  # Pressure: 1004.1 mB
@@ -2196,7 +2197,7 @@ def redraw() -> bool:
         y += line_space
         display.text(ow_draw + " " + de_draw + " " + dc_draw, x, y, WIDTH, scale = my_scale)
         y += line_space
-        display.text("msgID: " + time_draw, x, y, WIDTH, scale = my_scale)
+        display.text("msgID: " + str(uxTime), x, y, WIDTH, scale = my_scale)
         y += line_space
         if my_debug:
             print(TAG+f"topic_idx: {topIdx} = topic: \"{top}\"") # TOPIC_DICT[topIdx]}\"")
