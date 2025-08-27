@@ -1241,7 +1241,11 @@ def unixToIso8601(unixTime, local: bool=False) -> str:
 # Called from redraw()
 def format_sensor_value(payload, key):
     svDict = {"t":"TEMPERATURE", "p":"PRESSURE", "a":"ALTITUDE", "h":"HUMIDITY"}
-    unit = payload[key]["u"]
+    print(f"format_sensor_value(): key = {key}")
+    if key == "t":
+        unit = "°C" # Compensation for MQTT message transmission cannot contain "°" (AFAIK)
+    else:
+        unit = payload[key]["u"]
     value = round(float(payload[key]["v"]), 2)
     return f"{svDict[key]}: {value} {unit}"
 
@@ -2138,13 +2142,10 @@ def redraw() -> bool:
             de_draw = head["de"] # Lab
             vt = head["vt"]      # float
             uxTime = head["t"]   # 1755776794
-            #timestamp_draw = get_payload_member("t")
-            
             temp_draw = format_sensor_value(payload, "t")  # Temperature: 31.1 °C
             pres_draw = format_sensor_value(payload, "p")  # Pressure: 1004.1 mB
             alti_draw = format_sensor_value(payload, "a")   # Altitude: 101.1 m
             humi_draw = format_sensor_value(payload, "h")   # Humidity:  49.7
-            
             print(TAG+f"Topic = \'{top}\', topicIdx = {topIdx}")
             
         display.set_font("font14_outline")  # was ("bitmap8")
