@@ -1,0 +1,69 @@
+Wednesday 2025-08-27 10h:13 utc+1
+
+PuTTY SSH Session into Raspberry Pi Compute Module 5 (RPiCM5)
+which is running MQTT Broker app "mosquitto"
+
+Mosquitto output:
+
+
+2025-08-27T10:13:32: Client PrestoMQTTClient closed its connection.
+2025-08-27T10:13:36: New connection from 192.168._.___:62345 on port 1883.
+2025-08-27T10:13:36: New client connected from 192.168._.___:62345 as PrestoMQTTClient (p2, c1, k0).                  <<<<=== Subscriber
+
+2025-08-27T10:13:53: New connection from 192.168._.___:57213 on port 1883.
+2025-08-27T10:13:53: New client connected from 192.168._.___:57213 as Adafruit_Feather_ESP32S3TFT (p2, c1, k60).      <<<=== Publsher1
+2025-08-27T10:13:53: No will message specified.
+2025-08-27T10:13:53: Sending CONNACK to Adafruit_Feather_ESP32S3TFT (0, 0)
+2025-08-27T10:13:53: Received SUBSCRIBE from Adafruit_Feather_ESP32S3TFT
+2025-08-27T10:13:53:    $SYS/broker/clients/connected (QoS 0)
+2025-08-27T10:13:53: Adafruit_Feather_ESP32S3TFT 0 $SYS/broker/clients/connected
+2025-08-27T10:13:53: Sending SUBACK to Adafruit_Feather_ESP32S3TFT
+2025-08-27T10:13:53: Sending PUBLISH to Adafruit_Feather_ESP32S3TFT (d0, q0, r1, m0, '$SYS/broker/clients/connected', ... (1 bytes))
+2025-08-27T10:13:53: Received SUBSCRIBE from Adafruit_Feather_ESP32S3TFT
+2025-08-27T10:13:53:    $SYS/broker/clients/disconnected (QoS 0)
+2025-08-27T10:13:53: Adafruit_Feather_ESP32S3TFT 0 $SYS/broker/clients/disconnected
+
+2025-08-27T10:14:54: No will message specified.
+2025-08-27T10:14:54: Sending CONNACK to PrestoMQTTClient (0, 0)
+2025-08-27T10:14:54: Received SUBSCRIBE from PrestoMQTTClient
+2025-08-27T10:14:54:    sensors/Feath/ambient (QoS 0)
+2025-08-27T10:14:54: PrestoMQTTClient 0 sensors/Feath/ambient
+2025-08-27T10:14:54: Sending SUBACK to PrestoMQTTClient
+2025-08-27T10:14:55: Received SUBSCRIBE from PrestoMQTTClient
+2025-08-27T10:14:55:    lights/Feath/toggle (QoS 0)
+2025-08-27T10:14:55: PrestoMQTTClient 0 lights/Feath/toggle
+2025-08-27T10:14:55: Sending SUBACK to PrestoMQTTClient
+2025-08-27T10:14:55: Received SUBSCRIBE from PrestoMQTTClient
+2025-08-27T10:14:55:    lights/Feath/color_inc (QoS 0)
+2025-08-27T10:14:55: PrestoMQTTClient 0 lights/Feath/color_inc
+2025-08-27T10:14:55: Sending SUBACK to PrestoMQTTClient
+2025-08-27T10:14:55: Received SUBSCRIBE from PrestoMQTTClient
+2025-08-27T10:14:55:    lights/Feath/color_dec (QoS 0)
+2025-08-27T10:14:55: PrestoMQTTClient 0 lights/Feath/color_dec
+2025-08-27T10:14:55: Sending SUBACK to PrestoMQTTClient
+2025-08-27T10:14:56: Received SUBSCRIBE from PrestoMQTTClient
+2025-08-27T10:14:56:    lights/Feath/dclr_inc (QoS 0)
+2025-08-27T10:14:56: PrestoMQTTClient 0 lights/Feath/dclr_inc
+2025-08-27T10:14:56: Sending SUBACK to PrestoMQTTClient
+2025-08-27T10:14:56: Received SUBSCRIBE from PrestoMQTTClient
+2025-08-27T10:14:56:    lights/Feath/dclr_dec (QoS 0)
+2025-08-27T10:14:56: PrestoMQTTClient 0 lights/Feath/dclr_dec
+2025-08-27T10:14:56: Sending SUBACK to PrestoMQTTClient
+
+2025-08-27T10:16:08: Received PINGREQ from Adafruit_Feather_ESP32S3TFT
+2025-08-27T10:16:08: Sending PINGRESP to Adafruit_Feather_ESP32S3TFT
+2025-08-27T10:16:12: Received PUBLISH from Adafruit_Feather_ESP32S3TFT (d0, q0, r0, m0, 'sensors/Feath/ambient', ... (253 bytes))
+2025-08-27T10:16:12: Sending PUBLISH to PrestoMQTTClient (d0, q0, r0, m0, 'sensors/Feath/ambient', ... (253 bytes))
+
+2025-08-27T10:28:33: New connection from 192.168._.___:52729 on port 1883.
+2025-08-27T10:28:33: New client connected from 192.168._.___:52729 as PL2XLW (p2, c1, k0).                                  <<<=== Publisher2 logs in
+2025-08-27T10:28:33: No will message specified.
+2025-08-27T10:28:33: Sending CONNACK to PL2XLW (0, 0)
+2025-08-27T10:28:34: Received PUBLISH from PL2XLW (d0, q0, r0, m0, 'weather/PL2XLW/metar', ... (163 bytes))                 <<<=== First message sent by Publisher2
+2025-08-27T10:28:34: Sending PUBLISH to PrestoMQTTClient (d0, q0, r0, m0, 'weather/PL2XLW/metar', ... (163 bytes))
+2025-08-27T10:28:36: Sending PUBLISH to Adafruit_Feather_ESP32S3TFT (d0, q0, r0, m0, '$SYS/broker/clients/connected', ... (1 bytes))
+2025-08-27T10:28:36: Sending PUBLISH to PrestoMQTTClient (d0, q0, r0, m0, '$SYS/broker/clients/connected', ... (1 bytes))
+2025-08-27T10:28:41: Received PINGREQ from Adafruit_Feather_ESP32S3TFT
+2025-08-27T10:28:41: Sending PINGRESP to Adafruit_Feather_ESP32S3TFT
+
+
