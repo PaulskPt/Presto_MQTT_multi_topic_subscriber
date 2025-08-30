@@ -613,7 +613,7 @@ See [serial output](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscrib
 ### Added a Version 3 ("Subscriber_V8") for the Subscriber.
 This version is adapted to receive and display MQTT messages with topic ```weather/PL2XLW/metar```.
 
-See: [photo](https://imgur.com/a/SKHAVRJ) and [video](https://imgur.com/a/Mbb5P9i).  For images comparison between the Pimoroni Presto and a Unexpected Maker SQUiXL see: [photo](https://imgur.com/a/ARvUNSK)
+See: [photo](https://imgur.com/a/SKHAVRJ) and [video](https://imgur.com/a/Mbb5P9i).  For images comparison between the Pimoroni Presto and a Unexpected Maker SQUiXL see: [photos](https://imgur.com/a/ARvUNSK)
 
 ### Note about Publisher unixTime(s)
 In the latest software version for the Publisher devices, the unixTime they send is in GMT. It is up to the algorithm of the MQTT Subscriber to present the received unixTime as localTime or GMT. I have chosen to have the Subscriber device convert and display the received unixTime to ISO6801 format (example: "hh:mm:ss+01:00") [photos](https://imgur.com/a/MmotOGn)
