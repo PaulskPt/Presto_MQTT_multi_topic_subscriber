@@ -32,7 +32,7 @@
   Update 2025-08-19. In split_msg() added code to handle an added nexted JSonObject "header" alias "head" containing the elements (example sensorTPAH message type): 
   "head": {"ow": "Feath", "de": "PC-Lab", "dc": "BME280", "sc": "meas", "vt": "f", "ts": 1755622875},
   Note Version 3 was a trial that failed.
-  Update 2025-09-02: version 4. Added functionality to check if the current date is withing the DST period of the current year. Example for region Europe/Lisbon.
+  Update 2025-09-02: version 4. Added functionality to check if the current date is within the DST period of the current year. Example for region Europe/Lisbon.
   To use as less memory as possible, added the map "dst_start_end" and two small functions (getYearFromUnix() and isDST() ).
   You can switch between timezones "Europe/Lisbon" and "America/New_York". See #define #define REGION_EUROPE and #define REGION_USA in secret.h.
 */
