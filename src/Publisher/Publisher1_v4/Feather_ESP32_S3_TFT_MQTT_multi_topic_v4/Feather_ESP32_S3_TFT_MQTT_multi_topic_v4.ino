@@ -1,5 +1,5 @@
 /*
-  Feather_ESP32_S3_TFT_MQTT_w_Pimoroni_2xqwstpad_v2.ino
+  Feather_ESP32_S3_TFT_MQTT_multi_topic_v4.ino
 
   Sunday 2025-08-03 05h25 utc +1
   Adafruit Feather ESP32-S3 TFT MQTT test adaption for use with Pimoroni QwST Gamepad
