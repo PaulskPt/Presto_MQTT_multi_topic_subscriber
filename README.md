@@ -615,6 +615,43 @@ This version is adapted to receive and display MQTT messages with topic ```weath
 
 See: [photo](https://imgur.com/a/SKHAVRJ) and [video](https://imgur.com/a/Mbb5P9i).  For images comparison between the Pimoroni Presto and an Unexpected Maker SQUiXL see: [photos](https://imgur.com/a/ARvUNSK)
 
+### Added a Version 4 for the Publisher1 device
+This version adds DST awareness to the timezone offset. In secret.h one can choose between #define REGION_EUROPE, #define REGION_USA or create ones own region data.
+In the sketch these variables are set from the values in file ```secret.h```.
+```
+	int tzDST_Offset = atoi(SECRET_TIMEZONE_DST_OFFSET); // can be negative or positive (hours)
+	int tzSTD_Offset = atoi(SECRET_TIMEZONE_STD_OFFSET); // can be negative or positive (hours)
+	const char SECRET_TIMEZONE_DST_ID[] = SECRET_TZ_DST_ID;
+	const char SECRET_TIMEZONE_STD_ID[] = SECRET_TZ_STD_ID;
+```
+In the sketch there are these DST related definitions (lines 120-142):
+```
+// Used by isDST()
+struct DstPeriod {
+  time_t start;
+  time_t end;
+};
+
+// Used by isDST()
+#ifdef REGION_EUROPE
+std::map<std::string, DstPeriod> dst_start_end = {
+  { "2025", {1741503600, 1762063200} },
+  { "2026", {1772953200, 1793512800} },
+  { "2027", {1805007600, 1825567200} }
+};
+#endif
+
+#ifdef REGION_USA
+std::map<std::string, DstPeriod> dst_start_end = {
+  { "2025", {1741503600, 1762063200} },
+  { "2026", {1772953200, 1793512800} },
+  { "2027", {1805007600, 1825567200} },
+  { "2028", {1836457200, 1857016800} }
+};
+#endif
+
+```
+
 ### Note about Publisher unixTime(s)
 In the latest software version for the Publisher devices, the unixTime they send is in GMT. It is up to the algorithm of the MQTT Subscriber to present the received unixTime as localTime or GMT. I have chosen to have the Subscriber device convert and display the received unixTime to ISO6801 format (example: "hh:mm:ss+01:00") [photos](https://imgur.com/a/MmotOGn)
 
