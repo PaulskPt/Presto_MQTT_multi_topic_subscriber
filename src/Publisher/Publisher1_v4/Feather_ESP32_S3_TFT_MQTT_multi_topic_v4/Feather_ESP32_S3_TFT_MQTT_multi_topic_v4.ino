@@ -1,5 +1,5 @@
 /*
-  Feather_ESP32_S3_TFT_MQTT_multi_topic_v4.ino
+  Feather_ESP32_S3_TFT_MQTT_w_Pimoroni_2xqwstpad_v2.ino
 
   Sunday 2025-08-03 05h25 utc +1
   Adafruit Feather ESP32-S3 TFT MQTT test adaption for use with Pimoroni QwST Gamepad
@@ -32,9 +32,9 @@
   Update 2025-08-19. In split_msg() added code to handle an added nexted JSonObject "header" alias "head" containing the elements (example sensorTPAH message type): 
   "head": {"ow": "Feath", "de": "PC-Lab", "dc": "BME280", "sc": "meas", "vt": "f", "ts": 1755622875},
   Note Version 3 was a trial that failed.
-  Update 2025-09-02: version 4. Added functionality to check if the current date is within the DST period of the current year. Example for region Europe/Lisbon.
+  Update 2025-09-02: version 4. Added functionality to check if the current date is withing the DST period of the current year. Example for region Europe/Lisbon.
   To use as less memory as possible, added the map "dst_start_end" and two small functions (getYearFromUnix() and isDST() ).
-  You can switch between timezones "Europe/Lisbon" and "America/New_York". See #define REGION_EUROPE and #define REGION_USA in secret.h.
+  You can switch between timezones "Europe/Lisbon" and "America/New_York". See #define #define REGION_EUROPE and #define REGION_USA in secret.h.
 */
 #include <Arduino.h>
 #include "secrets.h"
@@ -128,7 +128,8 @@ struct DstPeriod {
 std::map<std::string, DstPeriod> dst_start_end = {
   { "2025", {1741503600, 1762063200} },
   { "2026", {1772953200, 1793512800} },
-  { "2027", {1805007600, 1825567200} }
+  { "2027", {1805007600, 1825567200} },
+  { "2028": {1837645200, 1856397600} }
 };
 #endif
 
