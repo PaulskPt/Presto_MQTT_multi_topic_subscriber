@@ -34,7 +34,7 @@
   Note Version 3 was a trial that failed.
   Update 2025-09-02: version 4. Added functionality to check if the current date is within the DST period of the current year. Example for region Europe/Lisbon.
   To use as less memory as possible, added the map "dst_start_end" and two small functions (getYearFromUnix() and isDST() ).
-  You can switch between timezones "Europe/Lisbon" and "America/New_York". See #define #define REGION_EUROPE and #define REGION_USA in secret.h.
+  You can switch between timezones "Europe/Lisbon" and "America/New_York". See #define REGION_EUROPE and #define REGION_USA in secret.h.
 */
 #include <Arduino.h>
 #include "secrets.h"
