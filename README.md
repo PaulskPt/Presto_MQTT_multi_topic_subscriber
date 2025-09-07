@@ -654,7 +654,7 @@ std::map<std::string, DstPeriod> dst_start_end = {
 ```
 ## Update 2025-09-07
 ### Added a Version 4 ("Subscriber_v9a") for the Subscriber.
-This version changed to hires mode. Another, better font type. Vector.text() and some other improvements
+This version changed to "Presto(full_res=hi_res)" mode. Another, better font type. Vector.text() and some other improvements.
 
 ### Note about Publisher unixTime(s)
 In the latest software version for the Publisher devices, the unixTime they send is in GMT. It is up to the algorithm of the MQTT Subscriber to present the received unixTime as localTime or GMT. I have chosen to have the Subscriber device convert and display the received unixTime to ISO6801 format (example: "hh:mm:ss+01:00") [photos](https://imgur.com/a/MmotOGn)
