@@ -1,0 +1,25 @@
+---Log created on: 2025-09-07T20:47:48---
+
+ 2025-09-07T20:49:28 WiFi connected to: Vodafone-8D96F1
+ 2025-09-07T20:49:28 Connected to MQTT broker: 192.168.1.114
+ 2025-09-07T20:49:28 Subscribed to topic: 'sensors/Feath/ambient'
+ 2025-09-07T20:49:29 Subscribed to topic: 'lights/Feath/toggle'
+ 2025-09-07T20:49:29 Subscribed to topic: 'lights/Feath/color_inc'
+ 2025-09-07T20:49:29 Subscribed to topic: 'lights/Feath/color_dec'
+ 2025-09-07T20:49:29 Subscribed to topic: 'lights/Feath/dclr_inc'
+ 2025-09-07T20:49:30 Subscribed to topic: 'lights/Feath/dclr_dec'
+ 2025-09-07T20:49:30 Subscribed to topic: 'weather/PL2XLW/LPPT'
+ 2025-09-07T20:49:30 Subscribed to topic: '$SYS/broker/clients/connected'
+ 2025-09-07T20:50:38 Session interrupted by user — logging and exiting.
+ 2025-09-07T20:51:10 WiFi connected to: Vodafone-8D96F1
+ 2025-09-07T20:51:10 Connected to MQTT broker: 192.168.1.114
+ 2025-09-07T20:51:11 Subscribed to topic: 'sensors/Feath/ambient'
+ 2025-09-07T20:51:11 Subscribed to topic: 'lights/Feath/toggle'
+ 2025-09-07T20:51:11 Subscribed to topic: 'lights/Feath/color_inc'
+ 2025-09-07T20:51:11 Subscribed to topic: 'lights/Feath/color_dec'
+ 2025-09-07T20:51:11 Subscribed to topic: 'lights/Feath/dclr_inc'
+ 2025-09-07T20:51:11 Subscribed to topic: 'lights/Feath/dclr_dec'
+ 2025-09-07T20:51:11 Subscribed to topic: 'weather/PL2XLW/LPPT'
+ 2025-09-07T20:51:12 Subscribed to topic: '$SYS/broker/clients/connected'
+ 2025-09-07T20:51:12 Subscribed to topic: '$SYS/broker/clients/disconnected'
+ 2025-09-07T20:53:44 Session interrupted by user — logging and exiting.
