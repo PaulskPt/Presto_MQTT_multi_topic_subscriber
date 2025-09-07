@@ -1,4 +1,6 @@
 """
+metar_mqtt_v1.py
+
 This example will scan for wireless networks (depending global variable: scan_networks) and attempt to connect
 to the one specified in secrets.json.
 
