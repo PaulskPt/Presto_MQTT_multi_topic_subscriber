@@ -4,7 +4,7 @@ metar_mqtt_v1.py
 This example will scan for wireless networks (depending global variable: scan_networks) and attempt to connect
 to the one specified in secrets.json.
 
-This MicroPython script is written for a Pimoroni Pico Lipo 2XL W (PIM776)
+This MicroPython script is written for a Pimoroni Pico LiPo 2XL W (PIM776)
 Date: 2025-08-26
 By: Paulus Schulinck (Github handle: @PaulskPt)
 License: MIT
@@ -32,8 +32,8 @@ The script below revealed:
 Pimoroni Pico Lipo 2XL W:
 WiFi IP: 192.168._.___
 WiFi MAC-address: __:__:__:__:__
-Note that, because the Pimoroni Pico Lipo 2XL W, unlike the Pimoroni Presto's micropython,
-does not have the module umqatt.simple, I searched Github and found this umqtt.simple2 module,
+Note that, because the Pimoroni Pico LiPo 2XL W, unlike the Pimoroni Presto's micropython,
+does not have the module umqtt.simple, I searched Github and found this umqtt.simple2 module,
 that I downloaded and installed onto the Pico Lipo 2XL W's drive, folder: /lib
 This script is my first attempt with this board to get a METAR messages through a GET() to server metar-taf.com 
 After a successful reception, this script will send a MQTT Publisher message that can be received by MQTT Subscriber devices,
