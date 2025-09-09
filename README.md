@@ -659,3 +659,6 @@ This version changed to "Presto(full_res=hi_res)" mode. Another, better font typ
 ### Note about Publisher unixTime(s)
 In the latest software version for the Publisher devices, the unixTime they send is in GMT. It is up to the algorithm of the MQTT Subscriber to present the received unixTime as localTime or GMT. I have chosen to have the Subscriber device convert and display the received unixTime to ISO6801 format (example: "hh:mm:ss+01:00") [photos](https://imgur.com/a/MmotOGn)
 
+## Update 2025-09-09
+Publisher2. Several changes to improve the script. Most changes are in function "ck_for_next_metar()". Now the calculation for requesting the next METAR and subsequent sending of a MQTT METAR topic message, is derived for the "observed" key in the received METAR message. The value of the "observed" key is a unixtime. This time will be increase 40 minuts. Airport METAR's are refreshed each 30 minutes. Tests revealed that requesting a new METAR at least 10 minutes after its time of publication, is a reliable moment to "catch" a METAR with "fresh" data compared with the last METAR message received before. To limit, during tests, the "loss" of credits from my subscription with metar-taf.com, I limited the number of METAR fetches to 3
+(see file: "secrets.json", key MAX_METAR_FETCHED).
