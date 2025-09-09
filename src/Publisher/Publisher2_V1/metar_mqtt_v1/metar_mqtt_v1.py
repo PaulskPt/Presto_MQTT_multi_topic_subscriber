@@ -20,7 +20,7 @@ does not have the module umqatt.simple, I searched Github and found this umqtt.s
 that I downloaded and installed onto the Pico LiPo 2XL W's drive, folder: /lib
 This script is my first attempt with this board to get a METAR messages through a GET() to server metar-taf.com 
 After a successful reception, this script will send a MQTT Publisher message that can be received by MQTT Subscriber devices,
-like my Pimoroni Presto device. To limit the "lose" of credits on metar-taf.com, I limit the number of METAR fetches to 3
+like my Pimoroni Presto device. To limit the "loss" of credits on metar-taf.com, I limit the number of METAR fetches to 3
 (see secrets.json, key MAX_METAR_FETCHED). The script will fetch a METAR message every 30 minutes, at 40 minutes past the
 "observed" unixtime in the METAR message. The script will run forever, until a reset or power-off.
 
@@ -400,6 +400,7 @@ def ck_for_next_metar() -> bool:
         update_metar = False
         
     if nr_metar_fetched+1 > max_metar_fetched: 
+        print(TAG+f"limit of {max_metar_fetched} metars feched reached!")
         time_to_fetch_metar = False
         return time_to_fetch_metar
      
