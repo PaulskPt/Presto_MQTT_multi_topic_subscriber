@@ -1,4 +1,7 @@
 """
+metar_mqtt_v1.py
+=================
+
 This example will scan for wireless networks and attempt to connect
 to the one specified in secrets.py.
 
@@ -10,38 +13,16 @@ Don't forget to edit secrets.py and add your SSID and PASSWORD.
 Note @PaulskPt 2025-08-24:
 The script below revealed:
 Pimoroni Pico LiPo 2XL W:
-WiFi IP: 192.168.1.146
-WiFi MAC-address: 28:cd:c1:16:a4
+WiFi IP: 192.168._.___
+WiFi MAC-address: __:__:__:__:__ .
 Note that, because the Pimoroni Pico LiPo 2XL W, unlike the Pimoroni Presto's micropython,
 does not have the module umqatt.simple, I searched Github and found this umqtt.simple2 module,
 that I downloaded and installed onto the Pico LiPo 2XL W's drive, folder: /lib
 This script is my first attempt with this board to get a METAR messages through a GET() to server metar-taf.com 
 After a successful reception, this script will send a MQTT Publisher message that can be received by MQTT Subscriber devices,
-like my Pimoroni Presto device.
-
-ToDo ideas:
-Rename topic to "weather/PL2XLW/<ICAO_airport_ID>", for example: "weather/PL2XLW/LPPT"
-
-Copilot wrote:
-Here's a quick example of how you'd retrieve METARs for Lisbon using that ICAO topic:
-
-entries = retrieve_metar_entries(topic_filter="weather/LPPT")
-
-for entry in entries:
-    for timestamp, data in entry.items():
-        print(f"{timestamp}: {data['metar']}")
-
-
-
-Auto-Detect ICAO from Board ID
-board_id = "PL2XLW"
-icao_map = {
-    "PL2XLW": "LPPT",
-    "BOARD2": "LPPR",
-    "BOARD3": "LPFR"
-}
-TOPIC = f"weather/{icao_map.get(board_id, 'UNKNOWN')}"
-
+like my Pimoroni Presto device. To limit the "lose" of credits on metar-taf.com, I limit the number of METAR fetches to 3
+(see secrets.json, key MAX_METAR_FETCHED). The script will fetch a METAR message every 30 minutes, at 40 minutes past the
+"observed" unixtime in the METAR message. The script will run forever, until a reset or power-off.
 
 """
 import machine
