@@ -1,44 +1,50 @@
 """
-metar_mqtt_v1.py
-
-This example will scan for wireless networks (depending global variable: scan_networks) and attempt to connect
-to the one specified in secrets.json.
-
-This MicroPython script is written for a Pimoroni Pico LiPo 2XL W (PIM776)
-Date: 2025-08-26
-By: Paulus Schulinck (Github handle: @PaulskPt)
-License: MIT
-
-Purposes:
-1) Connect via WiFi;
-2) at intervals get a NTP unix datetimestamp;
-3) at other intervals get a weather message from server metar-taf.com 
-   extract the METAR section and the "observed" (unixTime) value;
-4) compose and send a MQTT message, topic "weather/PL2XLW/metar" to a MQTT Broker (in this case a local Broker (LAN))
+This example will scan for wireless networks and attempt to connect
+to the one specified in secrets.py.
 
 If you're using a Pico LiPo 2 you'll need an RM2 breakout and an 8-pin JST-SH cable.
 Grab them here: https:#shop.pimoroni.com/products/rm2-breakout
 
-Don't forget to edit secrets.json and add/fill-in:
-- WiFi SSID, 
-- WiFi PASSWORD,
-- IP-address of your broker_local or broker_external,
-- meta-taf.com API KEY,
-- tz_utc_offset (examples: "1", "-3.5")
-- tz (example: "Europe/Lisbon")
+Don't forget to edit secrets.py and add your SSID and PASSWORD.
 
 Note @PaulskPt 2025-08-24:
 The script below revealed:
-Pimoroni Pico Lipo 2XL W:
-WiFi IP: 192.168._.___
-WiFi MAC-address: __:__:__:__:__
+Pimoroni Pico LiPo 2XL W:
+WiFi IP: 192.168.1.146
+WiFi MAC-address: 28:cd:c1:16:a4
 Note that, because the Pimoroni Pico LiPo 2XL W, unlike the Pimoroni Presto's micropython,
-does not have the module umqtt.simple, I searched Github and found this umqtt.simple2 module,
-that I downloaded and installed onto the Pico Lipo 2XL W's drive, folder: /lib
+does not have the module umqatt.simple, I searched Github and found this umqtt.simple2 module,
+that I downloaded and installed onto the Pico LiPo 2XL W's drive, folder: /lib
 This script is my first attempt with this board to get a METAR messages through a GET() to server metar-taf.com 
 After a successful reception, this script will send a MQTT Publisher message that can be received by MQTT Subscriber devices,
-like, in my case: a Pimoroni Presto device.
+like my Pimoroni Presto device.
+
+ToDo ideas:
+Rename topic to "weather/PL2XLW/<ICAO_airport_ID>", for example: "weather/PL2XLW/LPPT"
+
+Copilot wrote:
+Here's a quick example of how you'd retrieve METARs for Lisbon using that ICAO topic:
+
+entries = retrieve_metar_entries(topic_filter="weather/LPPT")
+
+for entry in entries:
+    for timestamp, data in entry.items():
+        print(f"{timestamp}: {data['metar']}")
+
+
+
+Auto-Detect ICAO from Board ID
+board_id = "PL2XLW"
+icao_map = {
+    "PL2XLW": "LPPT",
+    "BOARD2": "LPPR",
+    "BOARD3": "LPFR"
+}
+TOPIC = f"weather/{icao_map.get(board_id, 'UNKNOWN')}"
+
+
 """
+import machine
 import ujson
 import network
 import time
@@ -54,8 +60,12 @@ import ntptime
 
 
 my_debug = False
+_start1 = True
+_start2 = True
 
 TAG = "global(): "
+
+rtc = machine.RTC()
 
 # from secrets import WIFI_SSID, WIFI_PASSWORD
 
@@ -66,7 +76,7 @@ with open('secrets.json') as f:  # method used by Copilot. This reads and parses
 WIFI_SSID = secrets['wifi']['ssid']
 WIFI_PASSWORD = secrets['wifi']['pass']
 
-use_broker_local = True
+use_broker_local = True if secrets['mqtt']["use_local_broker"] else False
 
 if use_broker_local:
   broker = secrets['mqtt']['broker_local'] # "192.168.1.114"
@@ -92,6 +102,12 @@ CONNECTION_TIMEOUT = 5
 
 scan_networks = False # see setup()
 
+icao_lookup = {
+    "Lisbon": "LPPT",
+    "Porto": "LPPR",
+    "Faro": "LPFR"
+}
+
 kHostname = "https://api.metar-taf.com/metar"
 my_status = 0
 my_credits = 0
@@ -99,6 +115,7 @@ if my_debug:
     print(TAG+"Loaded keys:", secrets['mqtt'].keys())
 PUBLISHER_ID = secrets['mqtt']['publisher_id1']
 api_key = secrets['mqtt']['METAR_TAF_API_KEY'] 
+max_metar_fetched = secrets['mqtt']['MAX_METAR_FETCHED'] # 2
 version = "&v=2.3"
 locale = "&locale=en-US"
 station = "&id=LPPT" # Lisbon Airport for example
@@ -106,10 +123,15 @@ station = "&id=LPPT" # Lisbon Airport for example
 # token = secrets['mqtt']['METAR_TAF_TOKEN']
 kPath =   kHostname + "?api_key=" + api_key + version + locale + station # + "&token=" + token
 
-topic = ("weather/{:s}/metar".format(PUBLISHER_ID)).encode('utf-8')
+topic = ("weather/{:s}/{:s}".format(PUBLISHER_ID, icao_lookup["Lisbon"] )).encode('utf-8')
 
+time_to_fetch_metar = False
+# Track last sync time in milliseconds
+next_metar_unix_time = 0
+
+sync_interval_ms = 60_000  # Check every minute
 uxTime = 0
-utc_offset = secrets['timezone']['tz_utc_offset']  # utc offset in hours
+utc_offset = int(secrets['timezone']['tz_utc_offset'])  # utc offset in hours
 timezone = secrets['timezone']['tz'] # example: "Europe/Lisbon"
 uxTime_rcvd = 0
 metarData = None
@@ -126,7 +148,7 @@ mqtt = None
 use_test_client = False
 
 if use_test_client:
-    mqtt = MQTTClient("testClient", "192.168.1.114", port=1883)
+    mqtt = MQTTClient("testClient", broker, port=port)
 else:
     mqtt = MQTTClient(
         PUBLISHER_ID,
@@ -134,11 +156,12 @@ else:
 
 hd = {}
 metar = {}
+nr_metar_fetched = 0
 mqttMsgID = 0
 mqttMsgID_old = 0
-msgGrpID = 0
-msgGrpID_old = 0
-msgGrpID_max = 999
+msgSentCnt = 0
+msgSentCnt_old = 0
+msgSentCnt_max = 999
 testUnixTime = 1755979282
 timestamp = "2025-08-23T21:01:22+0100" # ISO 8601 e.g., "2025-07-02T13:32:02"
 isoBuffer = bytes(26)
@@ -153,10 +176,57 @@ metarStr = ""
   #msg = '{"message":"hello world","sequence":%d}' % (seq['v'])
   #mqtt.publish( topic = topic, msg = msg, qos = 0 )
 
+def add_minutes_to_metar_as_int(metar_str: str="", minutes_to_add: int=35) -> int:
+    TAG = "add_minutes_to_metar_as_int(): "
+    # Parse METAR time: "281430Z"
+    if not isinstance(metar_str, str):
+        print(TAG+f"param metar_str needs to be of type str. Received type {type(metar_str)}")
+        return 0
+    
+    if len(metar_str) < 6:
+        if not my_debug:
+            print(TAG+f"length param minutes_to_add must be 6 characters. Received: {len(metar_str)}")
+        return 0  # Not enough characters to safely parse
+    le = len(metar_str)
+    
+    offset = float(utc_offset)
+    if my_debug:
+        print(TAG+f"float(utc_offset) = float({utc_offset}) = {offset}")
+    offset_abs = abs(offset)
+    offset_hours = int(offset_abs)
+    offset_minutes = int(round((offset_abs - offset_hours) * 60))
+    
+    day = int(metar_str[0:2])
+    hour = int(metar_str[2:4])
+    minute = int(metar_str[4:6])
+    
+    if my_debug:
+        print(TAG+f"hour: {hour}, minute: {minute} (derived from param: {metar_str}). Minutes to add: {minutes_to_add}")
+
+    # Apply offset and minutes
+    total_minutes = hour * 60 + minute + minutes_to_add + offset_hours * 60 + offset_minutes
+    new_day = day + (total_minutes // (24 * 60))
+    new_hour = (total_minutes // 60) % 24
+    new_minute = total_minutes % 60
+
+    # Return as DDHHMM integer
+    return new_day * 10000 + new_hour * 100 + new_minute
+
+# Example usage
+# metar = "281430Z"
+# result = add_minutes_to_metar_as_int(metar, 35)
+# print("🧮 Integer time:", result)
+
+
 def fetchMetar():
-    global metarData, metarHeader, uxTime_rcvd
+    global metarData, metarHeader, uxTime_rcvd, max_metar_fetched, nr_metar_fetched
     TAG = "fetchMetar(): "
     print(TAG+"start to send request")
+    
+    if nr_metar_fetched+1 > max_metar_fetched:  # base-1
+        print(TAG+f"limit of {max_metar_fetched} metars feched reached!")
+        return
+    
     try:
         if my_debug:
             print(TAG+f"kPath = {kPath[:31]}\n\t{kPath[31:]}")
@@ -164,13 +234,17 @@ def fetchMetar():
         headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
         response = urequests.get(kPath, headers=headers)
         #response = urequests.get(kPath)
+        nr_metar_fetched += 1
         rawData = response.text
         if not my_debug:
             # print(TAG+f"type(rawData) = {type(rawData)}")
             print(TAG + f"Raw response (first 30 char\'s): \"{rawData[:30]}\"",end='\n')
+            #print(TAG + f"Raw response: \"{rawData}\"",end='\n')
             n = rawData.find("observed")
             if n >= 0:
                 uxTime_rcvd = int(rawData[n+10:n+20])
+                uxTime_rcvd_human = unixToIso8601(uxTime_rcvd, False)
+                print(TAG+f"wx observed (unix time): {uxTime_rcvd} = {uxTime_rcvd_human} UTC")
             else:
                 print(TAG+"\'observed\' not found in rawData")
         # Decode the JSON content
@@ -191,6 +265,22 @@ def fetchMetar():
             #print(TAG+f"hd = {metarHeader}")
             print(TAG+f"metar = {metarData}")
         
+        n = metarData.find("Z")
+        if n >= 0:
+            metarDayAndHrStr = metarData[n-6:n]
+            if not my_debug:
+                print(TAG+f"metarDayAndHour: {metarDayAndHrStr} Z")
+        else:
+            metarDayAndHrStr = "0"
+  
+        minutes_to_add = 35
+        metarHourNext = add_minutes_to_metar_as_int(metarDayAndHrStr, minutes_to_add)
+        metarHourNextStr = str(metarHourNext)
+        if len(metarHourNextStr) < 6:
+            metarHourNextStr = "0" + metarHourNextStr
+        print(TAG+f"metarHourNextStr = {metarHourNextStr}")
+        print(TAG+f"🕒 Next METAR hour at: {metarHourNextStr[2:4]}h{metarHourNextStr[4:6]} local")
+        
     except OSError as e:
         print(f"OSError: {e}")
         
@@ -204,6 +294,10 @@ def composePayload(local_or_utc: bool = False) -> int:
     TAG = "composePayload(): "
     
     offset = float(utc_offset)
+
+    if not local_or_utc:
+        offset = 0
+
     # Apply offset in seconds
     offset_seconds = int(offset * 3600)
     
@@ -240,7 +334,7 @@ def composePayload(local_or_utc: bool = False) -> int:
     return written
 
 def send_msg() -> bool:
-    global msgGrpID, payLoad, topic
+    global msgSentCnt, payLoad, topic
     TAG = "send_msg(): "
   
     ret = False
@@ -248,9 +342,9 @@ def send_msg() -> bool:
 
     # FILL IN HERE THE METAR DATA
 
-    msgGrpID += 1
-    if msgGrpID > msgGrpID_max:
-        msgGrpID = 1
+    msgSentCnt += 1
+    if msgSentCnt > msgSentCnt_max:
+        msgSentCnt = 1
 
     msg = composePayload()
     le = len(msg) # len(payLoad)
@@ -283,51 +377,89 @@ def send_msg() -> bool:
                 if my_debug:
                     print(TAG+f"we have a socket: type(mqtt.sock) = {type(mqtt.sock)}")
                 mqtt.publish(topic,msg,qos=0)
+        else:
+            print(TAG+"⚠️ failed to publish mqtt metar message. No mqtt.sock!")
+            return ret
     else:
-        print("⚠️ Failed to compose JSON msg")
-  
-    print("MQTT message group: {:3d} sent".format(msgGrpID))
+        print(TAG+"⚠️ Failed to compose JSON msg")
+        return ret
+    
+    print(TAG+"✅ MQTT message nr: {:3d} sent".format(msgSentCnt))
     print("-" * 55)
     ret = True
 
     return ret
+
+def ck_for_next_metar() -> bool:
+    global time_to_fetch_metar, next_metar_unix_time, uxTime_rcvd_last
+    ret = False
+    TAG = "ck_for_next_metar(): "
+
+    if uxTime_rcvd == 0:
+        print(TAG+"⚠️ uxTime_rcvd is zero! Need to fetch METAR first!")
+        return
+    
+    next_metar_unix_time = uxTime_rcvd + 1800 + 600 # 40 minutes later
+    uxTime_rcvd_last = uxTime_rcvd
+    
+    if my_debug:
+        print(TAG+f"Next METAR Unix time (+30 min) = : {next_metar_unix_time} = {unixToIso8601(next_metar_unix_time, False)} UTC")
+    
+    # Convert to ISO 8601 in local time
+    if my_debug:
+        print(TAG+f"next_metar_unix_time (to use to convert to iso_metar_send_local): {next_metar_unix_time}")
+    iso_metar_send_local = unixToIso8601(next_metar_unix_time, True)
+    
+    current_unix = time.mktime(time.localtime())
+    if my_debug:
+        print("\n"+TAG+f"current_unix (local time): {current_unix} = {unixToIso8601(current_unix, True)}")
+    if current_unix >= next_metar_unix_time:
+        update_metar = True
+    else:
+        update_metar = False
+        
+    if nr_metar_fetched+1 > max_metar_fetched: 
+        time_to_fetch_metar = False
+        return time_to_fetch_metar
+     
+    if not time_to_fetch_metar and update_metar:
+        print("🛫 Going to send METAR data message...")
+        time_to_fetch_metar = True
+    else:
+        time_to_fetch_metar = False
+    #    print(TAG+"📍 Next METAR will be send at (local time):", iso_metar_send_local)
+    return time_to_fetch_metar
 
 def sync_time_fm_ntp():
     global uxTime
     TAG = "sync_time_fm_ntp(): "
 
     try:
+        # grab the current time from the ntp server and update the Pico RTC
         ntptime.settime()
-        time_synced = time.localtime()
-        uxTime = time.mktime(time.localtime())
+        current_t = rtc.datetime()
+        if my_debug:
+            print(TAG+f"current (rtc.datetime() = {current_t}")
+        current_time = time.localtime()
+        yy = current_time[0]
+        mo = current_time[1]
+        dd = current_time[2]
+        hh = current_time[3]
+        mm = current_time[4]
+        ss = current_time[5]
         if not my_debug:
-            print(TAG+"✅ Time synced:", time_synced)
+            print(TAG+f"✅ Time synced: {yy:04d}-{mo:02d}-{dd:02d}T{hh:02d}:{mm:02d}:{ss:02d} UTC") # (local time, timezone {timezone}, UTC offset {utc_offset}h)")
+        if my_debug:
+            print(TAG+f"time.localtime() = {current_time}")
+        uxTime = time.mktime(time.localtime())
+        if my_debug:
             print(TAG+"🕒 Unix time:", uxTime)
+    
+    except OSError:
+        print("Unable to contact NTP server")        
     except Exception as e:
-        print("⚠️ NTP sync failed:", e)
-
-"""
-def unixToIso8601(unix_time) -> str:
-    TAG = "unixToIso8601(): "
-    # Example Unix timestamp
-    #unix_time = 1724680440  # Replace this with your actual timestamp
-
-    if isinstance(unix_time, str):
-        unix_time = int(unix_time)
-    
-    # Convert to local time tuple
-    time_tuple = time.localtime(unix_time)
-
-    # Format as ISO 8601 string
-    iso8601 = "{:04d}-{:02d}-{:02d}T{:02d}:{:02d}:{:02d}".format(
-        time_tuple[0], time_tuple[1], time_tuple[2],
-        time_tuple[3], time_tuple[4], time_tuple[5]
-    )
-    if not my_debug:
-        print(TAG+f"ISO 8601: {iso8601}")
-    
-    return iso8601
-"""  
+        print(TAG+ "⚠️ NTP sync failed:", e)
+ 
 # parameter local_or_utc default False = use UTC
 def unixToIso8601(unixTime, local_or_utc: bool =False) -> str:
 
@@ -343,6 +475,8 @@ def unixToIso8601(unixTime, local_or_utc: bool =False) -> str:
 
     # Apply offset in seconds
     offset_seconds = int(offset * 3600)
+    if my_debug:
+        print(TAG+f"offset_seconds = {offset_seconds}")
     adjusted_time = unixTime + offset_seconds
 
     # Convert to time tuple
@@ -355,6 +489,11 @@ def unixToIso8601(unixTime, local_or_utc: bool =False) -> str:
     offset_hours = int(offset_abs)
     offset_minutes = int(round((offset_abs - offset_hours) * 60))
     offsetStr = f"{sign}{offset_hours:02d}:{offset_minutes:02d}"
+    if my_debug:
+        print(TAG + f"offset_hours {offset_hours}")
+        print(TAG + f"offset_minutes {offset_minutes}")
+        print(TAG + f"offsetStr {offsetStr}")
+        
 
     # Build ISO 8601 string
     iso_str = f"{year:04d}-{month:02d}-{day:02d}T{hour:02d}:{minute:02d}:{second:02d}{offsetStr}"
@@ -505,42 +644,64 @@ def setup():
 SYNC_INTERVAL = 15 * 60  # 15 minutes in seconds
     
 def main():
+    global time_to_fetch_metar, _msg_interval_t, _start1, _start2,  nr_metar_fetched, max_metar_fetched
     TAG = "main(): "
     setup()
     # Timing variables
     _start_t = time.ticks_ms()
-    _msg_interval_t = 60000  # milliseconds
-    _start1 = True
-    _start2 = True
+    _msg_interval_t = 30 * 60 * 1000  # every 30 minutes (but at 05 and 35, see sync_time_fm_ntp())
+
     print(TAG+"Starting non-blocking METAR loop...")
     _ntp_start_t = time.ticks_ms()
-    _ntp_interval_t = 15 * 60 * 1000
-
+    _msg_start_t = time.ticks_ms()
+    _ntp_interval_t = 15 * 60 * 1000  # every 15 minutes
+    _chk_metar_t = 10 * 1000 # every 1 minute
+    msg_cnt = 0
+    previous_metar_unix_time = 0
     # Loop to sync every 15 minutes
     if not my_debug:
         print(TAG+f"MQTT message send interval: {int(float(_msg_interval_t/1000))} seconds")
     while True:
         now = time.ticks_ms()
-        if _start1 or time.ticks_diff(now, _ntp_start_t) >= _ntp_interval_t:
+        now2 = time.ticks_ms()
+        diff_t = time.ticks_diff(now, _ntp_start_t)
+        diff_t2 = time.ticks_diff(now2, _msg_start_t)
+        if my_debug:
+            if _start1 or msg_cnt > 100:
+                msg_cnt = 0
+                print(TAG+"diff_t = {:>6d}, _ntp_interval_t = {:>6d}".format(diff_t, _ntp_interval_t))
+            msg_cnt += 1
+        if _start1 or diff_t >= _ntp_interval_t:
             _start1 = False
             _ntp_start_t = now
             sync_time_fm_ntp()
             if not my_debug:
                 print(TAG+f"ISO 8601 time: {get_iso8601(True)}") # show local time
-    
-        if _start2 or time.ticks_diff(now, _start_t) >= _msg_interval_t:
+
+        if _start2 or diff_t2 >= _chk_metar_t: #  _msg_interval_t:  #_ck_metar_interval_t:
+            _msg_start_t = now2
+            ck_for_next_metar()
+            if previous_metar_unix_time != next_metar_unix_time:
+                previous_metar_unix_time = next_metar_unix_time
+                print(TAG+f"📍 next_metar_unix_time = {next_metar_unix_time} = {unixToIso8601(next_metar_unix_time, True)}")
+            
+        # time_to_fetch_metar: see sync_time_fm_ntp    
+        if _start2 or time_to_fetch_metar: # time.ticks_diff(now, _start_t) >= _msg_interval_t:
+            time_to_fetch_metar = False
             _start2 = False
-            print(TAG+"Time to fetch METAR!")
-            fetchMetar()
-            print(TAG+"Time to publish MQTT message!")
-            send_msg()
-            _start_t = now  # Reset timer
+            if nr_metar_fetched+1 > max_metar_fetched: 
+                print(TAG+f"limit of {max_metar_fetched} metars feched reached!")
+            else:
+                print(TAG+"Time to fetch METAR!")
+                fetchMetar()
+                print(TAG+"Time to publish MQTT message!")
+                send_msg()
+                _msg_start_t = now  # Reset timer
 
         # Do other non-blocking tasks here
         # Example: check sensors, handle MQTT, blink LED, etc.
 
         time.sleep(0.1)  # Small delay to prevent CPU hogging
     
-
 if __name__ == '__main__':
     main()

@@ -1,0 +1,111 @@
+Tuesday 2025-09-09 09h54 utc +1
+
+Board: Pimoroni Pico LiPo 2XL W
+IDE: Thonny
+MicroPython script: metar_mqtt_v1.py
+
+Note: most changes in the function ck_for_next_metar.
+      Now using the received metar message's "observed" unixTime value
+	  to calculate the time sending the next METAR MQTT message.
+	  (at the moment of calling fetchMetar() before the first two MQTT transmission: 
+	     observed uxTime + 1800 + 300 (= + 30 + 5 minutes), however in both moments the same METAR 
+		 was received from metar-taf.com. So, the delay was increased with 5 minutes to 40 minutes).
+	  Metars are usually created on the whole and on the half hour.
+	  
+	  To limit the "losing" of too much credit from the metar-taf.com 
+	  account, in secrets.json, I set the "MAX_METAR_FETCHED": 3.
+
+Shell serial output:
+
+>>> %Run -c $EDITOR_CONTENT
+
+MPY: soft reboot
+global(): PUBLISHER_ID = PL2XLW
+global(): broker = 192.168._.___
+global(): port = 1883
+
+Connecting to Vodafone-8D96F1....Timed out after 5 seconds...
+Unix time: 1757408081
+setup(): trying to mqtt.connect()
+main(): Starting non-blocking METAR loop...
+main(): MQTT message send interval: 1800 seconds
+sync_time_fm_ntp(): ✅ Time synced: 2025-09-09T08:54:41 UTC
+main(): ISO 8601 time: 2025-09-09T09:54:41+01:00
+ck_for_next_metar(): ⚠️ uxTime_rcvd is zero! Need to fetch METAR first!
+main(): Time to fetch METAR!
+fetchMetar(): start to send request
+fetchMetar(): Raw response (first 30 char's): "{"status":true,"credits":1229,"
+fetchMetar(): wx observed (unix time): 1757406600 = 2025-09-09T08:30:00+00:00 UTC
+fetchMetar(): my_status = True
+fetchMetar(): my_credits = 1229
+fetchMetar(): wx observed = 1757406600
+fetchMetar(): metar = METAR LPPT 090830Z 35013KT 320V020 9999 FEW020 18/12 Q1021
+fetchMetar(): metarDayAndHour: 090830 Z
+add_minutes_to_metar_as_int(): float(utc_offset) = float(1) = 1.0
+fetchMetar(): metarHourNextStr = 091005
+fetchMetar(): 🕒 Next METAR hour at: 10h05 local
+main(): Time to publish MQTT message!
+composePayload(): PUBLISHER_ID = PL2XLW
+send_msg(): Topic length: 19
+send_msg(): length written: 171
+send_msg(): MQTT message ID: 1757408081
+send_msg(): in IS8601 = 2025-09-09T08:54:41+00:00
+send_msg(): Topic = "b'weather/PL2XLW/LPPT'"
+send_msg(): msg = b'{"metar": {"raw": "METAR LPPT 090830Z 35013KT 320V020 9999 FEW020'
+	b' 18/12 Q1021"}, "hd": {"de": "Ext", "sc": "meas", "vt": "s", "t": 1757406600, "dc": "wx", "ow": "PL2XLW"}}'
+send_msg(): ✅ MQTT message nr:   1 sent
+-------------------------------------------------------
+main(): 📍 next_metar_unix_time = 1757408700 = 2025-09-09T10:05:00+01:00       <<<=== delay 35 minutes
+🛫 Going to send METAR data message...
+main(): Time to fetch METAR!
+fetchMetar(): start to send request
+fetchMetar(): Raw response (first 30 char's): "{"status":true,"credits":1228,"
+fetchMetar(): wx observed (unix time): 1757406600 = 2025-09-09T08:30:00+00:00 UTC
+fetchMetar(): my_status = True
+fetchMetar(): my_credits = 1228
+fetchMetar(): wx observed = 1757406600
+fetchMetar(): metar = METAR LPPT 090830Z 35013KT 320V020 9999 FEW020 18/12 Q1021
+fetchMetar(): metarDayAndHour: 090830 Z
+fetchMetar(): metarHourNextStr = 091005
+fetchMetar(): 🕒 Next METAR hour at: 10h05 local
+main(): Time to publish MQTT message!
+composePayload(): PUBLISHER_ID = PL2XLW
+send_msg(): Topic length: 19
+send_msg(): length written: 171
+send_msg(): MQTT message ID: 1757408081
+send_msg(): in IS8601 = 2025-09-09T08:54:41+00:00
+send_msg(): Topic = "b'weather/PL2XLW/LPPT'"
+send_msg(): msg = b'{"metar": {"raw": "METAR LPPT 090830Z 35013KT 320V020 9999 FEW020'
+	b' 18/12 Q1021"}, "hd": {"de": "Ext", "sc": "meas", "vt": "s", "t": 1757406600, "dc": "wx", "ow": "PL2XLW"}}'
+send_msg(): ✅ MQTT message nr:   2 sent
+-------------------------------------------------------
+main(): 📍 next_metar_unix_time = 1757410800 = 2025-09-09T10:40:00+01:00  <<<=== delay 40 minutes
+sync_time_fm_ntp(): ✅ Time synced: 2025-09-09T09:25:01 UTC
+main(): ISO 8601 time: 2025-09-09T10:25:01+01:00
+sync_time_fm_ntp(): ✅ Time synced: 2025-09-09T09:40:01 UTC
+main(): ISO 8601 time: 2025-09-09T10:40:01+01:00
+🛫 Going to send METAR data message...
+main(): Time to fetch METAR!
+fetchMetar(): start to send request
+fetchMetar(): Raw response (first 30 char's): "{"status":true,"credits":1226,"
+fetchMetar(): wx observed (unix time): 1757410200 = 2025-09-09T09:30:00+00:00 UTC
+fetchMetar(): my_status = True
+fetchMetar(): my_credits = 1226
+fetchMetar(): wx observed = 1757410200
+fetchMetar(): metar = METAR LPPT 090930Z 35015KT 9999 FEW030 20/11 Q1021
+fetchMetar(): metarDayAndHour: 090930 Z
+add_minutes_to_metar_as_int(): float(utc_offset) = float(1) = 1.0
+fetchMetar(): metarHourNextStr = 091105
+fetchMetar(): 🕒 Next METAR hour at: 11h05 local
+main(): Time to publish MQTT message!
+composePayload(): PUBLISHER_ID = PL2XLW
+send_msg(): Topic length: 19
+send_msg(): length written: 163
+send_msg(): MQTT message ID: 1757410801
+send_msg(): in IS8601 = 2025-09-09T09:40:01+00:00
+send_msg(): Topic = "b'weather/PL2XLW/LPPT'"
+send_msg(): msg = b'{"metar": {"raw": "METAR LPPT 090930Z 35015KT 9999 FEW030 20/11 Q'
+	b'1021"}, "hd": {"de": "Ext", "sc": "meas", "vt": "s", "t": 1757410200, "dc": "wx", "ow": "PL2XLW"}}'
+send_msg(): ✅ MQTT message nr:   2 sent
+-------------------------------------------------------
+main(): 📍 next_metar_unix_time = 1757412600 = 2025-09-09T11:10:00+01:00
