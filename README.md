@@ -662,3 +662,8 @@ In the latest software version for the Publisher devices, the unixTime they send
 ## Update 2025-09-09
 Publisher2. Several changes to improve the script. Most changes are in function "ck_for_next_metar()". Now the calculation for requesting the next METAR and subsequent sending of a MQTT METAR topic message, is derived from the "observed" key in the received METAR message. The value of the "observed" key is a unixtime. This time will be increased by 40 minutes. Airport METAR's are refreshed each 30 minutes. Tests revealed that requesting a new METAR at least 10 minutes after its time of publication, is a reliable moment to "catch" a METAR with "fresh" data compared with the METAR message received before. To limit, during tests, the "loss" of credits from my subscription with metar-taf.com, I limited the number of METAR fetches to 3
 (see file: "secrets.json", key MAX_METAR_FETCHED).
+
+## Update 2025-09-14
+Publisher2 version 2. Added functionality to display the received METAR data onto a connected Lolin 2.13 inch 3-Color e-Paper display.
+
+Added hardware: Lolin 2.13 inch 3-Color e-Paper display [info](https://www.wemos.cc/en/latest/d1_mini_shield/epd_2_13_3.html). Note that this ePD has the following screen dimensions: 250 x 122 pixels, as printed on the backside of the board in the link and not as shown on the image of the front of this ePD in the link.
