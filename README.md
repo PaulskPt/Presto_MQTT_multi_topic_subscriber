@@ -664,6 +664,6 @@ Publisher2. Several changes to improve the script. Most changes are in function 
 (see file: "secrets.json", key MAX_METAR_FETCHED).
 
 ## Update 2025-09-14
-Publisher2 version 2. Added functionality to display the received METAR data onto a connected Lolin 2.13 inch 3-Color e-Paper display.
+Publisher2 version 2. Added functionality to display the received METAR data onto a connected Lolin 2.13 inch 3-Color e-Paper display. [photo](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/images/Publisher/Publisher2_V2/20250914_204914.jpg)
 
 Added hardware: Lolin 2.13 inch 3-Color e-Paper display [info](https://www.wemos.cc/en/latest/d1_mini_shield/epd_2_13_3.html). Note that this ePD has the following screen dimensions: 250 x 122 pixels, as printed on the backside of the board in the link and not as shown on the image of the front of this ePD in the link.
