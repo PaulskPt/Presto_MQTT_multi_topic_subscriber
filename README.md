@@ -671,5 +671,5 @@ Added functionality to display the received METAR data onto a connected Lolin 2.
 
 Added hardware: Lolin 2.13 inch 3-Color e-Paper display [info](https://www.wemos.cc/en/latest/d1_mini_shield/epd_2_13_3.html). Note that this ePD has the following screen dimensions: 250 x 122 pixels, as printed on the backside of the board in the link and not as shown on the image of the front of this ePD in the link.
 
-## Update 2025-09-15
+## General cleanup 2025-09-15
 Cleaned up various versions for the Subscriber device and various versions of the Publisher device1. For each only one version is left.
