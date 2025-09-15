@@ -329,7 +329,7 @@ The source of the Arduino sketch for the MQTT Publisher1 device is [here](https:
 
 ## File secrets.h (for the MQTT Publisher1 device)
 
-To have the Publisher device be able to connect to the internet, to: a) get, at intervals, a Unixtime datetime stamp from an NTP server; b) send MQTT messages to the MQTT Broker, you have to fill-in the WiFi SSID and PASSWORD. 
+To have the Publisher1 device be able to connect to the internet, to: a) get, at intervals, a Unixtime datetime stamp from an NTP server; b) send MQTT messages to the MQTT Broker, you have to fill-in the WiFi SSID and PASSWORD. 
 
 Set the timezone offset from UTC:
 ```
@@ -391,30 +391,39 @@ The commands of the MQTT messages with topics "lights/Feath/color_inc" and "ligh
 The choice to use a "local MQTT broker" or an "external MQTT broker" is defined in the file "secrets.json".
 In the script these lines load the broker choice and print info about this choice as shown below:
 ```
-151 # MQTT setup
-152 use_local_broker = mqtt_config_dict['use_local_broker']
-153 #print(f"type(use_local_broker) = {type(use_local_broker)}")
-154 if my_debug:
-155   if use_local_broker:
-156      print("Using local Broker")
-157   else:
-158      print("Using external Broker")
-159
-160 if use_local_broker:
-161    BROKER = mqtt_config_dict['broker_local'] # Use the mosquitto broker app on the RaspberryPi CM5
-162 else:
-163    BROKER = mqtt_config_dict['broker_external']
+	151 # MQTT setup
+	152 use_local_broker = mqtt_config_dict['use_local_broker']
+	153 #print(f"type(use_local_broker) = {type(use_local_broker)}")
+	154 if my_debug:
+	155   if use_local_broker:
+	156      print("Using local Broker")
+	157   else:
+	158      print("Using external Broker")
+	159
+	160 if use_local_broker:
+	161    BROKER = mqtt_config_dict['broker_local'] # Use the mosquitto broker app on the RaspberryPi CM5
+	162 else:
+	163    BROKER = mqtt_config_dict['broker_external']
 
 ```
-The "publisher_id" and "subscriber_id" are also defined in the file "secrets.json". They are read into the script as follows:
+The "CLIENT_ID", "PUBLISHER_ID0 and "PUBLISHER_ID1" are also defined in the file "secrets.json". They are read into the script as follows:
 ```
-	139 CLIENT_ID = bytes(secrets['mqtt']['client_id'], 'utf-8')
-	140 PUBLISHER_ID = secrets['mqtt']['publisher_id']
-
+	354 CLIENT_ID = bytes(mqtt_config_dict['client_id'],'utf-8') # bytes(secrets['mqtt']['client_id'], 'utf-8')
+	355 if 'publisher_id0' in mqtt_config_dict.keys():
+	356    PUBLISHER_ID0 = mqtt_config_dict['publisher_id0'] # secrets['mqtt']['publisher_id0']
+	357 else:
+	358     PUBLISHER_ID0 = ""
+	359    print(f"key \'publisher_id0\' not found in mqtt_config_dict.keys(): {mqtt_config_dict.keys()}")
+	360    
+	361 if 'publisher_id1' in mqtt_config_dict.keys():
+	362     PUBLISHER_ID1 = mqtt_config_dict['publisher_id1'] # secrets['mqtt']['publisher_id0']
+	363 else:
+	364     PUBLISHER_ID1 = ""
+	365     print(f"key \'publisher_id1\' not found in mqtt_config_dict.keys(): {mqtt_config_dict.keys()}")
 ```
 If you put an SD-card into your Presto, this micropython script will start logging. Log filenames contain a date and time. When the logfile becomes of a certain file length, a new logfile will be created. Another file on SD-card, name: "mqtt_latest_log_fn.txt" will contain the filename of the current logfile. At the moment you force the running script to stop, by issuing the key-combo "<Ctrl+C>", this will provoke a KeyboardInterrupt. In this case the contents of the current logfile will be printed to the Thonny Shell window (serial output). In principle, the logfile(s) created on SD-card will not be deleted by the micropython script, leaving you the opportunity to copy them to another device or just read them once again. If you want old logfile(s) to be deleted automatically, set the following boolean flag to True: 
 ```
-	59 delete_logs = False
+	133 delete_logs = False
 ```
 Beside these type of logfiles there exists also an "err.log" file in the root folder of the filesystem of the Presto.
 
