@@ -686,7 +686,7 @@ This Publisher2 [info](https://shop.pimoroni.com/products/pimoroni-pico-lipo-2-x
 See [serial output](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/doc/Publisher/MQTT_Publisher2_PuTTY_session_output.txt).
 
 ### Note about Publisher unixTime(s)
-In the latest software version for the Publisher devices, the unixTime they send is in GMT. It is up to the algorithm of the MQTT Subscriber to present the received unixTime as localTime or GMT. I have chosen to have the Subscriber device convert and display the received unixTime to ISO6801 format (example: "hh:mm:ss+01:00") [photos](https://imgur.com/a/MmotOGn)
+Te unixTime the Publisher devices send is in GMT. It is up to the algorithm of the MQTT Subscriber to present the received unixTime as localTime or GMT. I have chosen to have the Subscriber device convert and display the received unixTime to ISO6801 format (example: "hh:mm:ss+01:00") [photos](https://imgur.com/a/MmotOGn)
 
 ## Publisher2 updates
 
