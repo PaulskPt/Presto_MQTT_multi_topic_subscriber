@@ -412,7 +412,7 @@ The "CLIENT_ID", "PUBLISHER_ID0 and "PUBLISHER_ID1" are also defined in the file
 	355 if 'publisher_id0' in mqtt_config_dict.keys():
 	356    PUBLISHER_ID0 = mqtt_config_dict['publisher_id0'] # secrets['mqtt']['publisher_id0']
 	357 else:
-	358     PUBLISHER_ID0 = ""
+	358    PUBLISHER_ID0 = ""
 	359    print(f"key \'publisher_id0\' not found in mqtt_config_dict.keys(): {mqtt_config_dict.keys()}")
 	360    
 	361 if 'publisher_id1' in mqtt_config_dict.keys():
