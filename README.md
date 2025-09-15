@@ -321,13 +321,13 @@ For the ambient lights of the Presto, in this repo, the following colors are def
   	8: "YELLOW"
   	9: "GREY"
 ```
-# MQTT Publisher (other functionalities)
+# MQTT Publisher1 (other functionalities)
 
-In case the Arduino sketch of the Publisher device encounters that it cannot read the values from the BME280 sensor, the sketch will issue a software reset by calling the function ```reset()``` which calls the function ```ESP.restart()```.
+In case the Arduino sketch of the Publisher1 device encounters that it cannot read the values from the BME280 sensor, the sketch will issue a software reset by calling the function ```reset()``` which calls the function ```ESP.restart()```.
 
-The source of the Arduino sketch for the MQTT Publisher device is [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Publisher)
+The source of the Arduino sketch for the MQTT Publisher1 device is [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Publisher)
 
-## File secrets.h (for the MQTT Publisher device)
+## File secrets.h (for the MQTT Publisher1 device)
 
 To have the Publisher device be able to connect to the internet, to: a) get, at intervals, a Unixtime datetime stamp from an NTP server; b) send MQTT messages to the MQTT Broker, you have to fill-in the WiFi SSID and PASSWORD. 
 
