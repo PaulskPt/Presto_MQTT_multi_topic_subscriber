@@ -43,7 +43,7 @@ Copy the files for the publisher1 device of this repo from this subfolder [here]
 C:\Users\<User>\Documents\Arduino\Feather_ESP32_S3_TFT_MQTT_multi_topic_v4\
 ```
 
-If you also use a Publisher2 device, copy the files of this repo for Publisher2 from this subfolder [here]() to a folder of your preference, for example:
+If you also use a Publisher2 device, copy the files of this repo for Publisher2 from this subfolder [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Publisher/Publisher2_V1/metar_mqtt_v1) to a folder of your preference, for example:
 ```
  C:\Users\<User>\Hardware\Pimoroni\PICO_LIPO_2XL_W_PIM776\micropython\metar_mqtt_v1\
 ```
