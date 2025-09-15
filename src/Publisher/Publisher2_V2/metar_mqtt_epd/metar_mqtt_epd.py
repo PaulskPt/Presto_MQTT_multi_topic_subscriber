@@ -189,6 +189,7 @@ CAPACITY = 1024 # Adjust based on your JSON size
 # DynamicJsonDocument doc(CAPACITY)
 # StaticJsonDocument<CAPACITY> doc
 metarStr = ""
+print(TAG+"globals set.")
 
 def draw_char_scaled(epd, x, y, char, color, scale=1):
     index = ord(char)
@@ -796,7 +797,7 @@ def setup():
 
 SYNC_INTERVAL = 15 * 60  # 15 minutes in seconds
     
-def main():
+def go_epd():
     global time_to_fetch_metar, _msg_interval_t, _start1, _start2,  nr_metar_fetched, max_metar_fetched
     TAG = "main(): "
     setup()
@@ -860,4 +861,4 @@ def main():
         time.sleep(0.1)  # Small delay to prevent CPU hogging
     
 if __name__ == '__main__':
-    main()
+    go_epd()
