@@ -470,10 +470,22 @@ Example of the contents of the current log showed after a KeyboardInterrupt:
     "topic5": "$SYS/broker/clients/disconnected",
     "client_id":  "PrestoMQTTClient",
     "publisher_id": "Feath"
+    "publisher_id0": "Feath",
+    "publisher_id1": "PL2XLW",
+    "METAR_TAF_API_KEY": "<Your metar-taf.com API KEY>",
+    "METAR_TOKEN": "<Your metar-taf.com TOKEN>"
   },
-   "wifi" : {
+  "wifi" : {
       "ssid" : "<Your WiFi SSID>",
-      "pass" : "<Your WiFi Password>"
+      "pass" : "<Your WiFi PASSWORD"
+  },
+  "display" : {
+    "gotosleep": 23,
+    "wakeup": 7
+  },
+    "timezone" : {
+    "tz_utc_offset" : "1",
+    "tz" : "Europe/Lisbon"
   }
 }
 ```
