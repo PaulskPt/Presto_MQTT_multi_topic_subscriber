@@ -683,7 +683,7 @@ std::map<std::string, DstPeriod> dst_start_end = {
 
 ### (Pimoroni Pico LiPo 2XL W) (Update 2025-08-26)
 This Publisher2 [info](https://shop.pimoroni.com/products/pimoroni-pico-lipo-2-xl-w?variant=55447911006587) is dedicated to receive, at intervals, weather messages from server ```metar-taf.com```, filter the METAR section, compose and send, at other intervals, MQTT messages with the topic ```weather/PL2XLW/metar```.
-See [serial output](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/doc/Publisher/MQTT_Publisher2_PuTTY_session_output.txt).
+See [serial output](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/doc/Publisher/MQTT_Publisher2_PuTTY_session_output.txt) and for Publisher2 version2 [serial output](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/doc/Publisher/Publisher2_V2/2025-09-15_19h11_Pimoroni_PL2XLW_MPY_metar_mqtt_epd_monitor_output.txt).
 
 ### Note about Publisher unixTime(s)
 Te unixTime the Publisher devices send is in GMT. It is up to the algorithm of the MQTT Subscriber to present the received unixTime as localTime or GMT. I have chosen to have the Subscriber device convert and display the received unixTime to ISO6801 format (example: "hh:mm:ss+01:00") [photos](https://imgur.com/a/MmotOGn)
