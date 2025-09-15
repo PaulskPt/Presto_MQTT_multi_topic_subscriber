@@ -391,19 +391,19 @@ The commands of the MQTT messages with topics "lights/Feath/color_inc" and "ligh
 The choice to use a "local MQTT broker" or an "external MQTT broker" is defined in the file "secrets.json".
 In the script these lines load the broker choice and print info about this choice as shown below:
 ```
-	151 # MQTT setup
-	152 use_local_broker = mqtt_config_dict['use_local_broker']
-	153 #print(f"type(use_local_broker) = {type(use_local_broker)}")
-	154 if my_debug:
-	155   if use_local_broker:
-	156      print("Using local Broker")
-	157   else:
-	158      print("Using external Broker")
-	159
-	160 if use_local_broker:
-	161    BROKER = mqtt_config_dict['broker_local'] # Use the mosquitto broker app on the RaspberryPi CM5
-	162 else:
-	163    BROKER = mqtt_config_dict['broker_external']
+	311 # MQTT setup
+	312 use_local_broker = mqtt_config_dict['use_local_broker']
+	313 #print(f"type(use_local_broker) = {type(use_local_broker)}")
+	314 if my_debug:
+	315   if use_local_broker:
+	316      print("Using local Broker")
+	317   else:
+	318      print("Using external Broker")
+	319
+	320 if use_local_broker:
+	321    BROKER = mqtt_config_dict['broker_local'] # Use the mosquitto broker app on the RaspberryPi CM5
+	322 else:
+	323    BROKER = mqtt_config_dict['broker_external']
 
 ```
 The "CLIENT_ID", "PUBLISHER_ID0 and "PUBLISHER_ID1" are also defined in the file "secrets.json". They are read into the script as follows:
