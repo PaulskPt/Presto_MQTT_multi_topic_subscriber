@@ -561,7 +561,7 @@ My advise for the Publisher device: the Adafruit Feather ESP32-S3 TFT (and proba
 
 # Updates
 
-## 2025-08-18 Version 2 of the Publisher sketch
+## 2025-08-18 Publisher1, sketch version 2 
 Added:
 - Using another type of game controller, the Pimoroni Qw/ST Pad I2C game controller.
 - For this I ported a Pimoroni qwstpad-micropython library for micropython to C++. See the files qwstpad.h and qwstpad.cpp. See [repo about port](https://github.com/PaulskPt/qwstpad-arduino)
@@ -572,7 +572,9 @@ Added:
 - "lights/Feath/dclr_dec". Containing a display text color decrease command from a remote controller
 - changed the contents of the MQTT message structure. In version 1 for the sensor/Feath/ambient topic message the first part, containing general data, had no name, the data part had the name "reads". In version 2 the general data section, in fact a nested JSon object, is given the name "head". Because of length of MQTT message problem on the Presto subscriber (micropython limitation?) the name "head" is shortened to "hd". The payload part of the MQTT message can be maximum 256 bytes. The new general section is as follows (example): "hd": {"ow": "Feath", "de": "Lab", "dc": "BME280", "sc": "meas", "vt": "f", "ts": 1755622875}," while the data section "read" stays the same as in Version 1.
 
-## 2025-08-22 Version 7 of the Subscriber script
+## Subscriber script updates
+
+### 2025-08-22
 Added:
 - functionality to remotely change the color of the display text (using buttons L(eft) and R(ight) on a Qw/ST I2C game controller, connected to the MQTT Publisher device).
   To change the display text color, I added the function redraw(). This new function is similar to the draw() function. The difference is that draw() uses data from the MQTT message received at that moment while redraw() uses data from the latest received and stored MQTT message.
@@ -604,18 +606,16 @@ The buttons of the Pimoroni Qw/ST I2C game controller are defined as follows:
 |   +      | execute a software reset                                       |
 +----------+----------------------------------------------------------------+
 ```
-## Update 2025-08-26
 
-### Added a second Publisher device (Pimoroni Pico LiPo 2XL W)
-This Publisher2 [info](https://shop.pimoroni.com/products/pimoroni-pico-lipo-2-xl-w?variant=55447911006587) is dedicated to receive, at intervals, weather messages from server ```metar-taf.com```, filter the METAR section, compose and send, at other intervals, MQTT messages with the topic ```weather/PL2XLW/metar```.
-See [serial output](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/doc/Publisher/MQTT_Publisher2_PuTTY_session_output.txt).
+### Update 2025-09-07
+In this update changed to "Presto(full_res=hi_res)" mode. Another, better font type. Vector.text() and some other improvements.
 
-### Added a Version 3 ("Subscriber_V8") for the Subscriber.
-This version is adapted to receive and display MQTT messages with topic ```weather/PL2XLW/metar```.
+Script upgraded to receive and display MQTT messages with topic ```weather/PL2XLW/metar```.
 
 See: [photo](https://imgur.com/a/SKHAVRJ) and [video](https://imgur.com/a/Mbb5P9i).  For images comparison between the Pimoroni Presto and an Unexpected Maker SQUiXL see: [photos](https://imgur.com/a/ARvUNSK)
 
-### Added a Version 4 for the Publisher1 device
+
+## Publisher1 update
 This version adds DST awareness to the timezone offset. In secret.h one can choose between #define REGION_EUROPE, #define REGION_USA or create ones own region data.
 In the sketch these variables are set from the values in file ```secret.h```.
 ```
@@ -652,19 +652,22 @@ std::map<std::string, DstPeriod> dst_start_end = {
 #endif
 
 ```
-## Update 2025-09-07
-### Added a Version 4 ("Subscriber_v9a") for the Subscriber.
-This version changed to "Presto(full_res=hi_res)" mode. Another, better font type. Vector.text() and some other improvements.
+
+## Publisher2 device added 
+
+### (Pimoroni Pico LiPo 2XL W) (Update 2025-08-26)
+This Publisher2 [info](https://shop.pimoroni.com/products/pimoroni-pico-lipo-2-xl-w?variant=55447911006587) is dedicated to receive, at intervals, weather messages from server ```metar-taf.com```, filter the METAR section, compose and send, at other intervals, MQTT messages with the topic ```weather/PL2XLW/metar```.
+See [serial output](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/doc/Publisher/MQTT_Publisher2_PuTTY_session_output.txt).
 
 ### Note about Publisher unixTime(s)
 In the latest software version for the Publisher devices, the unixTime they send is in GMT. It is up to the algorithm of the MQTT Subscriber to present the received unixTime as localTime or GMT. I have chosen to have the Subscriber device convert and display the received unixTime to ISO6801 format (example: "hh:mm:ss+01:00") [photos](https://imgur.com/a/MmotOGn)
 
-## Update 2025-09-09
-Publisher2. Several changes to improve the script. Most changes are in function "ck_for_next_metar()". Now the calculation for requesting the next METAR and subsequent sending of a MQTT METAR topic message, is derived from the "observed" key in the received METAR message. The value of the "observed" key is a unixtime. This time will be increased by 40 minutes. Airport METAR's are refreshed each 30 minutes. Tests revealed that requesting a new METAR at least 10 minutes after its time of publication, is a reliable moment to "catch" a METAR with "fresh" data compared with the METAR message received before. To limit, during tests, the "loss" of credits from my subscription with metar-taf.com, I limited the number of METAR fetches to 3
+### Publisher2 update 2025-09-09
+Added several changes to improve the script. Most changes are in function "ck_for_next_metar()". Now the calculation for requesting the next METAR and subsequent sending of a MQTT METAR topic message, is derived from the "observed" key in the received METAR message. The value of the "observed" key is a unixtime. This time will be increased by 40 minutes. Airport METAR's are refreshed each 30 minutes. Tests revealed that requesting a new METAR at least 10 minutes after its time of publication, is a reliable moment to "catch" a METAR with "fresh" data compared with the METAR message received before. To limit, during tests, the "loss" of credits from my subscription with metar-taf.com, I limited the number of METAR fetches to 3
 (see file: "secrets.json", key MAX_METAR_FETCHED).
 
-## Update 2025-09-14
-Publisher2 version 2. Added functionality to display the received METAR data onto a connected Lolin 2.13 inch 3-Color e-Paper display. [photo](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/images/Publisher/Publisher2_V2/20250914_204914.jpg)
+### Publisher2 update 2025-09-14
+Added functionality to display the received METAR data onto a connected Lolin 2.13 inch 3-Color e-Paper display. [photo](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/images/Publisher/Publisher2_V2/20250914_204914.jpg)
 
 Added hardware: Lolin 2.13 inch 3-Color e-Paper display [info](https://www.wemos.cc/en/latest/d1_mini_shield/epd_2_13_3.html). Note that this ePD has the following screen dimensions: 250 x 122 pixels, as printed on the backside of the board in the link and not as shown on the image of the front of this ePD in the link.
 
