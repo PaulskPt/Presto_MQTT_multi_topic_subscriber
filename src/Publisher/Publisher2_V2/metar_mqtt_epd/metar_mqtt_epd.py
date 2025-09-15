@@ -311,7 +311,7 @@ def fetchMetar():
             print(TAG+f"my_credits = {my_credits}")
             print(TAG+f"wx observed = {uxTime_rcvd}")
             #print(TAG+f"hd = {metarHeader}")
-            print(TAG+f"metar = {metarData}")
+            print(TAG+f"metar = \"{metarData}\"")
         
         n = metarData.find("Z")
         if n >= 0:
@@ -451,7 +451,7 @@ def composePayload(local_or_utc: bool = False) -> int:
 
     # Convert to JSON string 
     written = ujson.dumps(payLoad).encode('utf-8')  # Return the int value written
-    if my_debug:
+    if not my_debug:
         print(TAG+f"written = {written}")
     return written
 
@@ -470,6 +470,9 @@ def send_msg() -> bool:
 
     msg = composePayload()
     le = len(msg) # len(payLoad)
+    msgStr = msg.decode('utf-8')
+    n = msgStr.find("hd")
+    
     if le > 0:
         if not my_debug:
             #print(f"contents payLoad: {payLoad}")
@@ -479,8 +482,12 @@ def send_msg() -> bool:
             print(TAG+f"MQTT message ID: {mqttMsgID}")
             print(TAG+f"in IS8601 = {unixToIso8601(mqttMsgID, False)} UTC")  # use UTC
             print(TAG+f"Topic = \"{topic}\"")
-            print(TAG+f"msg = {msg[:65]}") # {payLoad}")
-            print(f"\t{msg[65:]}")
+            if n >= 2:
+                print(TAG+f"msg = {msg[:n-2]}") # {payLoad}")  -- do the split at "hd"
+                print(f"\t{msg[n-2:]}")  
+            else:
+                print(TAG+f"msg = {msg[:65]}") # {payLoad}")
+                print(f"\t{msg[65:]}")
         if my_debug:
             print(TAG+f"topic type: {type(topic)}")  # should be <class 'bytes'>
             print(TAG+f"msg type: {type(msg)}")      # should be <class 'bytes'>
