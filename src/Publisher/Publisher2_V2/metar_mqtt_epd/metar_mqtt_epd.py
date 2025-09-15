@@ -143,10 +143,6 @@ kPath =   kHostname + "?api_key=" + api_key + version + locale + station
 
 topic = ("weather/{:s}/{:s}".format(PUBLISHER_ID, icao_lookup["Lisbon"] )).encode('utf-8')
 
-time_to_fetch_metar = False
-# Track last sync time in milliseconds
-next_metar_unix_time = 0
-
 sync_interval_ms = 60_000  # Check every minute
 uxTime = 0
 utc_offset = int(secrets['timezone']['tz_utc_offset'])  # utc offset in hours
@@ -176,6 +172,10 @@ hd = {}
 metar = {}
 nr_metar_fetched = 0
 max_metar_fetched_msg_shown = False
+time_to_fetch_metar = False
+# Track last sync time in milliseconds
+next_metar_unix_time = 0
+next_metar_minutes = 40  # minutes past last metar "observed" time to fetch next metar
 mqttMsgID = 0
 mqttMsgID_old = 0
 msgSentCnt = 0
@@ -225,7 +225,8 @@ def draw_intro_screen():
   #msg = '{"message":"hello world","sequence":%d}' % (seq['v'])
   #mqtt.publish( topic = topic, msg = msg, qos = 0 )
 
-def add_minutes_to_metar_as_int(metar_str: str="", minutes_to_add: int=35) -> int:
+
+def add_minutes_to_metar_as_int(metar_str: str="", minutes_to_add: int=next_metar_minutes) -> int:
     TAG = "add_minutes_to_metar_as_int(): "
     # Parse METAR time: "281430Z"
     if not isinstance(metar_str, str):
@@ -323,7 +324,7 @@ def fetchMetar():
         else:
             metarDayAndHrStr = "0"
   
-        minutes_to_add = 40
+        minutes_to_add = next_metar_minutes
         metarHourNext = add_minutes_to_metar_as_int(metarDayAndHrStr, minutes_to_add)
         metarHourNextStr = str(metarHourNext)
         if len(metarHourNextStr) < 6:
