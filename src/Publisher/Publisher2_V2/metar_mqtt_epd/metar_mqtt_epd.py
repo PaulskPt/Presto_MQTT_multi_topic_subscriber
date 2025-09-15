@@ -451,7 +451,7 @@ def composePayload(local_or_utc: bool = False) -> int:
 
     # Convert to JSON string 
     written = ujson.dumps(payLoad).encode('utf-8')  # Return the int value written
-    if not my_debug:
+    if my_debug:
         print(TAG+f"written = {written}")
     return written
 
@@ -470,7 +470,7 @@ def send_msg() -> bool:
 
     msg = composePayload()
     le = len(msg) # len(payLoad)
-    msgStr = msg.decode('utf-8')
+    msgStr = msg.decode('utf-8') # decode to str to prepare a split at "hd"
     n = msgStr.find("hd")
     
     if le > 0:
@@ -486,7 +486,7 @@ def send_msg() -> bool:
                 print(TAG+f"msg = {msg[:n-2]}") # {payLoad}")  -- do the split at "hd"
                 print(f"\t{msg[n-2:]}")  
             else:
-                print(TAG+f"msg = {msg[:65]}") # {payLoad}")
+                print(TAG+f"msg = {msg[:65]}") # {payLoad}") # no "hd" found, so just split at 65 char's
                 print(f"\t{msg[65:]}")
         if my_debug:
             print(TAG+f"topic type: {type(topic)}")  # should be <class 'bytes'>
