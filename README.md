@@ -527,7 +527,7 @@ See also photos of sites where to download the mosquitto broker app for Raspberr
 
 # Adafruit Gamepad QT
 
-In the Arduino sketch for the MQTT Publisher device I have added functionality to read the state of the buttons and the joystick.
+In the Arduino sketch for the MQTT Publisher1 device I have added functionality to read the state of the buttons and the joystick.
 The joystick is not used yet. The buttons are defined as follows:
 ```
 +----------+-----------------------------------------------+
@@ -544,7 +544,7 @@ The joystick is not used yet. The buttons are defined as follows:
 
 # Hardware used
 
-### For the MQTT Publisher device: 
+### For the MQTT Publisher1 device: 
 Adafruit Feather ESP32-S3 TFT [info](https://www.adafruit.com/product/5483);
 
 and for version 2: Pimoroni Qw/ST I2C Game controller (PIM752) [info](https://shop.pimoroni.com/products/qwst-pad?variant=53514400596347);
@@ -563,14 +563,14 @@ Equipment connected to the Publisher device:
 ### For the MQTT Subscriber device:
 - Pimoroni Presto device: [info](https://shop.pimoroni.com/products/presto?variant=54894104019323).
 
-# Publisher device and external I2C devices wiring
+# Publisher1 device and external I2C devices wiring
 
 For an image of the I2C wiring see [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/images/20250720_202423_hardware.png). Note that this is an edited image. There was another device on the breadboard. I covered that part to not confuse the image with the unused device.
 
 # Known problems
 
 ### DC Power 
-My advise for the Publisher device: the Adafruit Feather ESP32-S3 TFT (and probably any other device used as MQTT Publisher device) and also the attached BME280 sensor, it is really necessary to use a 5,1 Volt DC power source of good quality. My experience is at this hardware / this sensor needs at least 5,1 Volt DC. For example: the USB port of my desktop PC delivered 5,132 Volt DC. That was OK. I also used an original Raspberry Pi 5,1 Volt DC power apdapter. That was also OK. When I used a power source that delivered 5,058 Volt DC, that was not insufficient. At times the BME280 was not recognized and at times the MQTT Publisher device sent messages containing a wrong NTP Unixtime value as MsgID. When using a good quality 5,1 Volt DC power supply, the MQTT Publisher device runs many hours without problem, resulting in the MQTT Broker receiving MQTT message correctly and the MQTT Subscriber device(s) do the same.
+My advise for the Publisher1 device: the Adafruit Feather ESP32-S3 TFT (and probably any other device used as MQTT Publisher device) and also the attached BME280 sensor, it is really necessary to use a 5,1 Volt DC power source of good quality. My experience is at this hardware / this sensor needs at least 5,1 Volt DC. For example: the USB port of my desktop PC delivered 5,132 Volt DC. That was OK. I also used an original Raspberry Pi 5,1 Volt DC power apdapter. That was also OK. When I used a power source that delivered 5,058 Volt DC, that was not insufficient. At times the BME280 was not recognized and at times the MQTT Publisher device sent messages containing a wrong NTP Unixtime value as MsgID. When using a good quality 5,1 Volt DC power supply, the MQTT Publisher device runs many hours without problem, resulting in the MQTT Broker receiving MQTT message correctly and the MQTT Subscriber device(s) do the same.
 
 ### I2C bus - connecting three or more external devices to the same I2C bus
  
@@ -583,7 +583,7 @@ My advise for the Publisher device: the Adafruit Feather ESP32-S3 TFT (and proba
  Beside these three or more external I2C devices the Adafruit Feather ESP32-S3 TFT board has other internal devices on the I2C bus:
  The I2C bus scan reported devices found with the following addresses: 0x23, 0x36, 0x50, 0x51, 0x6A, 0x76.
  The three external devices are connected to the Stemma QT/Qwiic connector of the Adafruit Feather ESP32-S3 TFT board, via a M5Stack 3-port Grove Hub. 
- Initially I had the Adafruit Gamepad QT connected in series with the Pimoroni multi-sensor-stick, however this caused I2C bus problems. In fact the M5Unit-RTC was giving unreliable datetime values after having been set with a correct NTP unixtime.  After disconnecting the Gamepad QT from the multi-sensor-stick and then connecting the Gamepad QT to the 3-port Grove Hub, the I2C bus problems were history. From then on the Arduino sketch running on the Adafruit Feather ESP32-S3 TFT received correct datetime data from the M5Unit-RTC.
+ Initially I had the Adafruit Gamepad QT connected in series with the Pimoroni multi-sensor-stick, however this caused I2C bus problems. In fact the M5Unit-RTC was giving unreliable datetime   values after having been set with a correct NTP unixtime.  After disconnecting the Gamepad QT from the multi-sensor-stick and then connecting the Gamepad QT to the 3-port Grove Hub, the I2C bus problems were history. From then on the Arduino sketch running on the Adafruit Feather ESP32-S3 TFT received correct datetime data from the M5Unit-RTC.
 
 # Updates
 
@@ -614,7 +614,7 @@ Added:
   in a file on SD-Card.
 - functionality to maintain certain maximum of received messages in a file on SD-Card (/sd/msg_hist.json);
 
-- In the Arduino sketch for the MQTT Publisher device I have added functionality to read the state of the buttons.
+- In the Arduino sketch for the MQTT Publisher1 device I have added functionality to read the state of the buttons.
 The buttons of the Pimoroni Qw/ST I2C game controller are defined as follows:
 
 # Pimoroni Qw/ST I2C game controller
@@ -688,11 +688,13 @@ See [serial output](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscrib
 ### Note about Publisher unixTime(s)
 In the latest software version for the Publisher devices, the unixTime they send is in GMT. It is up to the algorithm of the MQTT Subscriber to present the received unixTime as localTime or GMT. I have chosen to have the Subscriber device convert and display the received unixTime to ISO6801 format (example: "hh:mm:ss+01:00") [photos](https://imgur.com/a/MmotOGn)
 
-### Publisher2 update 2025-09-09
+## Publisher2 updates
+
+### 2025-09-09
 Added several changes to improve the script. Most changes are in function "ck_for_next_metar()". Now the calculation for requesting the next METAR and subsequent sending of a MQTT METAR topic message, is derived from the "observed" key in the received METAR message. The value of the "observed" key is a unixtime. This time will be increased by 40 minutes. Airport METAR's are refreshed each 30 minutes. Tests revealed that requesting a new METAR at least 10 minutes after its time of publication, is a reliable moment to "catch" a METAR with "fresh" data compared with the METAR message received before. To limit, during tests, the "loss" of credits from my subscription with metar-taf.com, I limited the number of METAR fetches to 3
 (see file: "secrets.json", key MAX_METAR_FETCHED).
 
-### Publisher2 update 2025-09-14
+### 2025-09-14
 Added functionality to display the received METAR data onto a connected Lolin 2.13 inch 3-Color e-Paper display. [photo](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/images/Publisher/Publisher2_V2/20250914_204914.jpg)
 
 Added hardware: Lolin 2.13 inch 3-Color e-Paper display [info](https://www.wemos.cc/en/latest/d1_mini_shield/epd_2_13_3.html). Note that this ePD has the following screen dimensions: 250 x 122 pixels, as printed on the backside of the board in the link and not as shown on the image of the front of this ePD in the link.
