@@ -29,7 +29,7 @@ For a successful MQTT communication you need:
 - one or more MQTT Subscriber device(s). This repo is intended to use a Pimoroni Presto as MQTT Subscriber device.
 
 ## How to install?
-### for the Subscriber device
+### For the Subscriber device
 
 Download the latest version of Pimoroni [Presto FW](https://github.com/pimoroni/presto/releases/tag/v0.1.0). You have two options: download micropython with filesystem (examples etcetera), filename: "presto-v0.1.0-micropython-with-filesystem.uf2" or without filesystem, filename: "presto-v0.1.0-micropython.uf2". Flash the .uf2 file of your choice onto your Presto. You can do this easily by bringing the Presto in download mode by pressing and holding the "BOOT" button, then pressing and releasing the "RESET" button and next releasing the "BOOT" button. If you did this well a disk drive (for example D:) will appear in the file manager of your PC. In Linux systems there will appear a disk icon on your desktop. On MS Windows PCs there will popup a window with the name (for example) "RP2350 (D:)". Now you can copy (for example by "dragging" and "dropping") the downloaded .uf2 file onto the "RP2350 (D:)" window. When the copy process has been completed the popup window will disappear from your desktop. Next press the "RESET" button of the Presto.
 
@@ -48,14 +48,14 @@ If you also use a Publisher2 device, copy the files of this repo for Publisher2 
  C:\Users\<User>\Hardware\Pimoroni\PICO_LIPO_2XL_W_PIM776\micropython\metar_mqtt_v1\
 ```
 
-### requirements for the development platform
+### Requirements for the development platform
 You need to have installed on your PC: 
 - Thonny IDE or equivalent. Needed for the Pimoroni Presto device.
 - Arduino IDE v2.3.5. Needed for the Adafruit Feather ESP32-S3-TFT device. Do not use the Arduino (Cloud) online IDE because, AFAIK, that limits the possibility to change library files to your needs.
   For example I added a function to the M5Stack M5Unit-RTC library for the Arduino IDE. I added the function:  "setUnixTime(unsigned long uxTime)".
   For your convenience I added this modified library [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Arduino/libraries/).
 
-### installing files onto your Presto Subscriber device
+### Installing files onto your Presto Subscriber device
 
 Before going to copy files from this repo to your Presto I advise you to first edit the file "\src\Subscriber\secrets.json". 
 
