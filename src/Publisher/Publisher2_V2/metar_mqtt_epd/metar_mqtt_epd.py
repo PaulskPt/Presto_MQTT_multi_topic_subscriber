@@ -323,7 +323,7 @@ def fetchMetar():
         else:
             metarDayAndHrStr = "0"
   
-        minutes_to_add = 35
+        minutes_to_add = 40
         metarHourNext = add_minutes_to_metar_as_int(metarDayAndHrStr, minutes_to_add)
         metarHourNextStr = str(metarHourNext)
         if len(metarHourNextStr) < 6:
