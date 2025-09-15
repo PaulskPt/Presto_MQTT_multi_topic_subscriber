@@ -175,6 +175,7 @@ else:
 hd = {}
 metar = {}
 nr_metar_fetched = 0
+max_metar_fetched_msg_shown = False
 mqttMsgID = 0
 mqttMsgID_old = 0
 msgSentCnt = 0
@@ -265,14 +266,15 @@ def add_minutes_to_metar_as_int(metar_str: str="", minutes_to_add: int=35) -> in
 # result = add_minutes_to_metar_as_int(metar, 35)
 # print("🧮 Integer time:", result)
 
-
 def fetchMetar():
     global metarData, metarHeader, uxTime_rcvd, max_metar_fetched, nr_metar_fetched
     TAG = "fetchMetar(): "
     print(TAG+"start to send request")
     
     if nr_metar_fetched+1 > max_metar_fetched:  # base-1
-        print(TAG+f"limit of {max_metar_fetched} metars feched reached!")
+        if not max_metar_fetched_msg_shown:  # only show once
+            max_metar_fetched_msg_shown = True
+            print(TAG+f"limit of {max_metar_fetched} metars feched reached!")
         return
     
     try:
