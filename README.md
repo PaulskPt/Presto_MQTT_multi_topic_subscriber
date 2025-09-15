@@ -325,7 +325,7 @@ For the ambient lights of the Presto, in this repo, the following colors are def
 
 In case the Arduino sketch of the Publisher1 device encounters that it cannot read the values from the BME280 sensor, the sketch will issue a software reset by calling the function ```reset()``` which calls the function ```ESP.restart()```.
 
-The source of the Arduino sketch for the MQTT Publisher1 device is [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Publisher)
+The source of the Arduino sketch for the MQTT Publisher1 device is [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Publisher/Publisher1_v4/Feather_ESP32_S3_TFT_MQTT_multi_topic_v4)
 
 ## File secrets.h (for the MQTT Publisher1 device)
 
