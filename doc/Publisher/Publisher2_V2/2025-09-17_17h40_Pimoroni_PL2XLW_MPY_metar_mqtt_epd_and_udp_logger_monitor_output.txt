@@ -1,0 +1,150 @@
+2025-09-17 17h40 utc +1
+
+
+Reception of UDP Packets sent by Pimoroni PL2XLW
+running (in Thonny) MPY script: "metar_mqtt_epd_and_udp_logger.py"
+
+udp_rx.py listener script running on the RPiCM5
+
+Note: initially this udp_listener printed each packet twice,
+because packets were received via both: eth0 and wlan0.
+MS Copilot hinted me about this. Then I switched wlan0 off by issuing "sudo ifconfig wlan0 down"
+
+udp_rx.py contents:
+----------------------
+import socket
+
+#sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+#sock.bind(('', 5005))
+
+udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+udp.bind(('', 5005))
+
+while True:
+    data, addr = udp.recvfrom(512)  # Reduced buffer size
+    if isinstance(data, bytes):
+      dataStr = data.decode('utf-8')
+      print(dataStr)
+    else:
+      print(f"[RAW] {repr(data)} from {addr}")
+
+============================================================
+Output in udp_listener from Micropython script "metar_mqtt_epd_and_udp_logger.py" 
+       running on a Pimoroni Pico LiPo 2XL W.
+	   date: 2025-09-17 17h42 utc +1
+	   
+paulsk@RPiCM5:~/udp_listener $ python udp_rx.py
+
+Pimoroni
+Pico LiPo 2XL W
++ Lolin 2.13 ePD
+Metar + MQTT + UDP Logger
+
+global(): Preparing ePD...
+global(): ePD prepared.
+global(): PUBLISHER_ID = PL2XLW
+global(): broker = 192.168._.___
+global(): port = 1883
+global(): globals set.
+setup(): Broadcast IP address: 192.168.1.255
+setup(): [1758134582] Connected to _____________
+setup(): IP-address: 192.168._.___
+setup(): WiFi MAC-address: __:__:__:__:__
+setup(): Unix time: 1758130984
+setup(): trying to mqtt.connect()
+setup(): ✅ mqtt.connect() successful
+setup(): Clearing ePD buffers...
+setup(): Creating FrameBuffer for red text...
+setup(): Drawing intro screen...
+setup(): Setup complete.
+main(): Starting non-blocking METAR loop...
+main(): MQTT message send interval: 1800 seconds
+sync_time_fm_ntp(): ✅ Time synced: 2025-09-17T17:43:29 UTC
+main(): ISO 8601 time: 2025-09-17T18:43:29+01:00
+ck_for_next_metar(): ⚠️ uxTime_rcvd is zero! Need to fetch METAR first!
+main(): Time to fetch METAR!
+fetchMetar(): start to send request
+fetchMetar(): Raw response (first 30 char's): "{"status":true,"credits":1141,"
+fetchMetar(): wx observed (unix time): 1758130200 = 2025-09-17T17:30:00+00:00 UTC
+fetchMetar(): my_status = True
+fetchMetar(): my_credits = 1141
+fetchMetar(): wx observed = 1758130200
+fetchMetar(): metar = "METAR LPPT 171730Z 31007KT CAVOK 32/09 Q1019"
+fetchMetar(): metarDayAndHour: 171730 Z
+fetchMetar(): metarHourNextStr = 171910
+fetchMetar(): 🕒 Next METAR hour at: 19h10 local
+main(): Time to publish MQTT message!
+composePayload(): PUBLISHER_ID = PL2XLW
+send_msg(): Topic length: 19
+send_msg(): length written: 157
+send_msg(): MQTT message ID: 1758131009
+send_msg(): in IS8601 = 2025-09-17T17:43:29+00:00 UTC
+send_msg(): Topic = "b'weather/PL2XLW/LPPT'"
+send_msg(): msg = b'{"metar": {"raw": "METAR LPPT 171730Z 31007KT CAVOK 32/09 Q1019"},'
+        b' "hd": {"de": "Ext", "sc": "meas", "vt": "s", "t": 1758130200, "dc": "wx", "ow": "PL2XLW"}}'
+send_msg(): ✅ MQTT message nr:   1 sent
+-------------------------------------------------------
+main(): Time to draw METAR on ePD!
+drawMetarOnEPD(): Drawing METAR on EPD...
+drawMetarOnEPD(): ✅ METAR drawn on EPD.
+main(): Waiting for next METAR update...
+main(): 📍 next_metar_unix_time = 1758132600 = 2025-09-17T19:10:00+01:00
+
+
+=======================================================
+Output from MPY script in Thonny Shell window:
+
+Pimoroni
+Pico LiPo 2XL W
++ Lolin 2.13 ePD
+Metar + MQTT + UDP Logger
+
+global(): Preparing ePD...
+global(): ePD prepared.
+global(): PUBLISHER_ID = PL2XLW
+global(): broker = 192.168._.___
+global(): port = 1883
+global(): globals set.
+setup(): Broadcast IP address: 192.168.1.255
+setup(): [1758134582] Connected to _____________
+setup(): IP-address: 192.168._.___
+setup(): WiFi MAC-address: __:__:__:__:__
+setup(): Unix time: 1758130984
+setup(): trying to mqtt.connect()
+setup(): ✅ mqtt.connect() successful
+setup(): Clearing ePD buffers...
+setup(): Creating FrameBuffer for red text...
+setup(): Drawing intro screen...
+setup(): Setup complete.
+main(): Starting non-blocking METAR loop...
+main(): MQTT message send interval: 1800 seconds
+sync_time_fm_ntp(): ✅ Time synced: 2025-09-17T17:43:29 UTC
+main(): ISO 8601 time: 2025-09-17T18:43:29+01:00
+ck_for_next_metar(): ⚠️ uxTime_rcvd is zero! Need to fetch METAR first!
+main(): Time to fetch METAR!
+fetchMetar(): start to send request
+fetchMetar(): Raw response (first 30 char's): "{"status":true,"credits":1141,"
+fetchMetar(): wx observed (unix time): 1758130200 = 2025-09-17T17:30:00+00:00 UTC
+fetchMetar(): my_status = True
+fetchMetar(): my_credits = 1141
+fetchMetar(): wx observed = 1758130200
+fetchMetar(): metar = "METAR LPPT 171730Z 31007KT CAVOK 32/09 Q1019"
+fetchMetar(): metarDayAndHour: 171730 Z
+fetchMetar(): metarHourNextStr = 171910
+fetchMetar(): 🕒 Next METAR hour at: 19h10 local
+main(): Time to publish MQTT message!
+composePayload(): PUBLISHER_ID = PL2XLW
+send_msg(): Topic length: 19
+send_msg(): length written: 157
+send_msg(): MQTT message ID: 1758131009
+send_msg(): in IS8601 = 2025-09-17T17:43:29+00:00 UTC
+send_msg(): Topic = "b'weather/PL2XLW/LPPT'"
+send_msg(): msg = b'{"metar": {"raw": "METAR LPPT 171730Z 31007KT CAVOK 32/09 Q1019"},'
+        b' "hd": {"de": "Ext", "sc": "meas", "vt": "s", "t": 1758130200, "dc": "wx", "ow": "PL2XLW"}}'
+send_msg(): ✅ MQTT message nr:   1 sent
+-------------------------------------------------------
+main(): Time to draw METAR on ePD!
+drawMetarOnEPD(): Drawing METAR on EPD...
+drawMetarOnEPD(): ✅ METAR drawn on EPD.
+main(): Waiting for next METAR update...
+main(): 📍 next_metar_unix_time = 1758132600 = 2025-09-17T19:10:00+01:00
