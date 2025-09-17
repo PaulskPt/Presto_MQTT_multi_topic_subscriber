@@ -1,5 +1,5 @@
 Output in udp_listener from UDP packets sent by another device in the same LAN. 
-       In this repo the Publisher2 (Pimoroni Pico LiPo 2XL W) device running the MicroPython script "metar_mqtt_epd_and_udp_logger.py" 
+       In this repo UDP packets sent by the Publisher2 (Pimoroni Pico LiPo 2XL W) device running the MicroPython script "metar_mqtt_epd_and_udp_logger.py" 
 	   Date: 2025-09-17 17h42 utc +1
 	   
 paulsk@RPiCM5:~/udp_listener $ python udp_rx.py
