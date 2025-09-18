@@ -5,6 +5,8 @@
 #
 import time
 
+my_debug = False
+
 # Color definitions
 EPD_BLACK = 'BLACK'
 EPD_WHITE = 'WHITE'
@@ -96,12 +98,18 @@ class SSD1680:
         self.read_busy()
 
 
-    def clear_buffer(self):
+    # bool param added by @Paulskpt
+    # if clr_to_white is True then buffer cleared with White color
+    def clear_buffer(self, clr_bw_to_white: bool = False):
+        fill_val = 0xFF if clr_bw_to_white else 0x00
+        if my_debug:
+            print(f"LOLIN_SSD1680.clear_buffer(): param clr_bw_to_write = {clr_bw_to_white}, fill_val = 0x{fill_val:02x}")
         for i in range(len(self._buffer_bw)):
-            self._buffer_bw[i] = 0x00
+            self._buffer_bw[i] = fill_val
         for i in range(len(self._buffer_red)):
-            self._buffer_red[i] = 0x00
-
+            self._buffer_red[i] = 0x00 # No red yet
+        if my_debug:
+            print(f"self._buffer_bw[:10] = {self._buffer_bw[:10]}")
     def clear_display(self):
         self.clear_buffer()
         self.display()

@@ -125,6 +125,7 @@ WIDTH  = 250
 HEIGHT = 122
 fb_red = None
 epd_text_scale = 2  # 1, 2 or 3
+epd_buffer_cleared = False
 
 # --- Initialize Display ---
 epd = SSD1680(WIDTH, HEIGHT, spi, dc_pin, rst_pin, cs_pin, busy_pin)
@@ -135,7 +136,8 @@ epd.begin(reset=True)
 orientation = 180
 epd.set_rotation(orientation)  # Landscape mode. Or 0, 90, 270 depending on your desired orientation
 
-epd.clear_buffer()
+epd.clear_buffer(True)  # fill epd._buffer_bw to White (0xFF)
+epd_buffer_cleared = True
 # epd.display()
 time.sleep_ms(100)
 epd.display()  # Evt. second pass helps eliminate ghosting
@@ -268,17 +270,48 @@ def draw_text_scaled(epd, x, y, text, color, scale=1):
     for i, c in enumerate(text):
         draw_char_scaled(epd, x + i * 6 * scale, y, c, color, scale)
 
+def set_edp_text_scale(new_scale: int = 2):
+    global epd_text_scale
+    TAG = "set_epd_text_scale(): "
+    if isinstance(new_scale, int):
+        if new_scale >= 1 and new_scale <= 6:
+            if epd_text_scale != new_scale:
+                epd_text_scale = new_scale
+                print(TAG+f"new scale: {epd_text_scale}")
+                
+
 def draw_intro_screen():
-  # --- Draw Red Text ---
-  global epd_text_scale
-  epd_text_scale = 2
-  draw_text_scaled(epd, 20,  20, "Pimoroni", EPD_RED, scale=epd_text_scale)
-  draw_text_scaled(epd, 20,  40, "Pico LiPo 2XL W", EPD_RED, scale=epd_text_scale)
-  draw_text_scaled(epd, 20,  60, "+ Lolin 2.13 ePD", EPD_RED, scale=epd_text_scale)
-  draw_text_scaled(epd, 20,  80, "Metar + MQTT", EPD_RED, scale=epd_text_scale)
-  draw_text_scaled(epd, 20, 100, "+ UDP Logger", EPD_RED, scale=epd_text_scale)
-  # --- Push to Display ---
-  epd.display()
+    # --- Draw Red Text ---
+    global epd_text_scale, epd_buffer_cleared
+    TAG = "draw_intro_screen(): "
+    if not epd_buffer_cleared:
+        print(TAG+ "going to clear the epd buffers")
+        epd.clear_buffer(True) # clear epd._buffer_bw to 0xFF (White)
+        epd_buffer_cleared = True
+    set_edp_text_scale(2)
+    draw_text_scaled(epd, 20,  20, "Pimoroni",         EPD_RED, scale=epd_text_scale)
+    draw_text_scaled(epd, 20,  40, "Pico LiPo 2XL W",  EPD_RED, scale=epd_text_scale)
+    draw_text_scaled(epd, 20,  60, "+ Lolin 2.13 ePD", EPD_RED, scale=epd_text_scale)
+    draw_text_scaled(epd, 20,  80, "Metar + MQTT",     EPD_RED, scale=epd_text_scale)
+    draw_text_scaled(epd, 20, 100, "+ UDP Logger",     EPD_RED, scale=epd_text_scale)
+    # --- Push to Display ---
+    epd.display()
+  
+def draw_max_fetches_screen():
+    # --- Draw Red Text ---
+    global epd_text_scale, max_metar_fetched, epd_buffer_cleared
+    TAG = "draw_max_fetches_screen(): "
+    if not epd_buffer_cleared:
+        print(TAG+ "going to clear the epd buffers")
+        epd.clear_buffer(True) # clear epd._buffer_bw to 0xFF (White)
+        epd_buffer_cleared = True
+    set_edp_text_scale(2)
+    t0 = f"Limit of {str(max_metar_fetched)}"
+    draw_text_scaled(epd, 20, 40, t0,                 EPD_RED, scale=epd_text_scale)
+    draw_text_scaled(epd, 20, 60, "max metars",       EPD_RED, scale=epd_text_scale)
+    draw_text_scaled(epd, 20, 80, "fetched reached!", EPD_RED, scale=epd_text_scale)
+    # --- Push to Display ---
+    epd.display()
 
 #def mypublish():
   # seq['v'] = seq['v']+1
@@ -335,6 +368,7 @@ def fetchMetar():
     if nr_metar_fetched+1 > max_metar_fetched:  # base-1
         if not max_metar_fetched_msg_shown:  # only show once
             max_metar_fetched_msg_shown = True
+            draw_max_fetches_screen()
             udp_logger.write(TAG+f"limit of {max_metar_fetched} metars feched reached!")
         return
     
@@ -457,15 +491,11 @@ def drawMetarOnEPD():
     
       
     udp_logger.write(TAG+"Drawing METAR on EPD...")
-    epd.clear_buffer()
+    # --- Clear Buffers to White Background ---
+    epd.clear_buffer(True) # clear epd_buffer_bw to 0xFF (White)
     # epd.display()
     time.sleep_ms(100)
-    
-    # --- Clear Buffers to White Background ---
-    for i in range(len(epd._buffer_bw)):
-        epd._buffer_bw[i] = 0xFF  # White
-    for i in range(len(epd._buffer_red)):
-        epd._buffer_red[i] = 0x00  # No red yet
+    set_edp_text_scale(2)
     
     # --- Draw Red Text ---
     for i, line in enumerate(lines):
@@ -586,7 +616,7 @@ def send_msg() -> bool:
     return ret
 
 def ck_for_next_metar() -> bool:
-    global time_to_fetch_metar, next_metar_unix_time, uxTime_rcvd_last
+    global time_to_fetch_metar, next_metar_unix_time, uxTime_rcvd_last, max_metar_fetched_msg_shown
     ret = False
     TAG = "ck_for_next_metar(): "
 
@@ -614,7 +644,10 @@ def ck_for_next_metar() -> bool:
         update_metar = False
         
     if nr_metar_fetched+1 > max_metar_fetched: 
-        udp_logger.write(TAG+f"limit of {max_metar_fetched} metars feched reached!")
+        if not max_metar_fetched_msg_shown:
+            udp_logger.write(TAG+f"limit of {max_metar_fetched} metars feched reached!")
+            draw_max_fetches_screen()
+            max_metar_fetched_msg_shown = True
         time_to_fetch_metar = False
         return time_to_fetch_metar
      
@@ -825,11 +858,8 @@ def setup():
         
         
     # --- Clear epd Buffers to White Background ---
-    udp_logger.write(TAG+"Clearing ePD buffers...")
-    for i in range(len(epd._buffer_bw)):
-        epd._buffer_bw[i] = 0xFF  # White
-    for i in range(len(epd._buffer_red)):
-        epd._buffer_red[i] = 0x00  # No red yet
+    # udp_logger.write(TAG+"Clearing ePD buffers...")
+    # Note the buffers are created ()
 
     # --- Create FrameBuffer for Red Text ---
     udp_logger.write(TAG+"Creating FrameBuffer for red text...")
@@ -842,11 +872,12 @@ def setup():
     udp_logger.write(TAG+"Drawing intro screen...")
     draw_intro_screen()
     udp_logger.write(TAG+"Setup complete.")
+    time.sleep(5) # Give user time to read the intro screen
 
 SYNC_INTERVAL = 15 * 60  # 15 minutes in seconds
     
 def go_epd():
-    global time_to_fetch_metar, _msg_interval_t, _start1, _start2,  nr_metar_fetched, max_metar_fetched
+    global time_to_fetch_metar, _msg_interval_t, _start1, _start2,  nr_metar_fetched, max_metar_fetched, max_metar_fetched_msg_shown
     TAG = "main(): "
     setup()
     # Timing variables
@@ -893,8 +924,11 @@ def go_epd():
         if _start2 or time_to_fetch_metar: # time.ticks_diff(now, _start_t) >= _msg_interval_t:
             time_to_fetch_metar = False
             _start2 = False
-            if nr_metar_fetched+1 > max_metar_fetched: 
-                udp_logger.write(TAG+f"limit of {max_metar_fetched} metars feched reached!")
+            if nr_metar_fetched+1 > max_metar_fetched:
+                if not max_metar_fetched_msg_shown:
+                    udp_logger.write(TAG+f"limit of {max_metar_fetched} metars feched reached!")
+                    draw_max_fetches_screen()
+                    max_metar_fetched_msg_shown = True
             else:
                 udp_logger.write(TAG+"Time to fetch METAR!")
                 fetchMetar()
