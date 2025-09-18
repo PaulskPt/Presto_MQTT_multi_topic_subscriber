@@ -306,10 +306,9 @@ def draw_max_fetches_screen():
         epd.clear_buffer(True) # clear epd._buffer_bw to 0xFF (White)
         epd_buffer_cleared = True
     set_edp_text_scale(2)
-    t0 = f"Limit of {str(max_metar_fetched)}"
-    draw_text_scaled(epd, 20, 40, t0,                 EPD_RED, scale=epd_text_scale)
-    draw_text_scaled(epd, 20, 60, "max metars",       EPD_RED, scale=epd_text_scale)
-    draw_text_scaled(epd, 20, 80, "fetched reached!", EPD_RED, scale=epd_text_scale)
+    t0 = f"Limit of {str(max_metar_fetched)} metars"
+    draw_text_scaled(epd, 20,  80, t0,                 EPD_RED, scale=epd_text_scale)
+    draw_text_scaled(epd, 20, 100, "fetched reached!", EPD_RED, scale=epd_text_scale)
     # --- Push to Display ---
     epd.display()
 
