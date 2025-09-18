@@ -289,11 +289,13 @@ def draw_intro_screen():
         epd.clear_buffer(True) # clear epd._buffer_bw to 0xFF (White)
         epd_buffer_cleared = True
     set_edp_text_scale(2)
-    draw_text_scaled(epd, 20,  20, "Pimoroni",         EPD_RED, scale=epd_text_scale)
-    draw_text_scaled(epd, 20,  40, "Pico LiPo 2XL W",  EPD_RED, scale=epd_text_scale)
-    draw_text_scaled(epd, 20,  60, "+ Lolin 2.13 ePD", EPD_RED, scale=epd_text_scale)
-    draw_text_scaled(epd, 20,  80, "Metar + MQTT",     EPD_RED, scale=epd_text_scale)
-    draw_text_scaled(epd, 20, 100, "+ UDP Logger",     EPD_RED, scale=epd_text_scale)
+    x = 20
+    y = 10
+    draw_text_scaled(epd, x, y,    "Pimoroni",         EPD_RED, scale=epd_text_scale)
+    draw_text_scaled(epd, x, y+20, "Pico LiPo 2XL W",  EPD_RED, scale=epd_text_scale)
+    draw_text_scaled(epd, x, y+40, "+ Lolin 2.13 ePD", EPD_RED, scale=epd_text_scale)
+    draw_text_scaled(epd, x, y+60, "Metar + MQTT",     EPD_RED, scale=epd_text_scale)
+    draw_text_scaled(epd, x, y+80, "+ UDP Logger",     EPD_RED, scale=epd_text_scale)
     # --- Push to Display ---
     epd.display()
   
