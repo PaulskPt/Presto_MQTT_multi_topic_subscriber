@@ -197,6 +197,7 @@ topic = ("weather/{:s}/{:s}".format(PUBLISHER_ID, icao_lookup["Lisbon"] )).encod
 
 sync_interval_ms = 60_000  # Check every minute
 uxTime = 0
+uxTime_zero_msg_shown = False
 utc_offset = int(secrets['timezone']['tz_utc_offset'])  # utc offset in hours
 timezone = secrets['timezone']['tz'] # example: "Europe/Lisbon"
 uxTime_rcvd = 0
@@ -305,10 +306,10 @@ def draw_max_fetches_screen():
     # --- Draw Red Text ---
     global epd_text_scale, max_metar_fetched, epd_buffer_cleared
     TAG = "draw_max_fetches_screen(): "
-    if not epd_buffer_cleared:
-        print(TAG+ "going to clear the epd buffers")
-        epd.clear_buffer(True) # clear epd._buffer_bw to 0xFF (White)
-        epd_buffer_cleared = True
+    #if not epd_buffer_cleared:
+    #    print(TAG+ "going to clear the epd buffers")
+    epd.clear_buffer(True) # clear epd._buffer_bw to 0xFF (White)
+    epd_buffer_cleared = True
     set_edp_text_scale(2)
     t0 = f"Limit of {str(max_metar_fetched)} metars"
     draw_text_scaled(epd, 20,  80, t0,                 EPD_RED, scale=epd_text_scale)
@@ -627,12 +628,13 @@ def send_msg() -> bool:
     return ret
 
 def ck_for_next_metar() -> bool:
-    global time_to_fetch_metar, next_metar_unix_time, uxTime_rcvd_last, max_metar_fetched_msg_shown
+    global time_to_fetch_metar, next_metar_unix_time, uxTime_rcvd_last, max_metar_fetched_msg_shown, uxTime_zero_msg_shown
     ret = False
     TAG = "ck_for_next_metar(): "
 
-    if uxTime_rcvd == 0:
+    if uxTime_rcvd == 0 and not uxTime_zero_msg_shown:
         udp_logger.write(TAG+"⚠️ uxTime_rcvd is zero! Need to fetch METAR first!")
+        uxTime_zero_msg_shown = True
         return
     
     next_metar_unix_time = uxTime_rcvd + 1800 + 600 # 40 minutes later
