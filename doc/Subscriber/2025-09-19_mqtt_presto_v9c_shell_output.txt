@@ -1,0 +1,65 @@
+
+Friday 2025-09-19 07h35 utc +1
+Board Pimoroni Presto
+MicroPython script: mqtt_presto_v9c.py
+
+Handling of "new" MQTT topic "weather/PL2XLW/LPPT". Topic message now contains a JSon key 'acc' containing a dict-like structure:
+containing keys 'st' (= Status) and 'cr' (= Credits).
+
+
+Note: this is a test with global flag "wx_test" = True
+
+Thonny Shell window output:
+
+>>> %Run -c $EDITOR_CONTENT
+
+MPY: soft reboot
+global(): error class object created. It is of class: <class 'ERR'>
+file: "sys_broker.json" has been reset.
+topicIdx_max = 7
+BROKER = 192.168.1.114
+PORT = 1883
+CLIENT_ID = b'PrestoMQTTClient'
+PUBLISHER_ID0 = Feath
+PUBLISHER_ID1 = PL2XLW
+main(): Connecting to WiFi...
+main(): WiFi connected.
+NP_clear(): 🌈 ambient neopixels off
+get_disp_color_idx(): pen_colorIdx set to: 3
+setup(): disp_obj.disp_color_index = 3
+setup(): Display hours wakeup: 7, gotosleep: 23
+setup(): Connecting to MQTT local broker on port 1883
+setup(): Not deleting log files, flag: "delete_logs" = False
+setup(): Successfully connected to MQTT broker.
+mqtt_callback(): type(msg): <class 'bytes'>
+mqtt_callback(): payload: {'acc': {'st': 1, 'cr': 1201}, 'hd': {'de': 'Ext', 'sc': 'meas', 'vt': 's', 't': 1755981697, 'dc': 'wx', 'ow': 'PL2XLW'}, 'metar': {'raw': 'METAR LPPT 291930Z 34012KT CAVOK 30/10 Q1014'}}
+
+mqtt_callback(): Received a mqtt message on topic: "weather/PL2XLW/LPPT", timestamp: 1755981697 = 2025-08-23T20:41:37+00:00
+mqtt_callback(): length of received mqtt message: 196
+mqtt_callback(): type(msg): <class 'bytes'>
+mqtt_callback(): payload: {'acc': {'st': 1, 'cr': 1201}, 'hd': {'de': 'Ext', 'sc': 'meas', 'vt': 's', 't': 1755981697, 'dc': 'wx', 'ow': 'PL2XLW'}, 'metar': {'raw': 'METAR LPPT 291930Z 34012KT CAVOK 30/10 Q1014'}}
+
+mqtt_callback(): Received a mqtt message on topic: "weather/PL2XLW/LPPT", timestamp: 1755981697 = 2025-08-23T20:41:37+00:00
+mqtt_callback(): length of received mqtt message: 196
+--------------------------------------------------
+split_msg(): len(payload) = 3
+split_msg(): payload.items() = dict_items([('acc', {'st': 1, 'cr': 1201}), ('hd', {'de': 'Ext', 'sc': 'meas', 'vt': 's', 't': 1755981697, 'dc': 'wx', 'ow': 'PL2XLW'}), ('metar', {'raw': 'METAR LPPT 291930Z 34012KT CAVOK 30/10 Q1014'})])
+split_msg(): type(acc) = <class 'dict'>
+split_msg(): acc.items() = dict_items([('st', 1), ('cr', 1201)])
+split_msg(): my_status = Active
+split_msg(): my_credits = 1201
+split_msg(): wx = {'raw': 'METAR LPPT 291930Z 34012KT CAVOK 30/10 Q1014'}
+clear_file_if_too_large(): received msg records on file: 63
+split_msg(): 🧹 Not needed to cleanup messages history file
+prep_and_save_record_to_sd(): Attempting to write to file: '/sd/msg_hist.json'
+split_msg(): ✅ record saved to file on SD
+loop(): MQTT message received
+draw(): we passed here. line 2512. topic_idx = 6 (metar)
+draw(): wx_metar_txt_draw1 = "METAR LPPT 291930Z 34012KT CAVOK 30/10 Q1014"
+draw(): wx_metar_txt_draw2 = "Status: Active"
+draw(): wx_metar_txt_draw3 = "Credits: 1201"
+draw(): METAR LPPT 291930Z
+draw(): 34012KT CAVOK 30/10
+draw(): Q1014
+draw(): Status: Active, Credits: 1201
+--------------------------------------------------
