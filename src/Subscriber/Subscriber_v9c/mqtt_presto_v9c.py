@@ -2511,7 +2511,7 @@ def draw(mode:int = 1):
                     print(TAG+f"dclr_txt1_draw = \"{dclr_txt1_draw}\"")
                     print(TAG+f"dclr_txt2_draw = \"{dclr_txt2_draw}\"")
             elif topic_idx == 6:
-                if not my_debug:
+                if my_debug:
                     print(TAG+"we passed here. line 2512. topic_idx = 6 (metar)")
                 wx_metar_txt_draw1 = get_payload_member("raw")  # msg['metar']['raw']
                 wx_metar_txt_draw2 = "Status:  " + get_payload_member("st") # msg["acc"]["st"]
