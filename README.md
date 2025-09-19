@@ -711,5 +711,9 @@ Added a startup file "main.py" that calls the script "metar_mqtt_epd.py". In thi
 ### 2025-09-17
 Added Publisher2 V3 [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/src/Publisher/Publisher2_V3/metar_mqtt_edp_udplogger). In this version added functionality to send print statements as UDP packets to any UDP Listener device in the LAN. In this way the Publisher2 board doesn't need to be connected to a PC to see its print output. Only need another device in the same LAN running a very small python script to print to the terminal window any print data received through the UDP packets. In my case I use as "UDP Listener" the Raspberry Pi Compute Module 5, the device I also use as MQTT Broker. Source code: [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/src/UDP_Listener/udp_rx.py). Example output: [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/doc/UDP_Listener/UDP_Listener_output.txt).
 
+### 2025-09-19
+Added functionality to send metar-taf.com account information. In the MQTT message payload added a key: "acc" with the contents, for example: "acc" : {"st" : 1, "cr" : 1201}, in which "acc" stands for "account", "st" for "Status" and "cr" for "Credits" (remaining).
+
+
 ## General cleanup 2025-09-15
 Cleaned up various versions for the Subscriber device and various versions of the Publisher device1. For each only one version is left.
