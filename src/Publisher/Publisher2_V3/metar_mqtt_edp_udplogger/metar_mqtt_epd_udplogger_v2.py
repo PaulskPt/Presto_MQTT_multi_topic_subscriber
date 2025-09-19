@@ -1,6 +1,6 @@
 """
-metar_mqtt_epd_and_udp_logger.py
-================================
+metar_mqtt_epd_udplogger_v2.py
+===================================
 This is an updated of metar_mqtt_edp.py
 Added UDP logging feature.
 
@@ -33,10 +33,10 @@ For this notifications of actions regarding the screen are printed to the serial
 
 """
 import machine
-import ujson
 import network
 import time
 import binascii
+import ujson
 #import utime
 from lib.umqtt.simple2 import MQTTClient
 import os
@@ -222,6 +222,8 @@ else:
 
 hd = {}
 metar = {}
+my_status = 0
+my_credits = 0
 nr_metar_fetched = 0
 max_metar_fetched_msg_shown = False
 time_to_fetch_metar = False
@@ -362,7 +364,7 @@ def add_minutes_to_metar_as_int(metar_str: str="", minutes_to_add: int=next_meta
 # udp_logger.write("🧮 Integer time:", result)
 
 def fetchMetar():
-    global metarData, metarHeader, uxTime_rcvd, max_metar_fetched, nr_metar_fetched
+    global metarData, metarHeader, uxTime_rcvd, max_metar_fetched, nr_metar_fetched, my_status, my_credits
     TAG = "fetchMetar(): "
     udp_logger.write(TAG+"start to send request")
     
@@ -461,7 +463,7 @@ def splitMetarforEPD(max_chars_per_line=20):
     return lines
 
 def drawMetarOnEPD():
-    global fb_red, epd, metarData, epd_text_scale
+    global fb_red, epd, metarData, epd_text_scale, my_status, my_credits
     TAG = "drawMetarOnEPD(): "
     if not metarData:
         udp_logger.write(TAG+"No metarData to display!")
@@ -504,12 +506,17 @@ def drawMetarOnEPD():
         draw_text_scaled(epd, 5, y_position, line, EPD_RED, scale=epd_text_scale) 
     # draw_text_scaled(epd, 5, 25, metarData, EPD_RED, scale=epd_text_scale)
     
+    t0 = f"Status:  {"Active" if my_status == 1 else "Inactive"}"
+    t1 = f"Credits: {my_credits}"
+    draw_text_scaled(epd, 5,  80, t0, EPD_RED, scale=epd_text_scale) 
+    draw_text_scaled(epd, 5, 100, t1, EPD_RED, scale=epd_text_scale) 
+    
     # --- Push to Display ---
     epd.display()
     udp_logger.write(TAG+"✅ METAR drawn on EPD.")
 
 def composePayload(local_or_utc: bool = False) -> int:
-    global payLoad, hd, metar, mqttMsgID, uxTime, metarData, PUBLISHER_ID, uxTime_rcvd
+    global payLoad, hd, acc, metar, mqttMsgID, uxTime, metarData, PUBLISHER_ID, uxTime_rcvd, my_status, my_credits
     TAG = "composePayload(): "
     
     offset = float(utc_offset)
@@ -540,9 +547,12 @@ def composePayload(local_or_utc: bool = False) -> int:
 
     metar = {"raw": metarData}
     
+    acc = {"st" : my_status, "cr": my_credits} # acc = account information
+    
     # Combine into a parent JSON object
     payLoad = {
         "hd": hd,
+        "acc" : acc,
         "metar": metar
     }
 
