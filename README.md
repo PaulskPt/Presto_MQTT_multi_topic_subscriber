@@ -640,6 +640,12 @@ Script upgraded to receive and display MQTT messages with topic ```weather/PL2XL
 
 See: [photo](https://imgur.com/a/SKHAVRJ) and [video](https://imgur.com/a/Mbb5P9i).  For images comparison between the Pimoroni Presto and an Unexpected Maker SQUiXL see: [photos](https://imgur.com/a/ARvUNSK)
 
+### Update 2025-09-19
+For MQTT messages of topic "weather/PL2XLW/LPPT" added functionality to display (and print) metar-taf.com account data: "Status" and "Credits".
+In the payload this is for example: 
+```
+	"acc": {"st": 1, "cr": 1201}
+```
 
 ## Publisher1 update
 This version adds DST awareness to the timezone offset. In secret.h one can choose between #define REGION_EUROPE, #define REGION_USA or create ones own region data.
