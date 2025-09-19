@@ -2,12 +2,12 @@
 
 import os
 
-fn = "metar_mqtt_epd_and_udp_logger.py"
+fn = "metar_mqtt_epd_udplogger_v2.py"
 
 if fn in os.listdir():
     try:
-        import metar_mqtt_epd_and_udp_logger
-        metar_mqtt_epd_and_udp_logger.go_epd()
+        import metar_mqtt_epd_udplogger_v2
+        metar_mqtt_epd_udplogger_v2.go_epd()
     except Exception as e:
         print(f"⚠️  Error \"{e}\" while importing and running \"{fn}\"")
 else:
