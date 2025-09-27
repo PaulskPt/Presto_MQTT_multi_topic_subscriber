@@ -1,0 +1,68 @@
+# 2025-09-27 10h23 utc+1
+# by Paulus Schulinck (Github handle: @PaulskPt)
+# License: MIT
+# Board: Raspberry Pi 4B-4GB
+# Python script: tcp_rx_v2.py
+# Output in PuTTY SSH session
+# /home/<User>/tcp_listener/tcp_rx_v2.py
+#
+paulsk@RPi4B:~/tcp_listener $ python tcp_rx_v2.py
+Listening for TCP connections...
+PL2XLW global(): ip: 192.168.1.__, subnet: 255.255.255.0
+PL2XLW global(): tcp_target(s): ['192.168.1.___']
+
+
+Pimoroni
+Pico LiPo 2XL W
++ Lolin 2.13 ePD
+Metar + MQTT + TCP Logger
+global(): Preparing ePD...
+global(): ePD prepared.
+global(): PUBLISHER_ID = PL2XLW
+global(): broker = 192.168.1.114
+global(): port = 1883
+global(): globals set.
+calc_broadcast(): ip: 192.168.1.__, subnet: 255.255.255.0
+setup(): Broadcast IP address: 192.168.1.255
+setup(): [1758969244] Connected to _____________
+setup(): IP-address: 192.168.1.__
+setup(): WiFi MAC-address: __:__:__:__:__:__
+setup(): Unix time: 1758965645
+setup(): trying to mqtt.connect()
+setup(): ✅ mqtt.connect() successful
+setup(): Creating FrameBuffer for red text...
+setup(): Drawing intro screen...
+setup(): Setup complete.
+main(): Starting non-blocking METAR loop...
+main(): MQTT message send interval: 1800 seconds
+sync_time_fm_ntp(): ✅ Time synced: 2025-09-27T09:34:35 UTC
+main(): ISO 8601 time: 2025-09-27T10:34:35+01:00
+ck_for_next_metar(): ⚠️ uxTime_rcvd is zero! Need to fetch METAR first!
+main(): Time to fetch METAR!
+fetchMetar(): start to send request
+fetchMetar(): Raw response (first 30 char's): "{"status":true,"credits":973,""
+fetchMetar(): wx observed (unix time): 1758963600 = 2025-09-27T09:00:00+00:00 UTC
+fetchMetar(): my_status = True
+fetchMetar(): my_credits = 973
+fetchMetar(): wx observed = 1758963600
+fetchMetar(): metar = "METAR LPPT 270900Z 19008KT 150V220 9999 FEW008 SCT012 18/15 Q1019"
+fetchMetar(): metarDayAndHour: 270900 Z
+fetchMetar(): metarHourNextStr = 271040
+fetchMetar(): 🕒 Next METAR hour at: 10h40 local
+main(): Time to publish MQTT message!
+composePayload(): PUBLISHER_ID = PL2XLW
+send_msg(): Topic length: 19
+send_msg(): length written: 210
+send_msg(): MQTT message ID: 1758965675
+send_msg(): in IS8601 = 2025-09-27T09:34:35+00:00 UTC
+send_msg(): msg = b''
+        b'{"hd": {"de": "Ext", "sc": "meas", "vt": "s", "t": 1758963600, "dc": "wx", "ow": "PL2XLW"}, "acc": {"st": true, "cr": 973}, "metar": {"raw": "METAR LPPT 270900Z 19008KT 150V220 9999 FEW008 SCT012 18/15 Q1019"}}'
+send_msg(): ✅ MQTT message nr:   1 sent
+-------------------------------------------------------
+main(): Time to draw METAR on ePD!
+drawMetarOnEPD(): Drawing METAR on EPD...
+drawMetarOnEPD(): ✅ METAR drawn on EPD.
+main(): Waiting for next METAR update...
+main(): 📍 next_metar_unix_time = 1758966000 = 2025-09-27T10:40:00+01:00
+
+
