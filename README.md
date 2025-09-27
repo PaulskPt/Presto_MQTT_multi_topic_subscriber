@@ -714,6 +714,8 @@ Added Publisher2 V3 [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_s
 ### 2025-09-19
 Added functionality to send metar-taf.com account information. In the MQTT message payload added a key: "acc" with the contents, for example: "acc" : {"st" : 1, "cr" : 1201}, in which "acc" stands for "account", "st" for "Status" and "cr" for "Credits" (remaining).
 
+### 2025-09-27
+Added Publisher2 V4 [here]() In this version replaced UDP packets by TCP packets to any TCP Listerner device in the LAN. Added a "TCP Listener" Python script that I tested on a Raspberry Pi 4B-4GB. Source code: [here](). Serial output: [here]().
 
 ## General cleanup 2025-09-15
 Cleaned up various versions for the Subscriber device and various versions of the Publisher device1. For each only one version is left.
