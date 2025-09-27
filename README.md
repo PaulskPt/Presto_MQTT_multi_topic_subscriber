@@ -743,8 +743,7 @@ Below is the section in the Publisher2 V4 script (lines 81-114) where the values
 	    tcp_logger.write(BOARD+TAG+f"ip: {ip}, subnet: {subnet}"+"\n")
 	
 	    tcp_logger.write(BOARD+TAG+"tcp_target(s): " + f"{tcp_targets}\n")
-	
-	
+		
 	except OSError as e:
 	    tcp_logger.write(BOARD+TAG+f"OSError: {e}\n")
 	    raise RuntimeError
