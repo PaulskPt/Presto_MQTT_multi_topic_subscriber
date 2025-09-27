@@ -99,7 +99,7 @@ try:
     
     ip, subnet, _, _ = net.ifconfig()
     time.sleep(0.1)
-    # Use a helper to calculate broadcast IP from IP and subnet
+
     tcp_logger.write(BOARD+TAG+f"ip: {ip}, subnet: {subnet}"+"\n")
 
     tcp_logger.write(BOARD+TAG+"tcp_target(s): " + f"{tcp_targets}\n")
