@@ -262,14 +262,6 @@ CAPACITY = 1024 # Adjust based on your JSON size
 metarStr = ""
 tcp_logger.write(TAG+"globals set.\n")
 
-def calc_broadcast(ip, subnet):
-    TAG = "calc_broadcast(): "
-    tcp_logger.write(TAG+f"ip: {ip}, subnet: {subnet}\n")
-    ip_parts = list(map(int, ip.split('.')))
-    subnet_parts = list(map(int, subnet.split('.')))
-    broadcast_parts = [(ip_parts[i] | (~subnet_parts[i] & 0xFF)) for i in range(4)]
-    return '.'.join(map(str, broadcast_parts))
-
 def draw_char_scaled(epd, x, y, char, color, scale=1):
     index = ord(char)
     if index < 32 or index > 126:
@@ -839,8 +831,6 @@ def setup():
     #tcp_logger.write(t0) # TAG+f"Connecting to {WIFI_SSID}")
     t_start = time.time()
     
-    broadcast_ip = calc_broadcast(ip, subnet)
-    tcp_logger.write(TAG+f"Broadcast IP address: {broadcast_ip}\n")
     
     if net.isconnected():
         tcp_logger.write(TAG+"[" + str(t_start) + "] Connected to Vodafone-8D96F1\n")

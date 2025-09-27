@@ -22,8 +22,6 @@ global(): PUBLISHER_ID = PL2XLW
 global(): broker = 192.168.1.114
 global(): port = 1883
 global(): globals set.
-calc_broadcast(): ip: 192.168.1.__, subnet: 255.255.255.0
-setup(): Broadcast IP address: 192.168.1.255
 setup(): [1758969244] Connected to _____________
 setup(): IP-address: 192.168.1.__
 setup(): WiFi MAC-address: __:__:__:__:__:__
