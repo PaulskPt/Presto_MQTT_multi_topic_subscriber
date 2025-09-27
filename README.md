@@ -715,7 +715,44 @@ Added Publisher2 V3 [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_s
 Added functionality to send metar-taf.com account information. In the MQTT message payload added a key: "acc" with the contents, for example: "acc" : {"st" : 1, "cr" : 1201}, in which "acc" stands for "account", "st" for "Status" and "cr" for "Credits" (remaining).
 
 ### 2025-09-27
-Added Publisher2 V4 [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Publisher/Publisher2_V4/metar_mqtt_edp_tcplogger) In this version replaced UDP packets by TCP packets to any TCP Listerner device in the LAN. Added a "TCP Listener" Python script that I tested on a Raspberry Pi 4B-4GB. Source code: [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/src/TCP_Listener/tcp_rx_v2.py). Serial output: [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/doc/TCP_Listener/2025-09-27_10h23_TCP_Listener_output.txt).
+Added Publisher2 V4 [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Publisher/Publisher2_V4/metar_mqtt_edp_tcplogger) In this version replaced UDP packets by TCP packets to any TCP Listerner device in the LAN. Added a "TCP Listener" Python script that I tested on a Raspberry Pi 4B-4GB. Source code: [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/src/TCP_Listener/tcp_rx_v2.py). Serial output: [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/doc/TCP_Listener/2025-09-27_10h23_TCP_Listener_output.txt). See also the contents of the file "secrets.json", key "lan" [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/src/Publisher/Publisher2_V4/metar_mqtt_edp_tcplogger/secrets.json). 
+Here is the section in the Publisher2 V4 script (lines 81-114) where the values for eventual "target" devices in the LAN are read from the file "secrets.json". The list "tcp_targets" (line 88) needs to contain the variable name(s) of the targets intended:
+```
+	# Set the IP addresses of TCP targets
+	# Note that TCP can only send to one IP-address at a time!
+	t1 = secrets['lan']['presto']  # '192.168.1.__'  # Pimoroni Presto - MQTT Subscriber1
+	t2 = secrets['lan']['pp2w']    # '192.168.1.__'  # Pimoroni Pico Plus 2W nr1 - TCP Listener
+	t3 = secrets['lan']['rpico32'] # '192.168.1.__'  # iLabs RPICO32 - TCP Listener
+	t4 = secrets['lan']['rpicm5']  # '192.168.1.114' # Raspberry Pi Compute Module 5 - MQTT Broker - TCP Listener
+	t5 = secrets['lan']['rpi4b']   # '192.168.1.__'  # Raspberry Pi 4B-4GB with RP senseHat V2 - TCP Listener
+	tcp_targets = [t5]  # was [t2, t4]
+	
+	try:
+	    # Wait until connected
+	    while not net.isconnected():
+	        time.sleep(0.2)
+	
+	    TCP_PORT = 12345
+	    use_tcp_logger = True
+	    tcp_logger_verbose = False
+	    tcp_logger = TCPLogger(TCP_PORT, tcp_targets, use_tcp_logger)
+	    
+	    ip, subnet, _, _ = net.ifconfig()
+	    time.sleep(0.1)
+	    # Use a helper to calculate broadcast IP from IP and subnet
+	    tcp_logger.write(BOARD+TAG+f"ip: {ip}, subnet: {subnet}"+"\n")
+	
+	    tcp_logger.write(BOARD+TAG+"tcp_target(s): " + f"{tcp_targets}\n")
+	    # ===== Create an instance of the TCPLogger class =====
+	
+	
+	except OSError as e:
+	    tcp_logger.write(BOARD+TAG+f"OSError: {e}\n")
+	    raise RuntimeError
+	except Exception as e:
+	    tcp_logger.write(BOARD+TAG+f"Exception: {e}\n")
+    raise RuntimeError
+```
 
 ## General cleanup 2025-09-15
 Cleaned up various versions for the Subscriber device and various versions of the Publisher device1. For each only one version is left.
