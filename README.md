@@ -722,11 +722,11 @@ tcp_targets = {}
 # Set the IP addresses of TCP targets
 # Note that TCP can only send to one IP-address at a time!
 # dict structure:  lan { "0" : {"name": "presto",  "ip": "192.168.1.68",  "timeout" : "1.0"}}
-t1 = secrets['lan']['0'] # '192.168.1.__'  # Pimoroni Presto - MQTT Subscriber1
-t2 = secrets['lan']['1'] # '192.168.1.__'  # Pimoroni Pico Plus 2W nr1 - TCP Listener
-t3 = secrets['lan']['2'] # '192.168.1.__'  # iLabs RPICO32 - TCP Listener
-t4 = secrets['lan']['3'] # '192.168.1.114' # Raspberry Pi Compute Module 5 - MQTT Broker - TCP Listener
-t5 = secrets['lan']['4'] # '192.168.1.__'  # Raspberry Pi 4B-4GB with RP senseHat V2
+# t1 = secrets['lan']['0'] # '192.168.1.__'  # Pimoroni Presto - MQTT Subscriber1
+# t2 = secrets['lan']['1'] # '192.168.1.__'  # Pimoroni Pico Plus 2W nr1 - TCP Listener
+# t3 = secrets['lan']['2'] # '192.168.1.__'  # iLabs RPICO32 - TCP Listener
+# t4 = secrets['lan']['3'] # '192.168.1.114' # Raspberry Pi Compute Module 5 - MQTT Broker - TCP Listener
+# t5 = secrets['lan']['4'] # '192.168.1.__'  # Raspberry Pi 4B-4GB with RP senseHat V2
 tcp_targets['0'] = secrets['lan']['4']
 if my_debug:
     print(f"tcp_targets = {tcp_targets}")
