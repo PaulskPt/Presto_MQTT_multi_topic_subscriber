@@ -734,7 +734,7 @@ Below is the section in the Publisher2 V4 script (lines 81-114) where the values
 	
 	    TCP_PORT = 12345
 	    use_tcp_logger = True
-	    tcp_logger_verbose = False
+	    # ===== Create an instance of the TCPLogger class =====
 	    tcp_logger = TCPLogger(TCP_PORT, tcp_targets, use_tcp_logger)
 	    
 	    ip, subnet, _, _ = net.ifconfig()
@@ -743,7 +743,6 @@ Below is the section in the Publisher2 V4 script (lines 81-114) where the values
 	    tcp_logger.write(BOARD+TAG+f"ip: {ip}, subnet: {subnet}"+"\n")
 	
 	    tcp_logger.write(BOARD+TAG+"tcp_target(s): " + f"{tcp_targets}\n")
-	    # ===== Create an instance of the TCPLogger class =====
 	
 	
 	except OSError as e:
