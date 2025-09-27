@@ -11,32 +11,31 @@ import gc
 
 my_debug = False
 
-RPI4B = '192.168.1.125'
+RPI4B = {'0' : {'name': 'RPI4B', 'ip' : '192.168.1.125', 'timeout': '1.0'}} # default dict
 
-device_timeouts = {
-    "192.168.1.69":  3.0, # Pico Plus 2W
-    "192.168.1.81":  1.0, # RPICO32
-    "192.168.1.125": 1.0  # RPi4B
-}
+targets_timeouts = []
 
 class TCPLogger:
     def __init__(self,
                  port: int = 12345,
                  targets=RPI4B,
                  use_tcp_logger: bool = True) -> None:
-        
+
         self.port = port
         self.use_tcp_logger = use_tcp_logger
         self.TAG_CLS = "TCPLogger"
-
+        if my_debug:
+            sys.stdout.write(self.TAG_CLS + f"param targets = {targets}\n")
+    
         # Normalize targets to a list
-        if isinstance(targets, str):
-            self.targets = [targets]
-        elif isinstance(targets, list):
+        if isinstance(targets, dict):
             self.targets = targets
+            if my_debug:
+                sys.stdout.write(self.TAG_CLS + f"__init__(): self.targets = {self.targets}\n")
         else:
-            self.targets = []
-
+            sys.stdout.write(self.TAG_CLS + "__init__(): parameter targets not of type dict.\n")
+            raise RuntimeError
+        
     def write(self, msg):
         TAG = ".write(): "
         try_cnt_max = 3
@@ -53,9 +52,18 @@ class TCPLogger:
             msg = str(msg)
 
         if isinstance(msg, str): # and len(msg.strip('\r\n')) > 0:
-            for ip in self.targets:
+            le = len(self.targets)
+            if my_debug:
+                sys.stdout.write(self.TAG_CLS + TAG + f"len(self.targets) = {len(self.targets)}")
+            for i in range(le):
+                n = str(i)
+                nm = self.targets[n]['name']
+                ip = self.targets[n]['ip']
+                to = int(float(self.targets[n]['timeout']))
+                if my_debug:
+                    sys.stdout.write(self.TAG_CLS + TAG + f"target name = \"{nm}\"\n")
                 if not self.ping(ip):  # Check reachability of the target
-                    sys.stdout.write(self.TAG_CLS + TAG + "target not reachable\n")
+                    sys.stdout.write(self.TAG_CLS + TAG + f"target {nm}, ip: {ip} not reachable\n")
                     continue # return # do it silently. No serial output
                 try_cnt = 0
                 sent = False
@@ -64,10 +72,10 @@ class TCPLogger:
                         if self.use_tcp_logger:
                             ack = None
                             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                            #sock.settimeout(1.0) # Guardrail: short timeout
-                            sock.settimeout(device_timeouts.get(ip, 2.0))  # default fallback
+                            sock.settimeout(to)
                             sock.connect((ip, self.port))
-                            # sys.stdout.write(self.TAG_CLS + TAG + f"[tcp_logger] Sending to {ip}: {repr(msg)}\n")
+                            if my_debug:
+                                sys.stdout.write(self.TAG_CLS + TAG + f"[tcp_logger] Sending to {ip}: {repr(msg)}\n")
                             sock.send(msg.encode()) # 'utf-8'))
                             sock.close()
                             sent = True

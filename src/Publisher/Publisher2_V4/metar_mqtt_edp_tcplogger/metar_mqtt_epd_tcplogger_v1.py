@@ -77,15 +77,20 @@ net = network.WLAN(network.STA_IF)
 #net.active(False)
 net.active(True)
 net.connect(WIFI_SSID, WIFI_PASSWORD)
-
+tcp_targets = {}
 # Set the IP addresses of TCP targets
 # Note that TCP can only send to one IP-address at a time!
-t1 = secrets['lan']['presto']  # '192.168.1.__'  # Pimoroni Presto - MQTT Subscriber1
-t2 = secrets['lan']['pp2w']    # '192.168.1.__'  # Pimoroni Pico Plus 2W nr1 - TCP Listener
-t3 = secrets['lan']['rpico32'] # '192.168.1.__'  # iLabs RPICO32 - TCP Listener
-t4 = secrets['lan']['rpicm5']  # '192.168.1.114' # Raspberry Pi Compute Module 5 - MQTT Broker - TCP Listener
-t5 = secrets['lan']['rpi4b']   # '192.168.1.__'  # Raspberry Pi 4B-4GB with RP senseHat V2
-tcp_targets = [t5]  # was [t2, t4]
+# dict structure:  lan { "0" : {"name": "presto",  "ip": "192.168.1.68",  "timeout" : "1.0"}}
+t1 = secrets['lan']['0'] # '192.168.1.__'  # Pimoroni Presto - MQTT Subscriber1
+t2 = secrets['lan']['1'] # '192.168.1.__'  # Pimoroni Pico Plus 2W nr1 - TCP Listener
+t3 = secrets['lan']['2'] # '192.168.1.__'  # iLabs RPICO32 - TCP Listener
+t4 = secrets['lan']['3'] # '192.168.1.114' # Raspberry Pi Compute Module 5 - MQTT Broker - TCP Listener
+t5 = secrets['lan']['4'] # '192.168.1.__'  # Raspberry Pi 4B-4GB with RP senseHat V2
+#tcp_targets = [t5]  # was [t2, t4]
+tcp_targets['0'] = secrets['lan']['4']
+if my_debug:
+    print(f"tcp_targets = {tcp_targets}")
+tcp_logger = None
 
 try:
     # Wait until connected
@@ -96,6 +101,9 @@ try:
     use_tcp_logger = True
     # ===== Create an instance of the TCPLogger class =====
     tcp_logger = TCPLogger(TCP_PORT, tcp_targets, use_tcp_logger)
+    if my_debug:
+        print(f"type(tcp_logger) = {type(tcp_logger)}")
+    tcp_logger.write(BOARD+TAG+f"tcp_targets = {tcp_targets}")
     
     ip, subnet, _, _ = net.ifconfig()
     time.sleep(0.1)
