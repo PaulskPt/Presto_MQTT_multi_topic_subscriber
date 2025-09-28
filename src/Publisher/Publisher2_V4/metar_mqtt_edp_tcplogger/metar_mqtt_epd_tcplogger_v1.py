@@ -205,11 +205,9 @@ CONNECTION_TIMEOUT = 5
 
 scan_networks = False # see setup()
 
-icao_lookup = {
-    "Lisbon": "LPPT",
-    "Porto": "LPPR",
-    "Faro": "LPFR"
-}
+icao_lookup = secrets['airports'] # {"Lisbon": "LPPT", "Porto": "LPPR", "Faro": "LPFR"}
+if my_debug:
+    tcp_logger.write(TAG+f"icao_lookup = {icao_lookup}\n")
 
 kHostname = "https://api.metar-taf.com/metar"
 my_status = 0
