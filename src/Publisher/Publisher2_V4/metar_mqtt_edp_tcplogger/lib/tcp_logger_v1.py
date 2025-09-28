@@ -28,7 +28,6 @@ class TCPLogger:
         if my_debug:
             sys.stdout.write(self.TAG_CLS + TAG + f"param targets = {targets}\n")
     
-        # Normalize targets to a list
         if isinstance(targets, dict):
             self.targets = targets
             if my_debug:
