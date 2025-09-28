@@ -131,10 +131,9 @@ except Exception as e:
     raise RuntimeError
 
 #if use_tcp_logger:
-#    sys.stdout = my_logger  # Redirect print statements to TCP logger  
-#    sys.stderr = my_logger  # Redirect errors to TCP logger
+#    sys.stdout = tcp_logger  # Redirect print statements to TCP logger  
+#    sys.stderr = tcp_logger  # Redirect errors to TCP logger
 #    tcp_logger.write(TAG+"TCP logger activated. All tcp_logger.write() output will be sent via TCP packets.")
-
 
 # === Print intro to my_logger ===
 tcp_logger.write("\nPimoroni\n")
