@@ -81,7 +81,7 @@ tcp_targets = {}
 # Set the IP addresses of TCP targets
 # Note that TCP can only send to one IP-address at a time!
 # dict structure:  lan { "0" : {"name": "presto",  "ip": "192.168.1.68",  "timeout" : "1.0"}}
-# tcp_targets['0']  = secrets['lan']['0'] # {'ip': '192.168.1.__', 'name': 'presto', 'timeout': '1.0'}}  Pimoroni Presto - MQTT Subscriber1
+# tcp_targets['0']  = secrets['lan']['0'] # {...} Pimoroni Presto - MQTT Subscriber1
 # tcp_targets['1']  = secrets['lan']['1'] # {...} Pimoroni Pico Plus 2W nr1 - TCP Listener
 # tcp_targets['2']  = secrets['lan']['2'] # {...} iLabs RPICO32 - TCP Listener
 # tcp_targets['3']  = secrets['lan']['3'] # {...} Raspberry Pi Compute Module 5 - MQTT Broker - TCP Listener
