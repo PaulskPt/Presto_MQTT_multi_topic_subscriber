@@ -721,7 +721,8 @@ Below is the section in the Publisher2 V4 script (lines 80-100) where the values
 tcp_targets = {}
 # Use the IP addresses and timeout values of TCP targets
 # Note that TCP can only send to one IP-address at a time!
-# dict structure:  lan { "0" : {"name": "presto",  "ip": "192.168.1.__",  "timeout" : "1.0"}}
+# The TCPLogger class takes care of sending the same message to multiple TCP Listeners
+# dict structure: { "0" : {"name": "presto",  "ip": "192.168.1.__",  "timeout" : "1.0"}}
 # tcp_targets['0'] = secrets['lan']['0'] # {...} Pimoroni Presto - MQTT Subscriber1
 # tcp_targets['1'] = secrets['lan']['1'] # {...} Pimoroni Pico Plus 2W nr1 - TCP Listener
 # tcp_targets['2'] = secrets['lan']['2'] # {...} iLabs RPICO32 - TCP Listener
