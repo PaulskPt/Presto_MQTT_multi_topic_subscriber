@@ -1,6 +1,11 @@
 """
 metar_mqtt_epd_tcplogger_v1.py
 ==============================
+# Date: 2025-09-28
+# by Paulus Schulinck (Github handle: @PaulskPt)
+# with assistance of Microsoft Copilot
+# License: MIT
+
 This is an updated of metar_mqtt_edp.py
 Added TCP logging feature.
 
