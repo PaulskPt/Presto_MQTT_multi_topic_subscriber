@@ -716,17 +716,17 @@ Added functionality to send metar-taf.com account information. In the MQTT messa
 
 ### 2025-09-27
 Added Publisher2 V4 [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/tree/main/src/Publisher/Publisher2_V4/metar_mqtt_edp_tcplogger) In this version replaced UDP packets by TCP packets to any TCP Listerner device in the LAN. Added a "TCP Listener" Python script that I tested on a Raspberry Pi 4B-4GB. Source code: [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/src/TCP_Listener/tcp_rx_v2.py). Serial output: [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/doc/TCP_Listener/2025-09-27_10h23_TCP_Listener_output.txt). See also the contents of the file "secrets.json", key "lan" [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_subscriber/blob/main/src/Publisher/Publisher2_V4/metar_mqtt_edp_tcplogger/secrets.json). 
-Below is the section in the Publisher2 V4 script (lines 80-120) where the values for eventual "target" devices in the LAN are read from the file "secrets.json". The dictionary "tcp_targets" (line 88) needs to contain the dictionary of the target(s) intended. You can also load tcp_targets with all the dictionaries of the devices listed in key "lan" by setting the flag "load_all_targets = True". Default this flag is set to "False". Note that to my experience the TCP Listener devices using a RP2040 or RP2035, like the Pimoroni Pico Plus 2W and the iLabs RPICO32 had poor performance as TCP Listener device. They "missed" a lot of TCP packets sent by the Publisher2 (Pimoroni Pico Plus 2XL W). The Raspberry Pi devices: RPiCM5 and RPi4B-4GB performed excellent as TCP Listener device. These devices missed no TCP packets sent. As written above, below the code section that reads the IP-addresses of "target" devices:
+Below is the section in the Publisher2 V4 script (lines 80-100) where the values for eventual "target" devices in the LAN are read from the file "secrets.json". The dictionary "tcp_targets" (line 88) needs to contain the dictionary of the target(s) intended. You can also load tcp_targets with all the dictionaries of the devices listed in key "lan" by setting the flag "load_all_targets = True". Default this flag is set to "False". Note that to my experience the TCP Listener devices using a RP2040 or RP2035, like the Pimoroni Pico Plus 2W and the iLabs RPICO32 had poor performance as TCP Listener device. They "missed" a lot of TCP packets sent by the Publisher2 (Pimoroni Pico Plus 2XL W). The Raspberry Pi devices: RPiCM5 and RPi4B-4GB performed excellent as TCP Listener device. These devices missed no TCP packets sent. As written above, below the code section that reads the IP-addresses of "target" devices:
 ```
 tcp_targets = {}
 # Set the IP addresses of TCP targets
 # Note that TCP can only send to one IP-address at a time!
-# dict structure:  lan { "0" : {"name": "presto",  "ip": "192.168.1.68",  "timeout" : "1.0"}}
-# t1 = secrets['lan']['0'] # {'ip': '192.168.1.__', 'name': 'presto', 'timeout': '1.0'}}  Pimoroni Presto - MQTT Subscriber1
-# t2 = secrets['lan']['1'] # {...} Pimoroni Pico Plus 2W nr1 - TCP Listener
-# t3 = secrets['lan']['2'] # {...} iLabs RPICO32 - TCP Listener
-# t4 = secrets['lan']['3'] # {...} Raspberry Pi Compute Module 5 - MQTT Broker - TCP Listener
-# t5 = secrets['lan']['4'] # {...} Raspberry Pi 4B-4GB with RP senseHat V2
+# dict structure:  lan { "0" : {"name": "presto",  "ip": "192.168.1.__",  "timeout" : "1.0"}}
+# tcp_targets['0'] = secrets['lan']['0'] # {'ip': '192.168.1.__', 'name': 'presto', 'timeout': '1.0'}}  Pimoroni Presto - MQTT Subscriber1
+# tcp_targets['1'] = secrets['lan']['1'] # {...} Pimoroni Pico Plus 2W nr1 - TCP Listener
+# tcp_targets['2'] = secrets['lan']['2'] # {...} iLabs RPICO32 - TCP Listener
+# tcp_targets['3'] = secrets['lan']['3'] # {...} Raspberry Pi Compute Module 5 - MQTT Broker - TCP Listener
+# tcp_targets['4'] = secrets['lan']['4'] # {...} Raspberry Pi 4B-4GB with RP senseHat V2
 
 load_all_targets = False
 
