@@ -135,13 +135,13 @@ except Exception as e:
 #    sys.stderr = tcp_logger  # Redirect errors to TCP logger
 #    tcp_logger.write(TAG+"TCP logger activated. All tcp_logger.write() output will be sent via TCP packets.")
 
+# ===== End TCP setup =====
+
 # === Print intro to my_logger ===
 tcp_logger.write("\nPimoroni\n")
 tcp_logger.write("Pico LiPo 2XL W\n")
 tcp_logger.write("+ Lolin 2.13 ePD\n")
 tcp_logger.write("Metar + MQTT + TCP Logger\n")
-
-# ===== End TCP setup =====
 
 tcp_logger.write(TAG+"Preparing ePD...\n")
 # --- SPI and Pin Setup ---
