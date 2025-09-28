@@ -1,7 +1,8 @@
 # tcp_logger_v1.py
 # Date: 2025-09-24
-# by Paulus Schulinck (@PaulskPt)
+# by Paulus Schulinck (Github handle: @PaulskPt)
 # with assistance of Microsoft Copilot
+# License: MIT
 # TCP version of UDPLogger with multi-target support
 
 import sys
