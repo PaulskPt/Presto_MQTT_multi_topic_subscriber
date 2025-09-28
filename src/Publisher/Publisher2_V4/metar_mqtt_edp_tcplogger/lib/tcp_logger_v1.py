@@ -24,16 +24,17 @@ class TCPLogger:
         self.port = port
         self.use_tcp_logger = use_tcp_logger
         self.TAG_CLS = "TCPLogger"
+        TAG = ".__init__(): "
         if my_debug:
-            sys.stdout.write(self.TAG_CLS + f"param targets = {targets}\n")
+            sys.stdout.write(self.TAG_CLS + TAG + f" param targets = {targets}\n")
     
         # Normalize targets to a list
         if isinstance(targets, dict):
             self.targets = targets
             if my_debug:
-                sys.stdout.write(self.TAG_CLS + f"__init__(): self.targets = {self.targets}\n")
+                sys.stdout.write(self.TAG_CLS + TAG + f"self.targets = {self.targets}\n")
         else:
-            sys.stdout.write(self.TAG_CLS + "__init__(): parameter targets not of type dict.\n")
+            sys.stdout.write(self.TAG_CLS + TAG + "parameter targets not of type dict.\n")
             raise RuntimeError
         
     def write(self, msg):

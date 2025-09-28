@@ -78,9 +78,10 @@ net = network.WLAN(network.STA_IF)
 net.active(True)
 net.connect(WIFI_SSID, WIFI_PASSWORD)
 tcp_targets = {}
-# Set the IP addresses of TCP targets
+# Use the IP addresses and timeout values of TCP targets
 # Note that TCP can only send to one IP-address at a time!
-# dict structure:  lan { "0" : {"name": "presto",  "ip": "192.168.1.68",  "timeout" : "1.0"}}
+# The TCPLogger class takes care of sending the same message to multiple TCP Listeners
+# dict structure: { "0" : {"name": "presto",  "ip": "192.168.1.68",  "timeout" : "1.0"}}
 # tcp_targets['0']  = secrets['lan']['0'] # {...} Pimoroni Presto - MQTT Subscriber1
 # tcp_targets['1']  = secrets['lan']['1'] # {...} Pimoroni Pico Plus 2W nr1 - TCP Listener
 # tcp_targets['2']  = secrets['lan']['2'] # {...} iLabs RPICO32 - TCP Listener
