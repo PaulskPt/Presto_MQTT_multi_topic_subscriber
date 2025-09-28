@@ -719,7 +719,7 @@ Added Publisher2 V4 [here](https://github.com/PaulskPt/Presto_MQTT_multi_topic_s
 Below is the section in the Publisher2 V4 script (lines 80-100) where the values for eventual "target" devices in the LAN are read from the file "secrets.json". The dictionary "tcp_targets" (line 88) needs to contain the dictionary of the target(s) intended. You can also load tcp_targets with all the dictionaries of the devices listed in key "lan" by setting the flag "load_all_targets = True". Default this flag is set to "False". Note that to my experience the TCP Listener devices using a RP2040 or RP2035, like the Pimoroni Pico Plus 2W and the iLabs RPICO32 had poor performance as TCP Listener device. They "missed" a lot of TCP packets sent by the Publisher2 (Pimoroni Pico Plus 2XL W). The Raspberry Pi devices: RPiCM5 and RPi4B-4GB performed excellent as TCP Listener device. These devices missed no TCP packets sent. As written above, below the code section that reads the IP-addresses of "target" devices:
 ```
 tcp_targets = {}
-# Set the IP addresses of TCP targets
+# Use the IP addresses and timeout values of TCP targets
 # Note that TCP can only send to one IP-address at a time!
 # dict structure:  lan { "0" : {"name": "presto",  "ip": "192.168.1.__",  "timeout" : "1.0"}}
 # tcp_targets['0'] = secrets['lan']['0'] # {...} Pimoroni Presto - MQTT Subscriber1
