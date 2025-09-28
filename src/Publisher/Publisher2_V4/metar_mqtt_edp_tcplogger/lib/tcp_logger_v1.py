@@ -26,7 +26,7 @@ class TCPLogger:
         self.TAG_CLS = "TCPLogger"
         TAG = ".__init__(): "
         if my_debug:
-            sys.stdout.write(self.TAG_CLS + TAG + f" param targets = {targets}\n")
+            sys.stdout.write(self.TAG_CLS + TAG + f"param targets = {targets}\n")
     
         # Normalize targets to a list
         if isinstance(targets, dict):
