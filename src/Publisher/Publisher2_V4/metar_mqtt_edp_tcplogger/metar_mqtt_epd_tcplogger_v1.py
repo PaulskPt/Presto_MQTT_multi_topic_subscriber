@@ -137,7 +137,7 @@ except Exception as e:
 
 # ===== End TCP setup =====
 
-# === Print intro to my_logger ===
+# === Print intro using tcp_logger ===
 tcp_logger.write("\nPimoroni\n")
 tcp_logger.write("Pico LiPo 2XL W\n")
 tcp_logger.write("+ Lolin 2.13 ePD\n")
