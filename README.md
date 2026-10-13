@@ -684,9 +684,8 @@ std::map<std::string, DstPeriod> dst_start_end = {
 #endif
 
 ```
-
 ### 2025-10-12
-Replaced the dst calculation in isDST() in another way. Because of this we remove the struct DstPeriod{} and the std::map.
+Replaced the way of calculation for dst in isDST(). Because of this we removed the struct DstPeriod{} and the std::map.
 Changed the file version to V6.
 
 ## Publisher2 device added 
