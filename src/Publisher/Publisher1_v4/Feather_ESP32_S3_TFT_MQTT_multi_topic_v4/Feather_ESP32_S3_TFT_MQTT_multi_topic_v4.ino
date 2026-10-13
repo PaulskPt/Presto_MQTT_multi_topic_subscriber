@@ -1,5 +1,5 @@
 /*
-  Feather_ESP32_S3_TFT_MQTT_w_Pimoroni_2xqwstpad_v2.ino
+  Feather_ESP32_S3_TFT_MQTT_multi_topic_v4.ino
 
   Sunday 2025-08-03 05h25 utc +1
   Adafruit Feather ESP32-S3 TFT MQTT test adaption for use with Pimoroni QwST Gamepad
@@ -35,10 +35,12 @@
   Update 2025-09-02: version 4. Added functionality to check if the current date is withing the DST period of the current year. Example for region Europe/Lisbon.
   To use as less memory as possible, added the map "dst_start_end" and two small functions (getYearFromUnix() and isDST() ).
   You can switch between timezones "Europe/Lisbon" and "America/New_York". See #define #define REGION_EUROPE and #define REGION_USA in secret.h.
+  Updated 2025-10-26 for PT Winter time (WET) and correcting errors regarding new type admin.
 */
 #include <Arduino.h>
 #include "secrets.h"
 #include <Unit_RTC.h>
+#define TX_PAYLOAD_BUFFER_SIZE 512  // Added on advise of MS Copilot (before including ArduinoMqttClient.h !)
 #include <ArduinoMqttClient.h>
 #include <ArduinoJson.h>
 #include <WiFi.h>
@@ -126,10 +128,10 @@ struct DstPeriod {
 // Used by isDST()
 #ifdef REGION_EUROPE
 std::map<std::string, DstPeriod> dst_start_end = {
-  { "2025", {1741503600, 1762063200} },
-  { "2026", {1772953200, 1793512800} },
-  { "2027", {1805007600, 1825567200} },
-  { "2028": {1837645200, 1856397600} }
+  { "2025", {1743296400, 1761444000 } }, // Mar 30 02 UTC - Oct 26 03 UTC+1
+  { "2026", {1774746000, 1792893600 } }, // Mar 29 same   - Oct 25 same
+  { "2027", {1806195600, 1824948000 } }, // Mar 28 same   - Oct 31 same
+  { "2028", {1837645200, 1856397600 } }  // Mar 26 same   - Oct 29 same
 };
 #endif
 
@@ -186,7 +188,8 @@ enum mqtt_msg_type {
   lights_color_decrease = 3,
   lights_dclr_increase = 4,
   lights_dclr_decrease = 5,
-  msg_todo = 6
+  msg_admin = 6,
+  msg_todo = 7
 };
 
 mqtt_msg_type myMsgType = tpah_sensor;// create an enum class variable and assign default message type value
@@ -201,14 +204,14 @@ int getYearFromUnix(time_t uxTime) {
 // Function declaration so that it will be found by other functions
 void disp_msg(const char* arr[], size_t size, bool disp_on_serial);
 
-static constexpr const char *weekdays[] PROGMEM = {"Sun", "Mon", "Tues", "Wednes", "Thurs", "Fri", "Satur" };
+static constexpr const char *weekdays[] PROGMEM = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
 
 //               Button    A                   B               
 //                         X                   Y        
 //                         LEFT                RIGHT
 const char *msgTypes[] = {"sensors",          "lights_toggle", 
                           "lights_color_inc", "lights_color_dec", 
-                          "lights_dclr_inc",  "lights_dclr_dec",   "todo"};
+                          "lights_dclr_inc",  "lights_dclr_dec",   "admin"};
 int colorIndex = 0;
 int colorIndexMin = 0;
 int colorIndexMax = 9;
@@ -379,16 +382,16 @@ int        port = atoi(SECRET_MQTT_PORT);
 const char MQTT_CLIENT_ID[]                      = SECRET_MQTT_CLIENT_ID;                                                           // 1883;
 const char TOPIC_PREFIX_SENSORS[]                = SECRET_MQTT_TOPIC_PREFIX_SENSORS;                 // "sensors"
 const char TOPIC_PREFIX_LIGHTS[]                 = SECRET_MQTT_TOPIC_PREFIX_LIGHTS;                  // "lights"
+const char TOPIC_PREFIX_ADMIN[]                  = SECRET_MQTT_TOPIC_PREFIX_ADMIN;                   // "admin"
 const char TOPIC_PREFIX_TODO[]                   = SECRET_MQTT_TOPIC_PREFIX_TODO;                    // "todo"
-
 const char TOPIC_PUBLISHER[]                     = SECRET_MQTT_PUBLISHER;                            // "Feath"
-
 const char TOPIC_SUFFIX_SENSORS[]                = SECRET_MQTT_TOPIC_SUFFIX_SENSORS;                 // "ambient"
 const char TOPIC_SUFFIX_LIGHTS_TOGGLE[]          = SECRET_MQTT_TOPIC_SUFFIX_LIGHTS_TOGGLE;           // "toggle"
 const char TOPIC_SUFFIX_LIGHTS_COLOR_DECREASE[]  = SECRET_MQTT_TOPIC_SUFFIX_LIGHTS_COLOR_DECREASE;   // "color_dec"
 const char TOPIC_SUFFIX_LIGHTS_COLOR_INCREASE[]  = SECRET_MQTT_TOPIC_SUFFIX_LIGHTS_COLOR_INCREASE;   // "color_inc"
 const char TOPIC_SUFFIX_LIGHTS_DCLR_DECREASE[]   = SECRET_MQTT_TOPIC_SUFFIX_LIGHTS_DCLR_DECREASE;    // "dclr_dec"
 const char TOPIC_SUFFIX_LIGHTS_DCLR_INCREASE[]   = SECRET_MQTT_TOPIC_SUFFIX_LIGHTS_DCLR_INCREASE;    // "dclr_inc"
+const char TOPIC_SUFFIX_ADMIN[]                  = SECRET_MQTT_TOPIC_SUFFIX_ADMIN;                  // "status"
 const char TOPIC_SUFFIX_TODO[]                   = SECRET_MQTT_TOPIC_SUFFIX_TODO;                    // "todo"
 const char topic1[]                              = SECRET_MQTT_SYS_TOPIC1;                           // "$SYS/broker/clients/connected";
 const char topic2[]                              = SECRET_MQTT_SYS_TOPIC2;                           // "$SYS/broker/clients/disconnected";
@@ -543,7 +546,7 @@ void composeMsgTopic(enum mqtt_msg_type msgType = tpah_sensor) {  // default mes
   // Compose the message type string based on the enum value
   //char msgTopicStr[] = {};
   msg_topic[0] = '\0'; // Initialize the msg_topic string to an empty string
-  switch (msgType) {  
+  switch (msgType) { 
     case tpah_sensor:
     {
       //msg_topic = msgTypes[tpah_sensor]; //"sensors";
@@ -586,6 +589,16 @@ void composeMsgTopic(enum mqtt_msg_type msgType = tpah_sensor) {  // default mes
         strcat(msg_topic, "unknown");
       break;
     }
+    case msg_admin:
+    {
+      //msg_topic = msgTypes[admin]; //"admin";
+      strcat(msg_topic, TOPIC_PREFIX_ADMIN);
+      strcat(msg_topic, "/");
+      strcat(msg_topic, TOPIC_PUBLISHER);
+      strcat(msg_topic, "/");
+      strcat(msg_topic, TOPIC_SUFFIX_ADMIN);
+      break;
+    }  
     default:
     {
       //msg_topic = msgTypes[msg_todo];
@@ -848,6 +861,8 @@ void printWifiStatus() {
   IPAddress ip = WiFi.localIP();
   serialPrintf(PSTR("IP Address: %s\n"), ip.toString().c_str());
 
+  Serial.print("Wi-Fi MAC address: ");
+  Serial.println(WiFi.macAddress());
 /*
   // print the received signal strength:
   long rssi = WiFi.RSSI();
@@ -1598,6 +1613,13 @@ int composePayload(char* outBuffer, size_t outSize,
       header["vt"] = "i";     //  i = value type
       break;
     }
+    case msg_admin:
+    {
+      header["dc"] = "admin";   // device_class
+      header["sc"] = "admin";   // state_class
+      header["vt"] = "s";      //  s = value type (for all values) string
+      break;
+    }
     case msg_todo:
     {
       header["dc"] = "todo";   // device_class
@@ -2290,6 +2312,11 @@ void handleButtonPress(Button i) {
   }
 }
 
+std::string keyTokeyMod(std::string key) {
+  std::string key_mod = keyAliases.count(key) ? keyAliases[key] : key;
+  return key_mod;
+}
+
 void blink_a_led(padBtn &padLogic, bool all_leds = false) {
   static constexpr const char txt0[] PROGMEM = "blink_a_led(): ";
   uint8_t pad_idx = padLogic.padID;
@@ -2378,11 +2405,6 @@ void blink_a_led(padBtn &padLogic, bool all_leds = false) {
     delay(500);
     pads[pad_idx]->clear_leds();
   }
-}
-
-std::string keyTokeyMod(std::string key) {
-  std::string key_mod = keyAliases.count(key) ? keyAliases[key] : key;
-  return key_mod;
 }
 
 bool ckForButtonPress() {
@@ -3363,4 +3385,3 @@ void loop()
     }
   }
 }
-
